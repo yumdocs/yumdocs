@@ -1,5 +1,7 @@
 const constants = {
-    matchExpression: /{{[^{}]+}}/g
+    endOfExpression: '}}',
+    startOfExpression: '{{',
+    matchExpression: /{{[^{}]+}}/,
 };
 
 export default constants;

@@ -3,6 +3,7 @@ import JSZip from 'jszip';
 import { DOMParser, XMLSerializer } from '@xmldom/xmldom';
 import OpenXMLContentTypes from './OpenXMLContentTypes';
 import DefaultPartRenderer from "./parts/DefaultPartRenderer";
+import {sanitizeWordMarkupInExpressions} from "./word/wordUtils";
 
 const CONTENT_TYPES = '[Content_Types].xml';
 
@@ -44,6 +45,9 @@ class OpenXMLTemplate {
         for (let i = 0; i < this._parts.length; i++) {
             const name = this._parts[i].PartName.slice(1);
             let xml: string = await this._zip.files[name].async('text');
+            if (name.startsWith('word')) {
+                xml = sanitizeWordMarkupInExpressions(xml);
+            }
             const dom = new DOMParser().parseFromString(xml, 'text/xml')
             new DefaultPartRenderer(dom).render(data);
             xml = new XMLSerializer().serializeToString(dom);
