@@ -6,6 +6,7 @@
 # DOMParser polyfill for nodeJS
 
 - https://github.com/xmldom/xmldom
+- Consider https://github.com/Chevrotain/chevrotain/tree/master/examples/grammars/xml
 
 # XSD validation
 
