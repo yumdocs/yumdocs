@@ -34,6 +34,7 @@ class OpenXMLContentTypes {
                     const { nodeName, nodeValue } = attributes[j];
                     part[nodeName] = nodeValue
                 }
+                // TODO: Some parts might probably be ignored
                 ret.push(part);
             }
         }
