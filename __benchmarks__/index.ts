@@ -3,8 +3,8 @@ import * as path from 'path';
 import Benchmark from 'benchmark';
 import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
-import {faker} from "@faker-js/faker";
 import OpenXMLTemplate from "../src/OpenXMLTemplate";
+import {faker} from "@faker-js/faker";
 
 const suite = new Benchmark.Suite;
 const DATA = {
