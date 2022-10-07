@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import JSZip from 'jszip';
 import { DOMParser, XMLSerializer } from '@xmldom/xmldom';
+import constants from './constants';
 import OpenXMLContentTypes from './OpenXMLContentTypes';
 import DefaultPartRenderer from "./parts/DefaultPartRenderer";
 import {sanitizeWordMarkupInExpressions} from "./word/wordUtils";
@@ -45,20 +46,23 @@ class OpenXMLTemplate {
         for (let i = 0; i < this._parts.length; i++) {
             const name = this._parts[i].PartName.slice(1);
             let xml: string = await this._zip.files[name].async('text');
-            if (name.startsWith('word')) {
-                xml = sanitizeWordMarkupInExpressions(xml);
+            // No need to process without openChar in part
+            if (xml.indexOf(constants.openChar) > -1) {
+                if (name.startsWith('word')) {
+                    xml = sanitizeWordMarkupInExpressions(xml);
+                }
+                const dom = new DOMParser().parseFromString(xml, 'text/xml')
+                new DefaultPartRenderer(dom).render(data);
+                xml = new XMLSerializer().serializeToString(dom);
+                // For testing only
+                if (name === 'word/document.xml' ||
+                    name === 'ppt/slides/slide1.xml' ||
+                    name === 'xl/sharedStrings.xml') {
+                    ret = xml;
+                }
+                // Update zip stream
+                this._zip.file(name, xml);
             }
-            const dom = new DOMParser().parseFromString(xml, 'text/xml')
-            new DefaultPartRenderer(dom).render(data);
-            xml = new XMLSerializer().serializeToString(dom);
-            // For testing only
-            if (name === 'word/document.xml' ||
-                name === 'ppt/slides/slide1.xml' ||
-                name === 'xl/sharedStrings.xml') {
-                ret = xml;
-            }
-            // Update zip stream
-            this._zip.file(name, xml);
         }
         return ret; // For testing
     }

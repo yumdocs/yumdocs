@@ -1,5 +1,49 @@
 import { DOMParser } from '@xmldom/xmldom';
 
+const EXCLUDE: Array<string> = [
+    // '/word/document.xml',
+    '/word/numbering.xml',
+    '/word/styles.xml',
+    '/word/settings.xml',
+    '/word/webSettings.xml',
+    '/word/fontTable.xml',
+    '/word/theme/theme1.xml',
+    '/word/theme/theme2.xml',
+    '/word/theme/theme3.xml',
+    '/docProps/core.xml',
+    '/docProps/app.xml'
+    ////////////////////////
+    /*
+    /ppt/presentation.xml,
+    /ppt/slideMasters/slideMaster1.xml,
+    /ppt/slides/slide1.xml,
+    /ppt/presProps.xml,
+    /ppt/viewProps.xml,
+    /ppt/theme/theme1.xml,
+    /ppt/tableStyles.xml,
+    /ppt/slideLayouts/slideLayout1.xml,
+    /ppt/slideLayouts/slideLayout2.xml,
+    /ppt/slideLayouts/slideLayout3.xml,
+    /ppt/slideLayouts/slideLayout4.xml,
+    /ppt/slideLayouts/slideLayout5.xml,
+    /ppt/slideLayouts/slideLayout6.xml,
+    /ppt/slideLayouts/slideLayout7.xml,
+    /ppt/slideLayouts/slideLayout8.xml,
+    /ppt/slideLayouts/slideLayout9.xml,
+    /ppt/slideLayouts/slideLayout10.xml,
+    /ppt/slideLayouts/slideLayout11.xml,
+    /ppt/changesInfos/changesInfo1.xml,
+    /ppt/revisionInfo.xml*/
+    //////////////////////////////////
+    /*
+    // /xl/workbook.xml,
+    // /xl/worksheets/sheet1.xml,
+    // /xl/theme/theme1.xml,
+    // /xl/styles.xml,
+    // /xl/sharedStrings.xml
+     */
+];
+
 /**
  * OpenXMLContentTypes
  */
@@ -34,8 +78,10 @@ class OpenXMLContentTypes {
                     const { nodeName, nodeValue } = attributes[j];
                     part[nodeName] = nodeValue
                 }
-                // TODO: Some parts might probably be ignored
-                ret.push(part);
+                // Some parts may be discarded
+                if (!EXCLUDE.includes(part.PartName)) {
+                    ret.push(part);
+                }
             }
         }
         return ret;

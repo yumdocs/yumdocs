@@ -1,6 +1,8 @@
 const constants = {
-    endOfExpression: '}}',
-    startOfExpression: '{{',
+    openChar: '}',
+    closeChar: '}',
+    openExpression: '{{',
+    closeExpression: '}}',
     matchExpression: /{{[^{}]+}}/,
 };
 

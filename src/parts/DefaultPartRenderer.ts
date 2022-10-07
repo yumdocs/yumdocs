@@ -1,6 +1,6 @@
 import PartRendererInterface from './PartRendererInterface';
 import DefaultNodeRenderer from '../nodes/DefaultNodeRenderer';
-import ExpressionSearch from "../ExpressionSearch";
+import ExpressionSearch from '../ExpressionSearch';
 
 class DefaultPartRenderer implements PartRendererInterface {
     private _dom: Document;
