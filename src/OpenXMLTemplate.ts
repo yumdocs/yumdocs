@@ -13,7 +13,18 @@ const CONTENT_TYPES = '[Content_Types].xml';
  */
 class OpenXMLTemplate {
     private _parts: any[];
-    private _zip: JSZip; // TODO
+    private _zip: JSZip;
+
+    // Instrumentation
+    static instrument = false;
+    static time = 0;
+    static showTime(message: string) {
+        if (OpenXMLTemplate.instrument) {
+            const t = Date.now();
+            console.log(`${message}: ${t - OpenXMLTemplate.time} ms`)
+            OpenXMLTemplate.time = t;
+        }
+    }
 
     /**
      * constructor
@@ -29,11 +40,15 @@ class OpenXMLTemplate {
      * @param path
      */
     async load(path: string) {
+        OpenXMLTemplate.time = Date.now();
         // TODO Check browser versus nodeJS (this is nodeJS)
         const handle = await fs.promises.readFile(path);
         this._zip = await JSZip.loadAsync(handle);
-        const xml = await this._zip.files[CONTENT_TYPES]?.async('text');
+        OpenXMLTemplate.showTime('Zip loaded');
+        const xml = await this._zip.file(CONTENT_TYPES)?.async('string') || '';
+        OpenXMLTemplate.showTime('Content types loaded');
         this._parts = new OpenXMLContentTypes(xml).parts;
+        OpenXMLTemplate.showTime('Content types read');
     }
 
     /**
@@ -42,7 +57,6 @@ class OpenXMLTemplate {
      */
     async render(data: any = {}) {
         let ret;
-        // TODO Add preprocessing (tables) and postprocessing (Excel numbers, TOC Update, else?)
         for (let i = 0; i < this._parts.length; i++) {
             const name = this._parts[i].PartName.slice(1);
             let xml: string = await this._zip.files[name].async('text');
@@ -64,6 +78,7 @@ class OpenXMLTemplate {
                 this._zip.file(name, xml);
             }
         }
+        OpenXMLTemplate.showTime('Data merged');
         return ret; // For testing
     }
 
@@ -78,6 +93,7 @@ class OpenXMLTemplate {
             // compression: 'DEFLATE'
         });
         await fs.promises.writeFile(path, buf);
+        OpenXMLTemplate.showTime('Zip saved');
     }
 }
 
