@@ -1,4 +1,4 @@
-import OpenXMLSearch from "../src/OpenXMLSearch";
+import ExpressionSearch from "../src/ExpressionSearch";
 import { DOMParser } from '@xmldom/xmldom';
 
 const XML = `<?xml version="1.0"?>
@@ -11,7 +11,7 @@ const XML = `<?xml version="1.0"?>
 
 test('OpenXMLSearch', () => {
     const dom = new DOMParser().parseFromString(XML, 'text/xml');
-    const search = new OpenXMLSearch(dom);
+    const search = new ExpressionSearch(dom);
     const ret = search.filter();
     expect(ret).toBeInstanceOf(Array);
     expect(ret.length).toEqual(2);

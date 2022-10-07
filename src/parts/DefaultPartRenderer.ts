@@ -1,6 +1,6 @@
 import PartRendererInterface from './PartRendererInterface';
 import DefaultNodeRenderer from '../nodes/DefaultNodeRenderer';
-import OpenXMLSearch from "../OpenXMLSearch";
+import ExpressionSearch from "../ExpressionSearch";
 
 class DefaultPartRenderer implements PartRendererInterface {
     private _dom: Document;
@@ -12,7 +12,7 @@ class DefaultPartRenderer implements PartRendererInterface {
      */
     constructor(dom: Document) {
         this._dom = dom;
-        const search = new OpenXMLSearch(this._dom);
+        const search = new ExpressionSearch(this._dom);
         this._nodes = search.filter();
     }
 

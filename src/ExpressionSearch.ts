@@ -4,7 +4,7 @@ import constants from "./constants";
  * OpenXMLSearch
  * @param node
  */
-class OpenXMLSearch {
+class ExpressionSearch {
 
     private _root: Node;
     /**
@@ -47,4 +47,4 @@ class OpenXMLSearch {
     }
 }
 
-export default OpenXMLSearch;
+export default ExpressionSearch;
