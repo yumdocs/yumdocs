@@ -68,20 +68,12 @@ class OpenXMLTemplate {
      * @param path
      */
     async saveAs(path: string) {
-        await new Promise((resolve /*, reject */) => {
-            this._zip // TODO Check generateAsync (JSZip)
-                .generateNodeStream({
-                    type:'nodebuffer',
-                    streamFiles:true
-                })
-                .pipe(fs.createWriteStream(path))
-                .on('finish',  () => {
-                    // JSZip generates a readable stream with a "end" event,
-                    // but is piped here in a writable stream which emits a "finish" event.
-                    console.log("out.zip written.");
-                    resolve(null);
-                });
+        const buf = await this._zip.generateAsync({
+            type: 'nodebuffer',
+            streamFiles: true,
+            // compression: 'DEFLATE'
         });
+        await fs.promises.writeFile(path, buf);
     }
 }
 
