@@ -1,10 +1,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import Benchmark from 'benchmark';
-import JSZip from 'jszip';
-import PizZip from 'pizzip';
+import JSZip from 'jszip'; // JSZip 3
+import PizZip from 'pizzip'; // JSZip 2
 // TODO import * as zip from "@zip.js/zip.js";
-// TODO pako, fflate
+// TODO adm-zip, pako, fflate, yazl/yauzl
 
 
 const suite = new Benchmark.Suite;
