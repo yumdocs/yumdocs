@@ -1,4 +1,7 @@
-export const culture = {
+/**
+ * en-US
+ */
+const culture = {
     name: 'en-US',
     numberFormat: {
         pattern: ['-n'],
@@ -60,3 +63,8 @@ export const culture = {
         }
     }
 };
+
+/**
+ * Default export
+ */
+export default culture;
