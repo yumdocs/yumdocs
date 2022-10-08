@@ -13,7 +13,7 @@ import constants from '../constants';
  * @param xml
  */
 export function sanitizeWordMarkupInExpressions (xml: string) {
-    const rx_find = /{(<\/w:t><\/w:r><w:r\s?[^>]+><w:t>)?{[^{}]+}(<\/w:t><\/w:r><w:r\s?[^>]+><w:t>)?}/;
+    const rx_find = /{(<\/w:t><\/w:r><w:r\s?[^>]*><w:t>)?{[^{}]+}(<\/w:t><\/w:r><w:r\s?[^>]*><w:t>)?}/;
     const rx_replace = /<\/?w:[^>]+>/g;
     let pos1 = 0, pos2 = 0, ret = '';
     while (xml.length > 0) {
