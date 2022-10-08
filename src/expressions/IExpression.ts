@@ -2,8 +2,8 @@
  * IExpression
  */
 interface IExpression {
-    startNode: any;
-    endNode?: any;
+    done: boolean;
+    hasEndNode(): boolean;
     render(data: any): void
 }
 
