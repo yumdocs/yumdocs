@@ -4,19 +4,15 @@ import OpenXMLTemplate from '../src/OpenXMLTemplate';
 
 const INPUT_DIR = './templates/';
 const OUTPUT_DIR = './temp/'
-const TEST = 'data';
+const TEST = 'if';
 const DOCX = `${TEST}.docx`;
 const PPTX = `${TEST}.pptx`;
 const XLSX = `${TEST}.xlsx`;
 const DATA = {
-    text: faker.datatype.string(),
-    integer: faker.datatype.number(),
-    float: faker.datatype.float(),
-    boolean: faker.datatype.boolean(),
-    date: faker.datatype.datetime()
+    hasText: faker.datatype.boolean()
 };
 
-test('Word File', async () => {
+xtest('Word File', async () => {
     const file = new OpenXMLTemplate();
     await file.load(`${INPUT_DIR}${DOCX}`);
     const ret = await file.render(DATA);

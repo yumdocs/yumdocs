@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import constants from '../src/constants';
 import OpenXMLTemplate from '../src/OpenXMLTemplate';
 
-const INPUT_DIR = './__tests__/';
+const INPUT_DIR = './templates/';
 const OUTPUT_DIR = './temp/'
 const TEST = 'simple';
 const DOCX = `${TEST}.docx`;
