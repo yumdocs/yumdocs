@@ -13,9 +13,9 @@ class OpenXMLError extends Error {
     /**
      * constructor
      * @param code
-     * @param data
+     * @param options
      */
-    constructor(code: number, data?: any) {
+    constructor(code: number, options: Record<string, unknown> = {}) {
         const error = errorCodes.get(code) || { code, message: '' };
         if (!error.message) {
             error.message = `Missing error code ${code}`;
@@ -24,10 +24,11 @@ class OpenXMLError extends Error {
         // @see https://stackoverflow.com/questions/41102060/typescript-extending-error-class
         Object.setPrototypeOf(this, new.target.prototype); // restore prototype chain
         this.code = code;
-        if (data instanceof Error) {
-            this.originalError = data;
-        } else if (data) {
-            this.data = data;
+        if (options.error instanceof Error) {
+            this.originalError = options.error;
+        }
+        if (Object.prototype.toString.call(options.data) === '[object Object]') {
+            this.data = options.data;
         }
         this.name = 'OpenXMLError';
     }

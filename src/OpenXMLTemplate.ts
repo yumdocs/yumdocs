@@ -9,6 +9,7 @@ import AbstractExpression from './expressions/AbstractExpression';
 import DataExpression from "./expressions/DataExpression";
 import AbstractPart from "./parts/AbstractPart";
 import ExpressionPart from "./parts/ExpressionPart";
+import OpenXMLError from "./error/OpenXMLError";
 //import OpenXMLError from "./error/OpenXMLError";
 
 const CONTENT_TYPES = '[Content_Types].xml';
@@ -40,7 +41,7 @@ interface IExpressionConstructor {
  * OpenXMLTemplate
  */
 class OpenXMLTemplate {
-    private _parts: Map<string, IPart>;
+    private readonly _parts: Map<string, IPart>;
     private _zip: JSZip;
 
     // ----------------------------------
@@ -62,12 +63,12 @@ class OpenXMLTemplate {
     // ----------------------------------
     // Cultures
     // ----------------------------------
-    static cultures: Map<string, any> = new Map([
+    static cultures: Map<string, Record<string, unknown>> = new Map([
         ['en-GB', enGB],
         ['en-US', enUS],
         ['fr-FR', frFR]
     ]);
-    static registerCulture(locale: string, culture: any) {
+    static registerCulture(locale: string, culture: Record<string, unknown>) {
         // Note: a registered culture can be replaced
         OpenXMLTemplate.cultures.set(locale, culture);
     }
@@ -108,6 +109,7 @@ class OpenXMLTemplate {
      * @param type
      */
     constructor() {
+        // TODO add options including culture
         this._parts = new Map();
         this._zip = new JSZip();
     }
@@ -119,8 +121,18 @@ class OpenXMLTemplate {
     async load(path: string) {
         OpenXMLTemplate.resetTime();
         // TODO Check browser versus nodeJS (this is nodeJS)
-        const handle = await fs.promises.readFile(path);
-        this._zip = await JSZip.loadAsync(handle);
+        try {
+            const handle = await fs.promises.readFile(path);
+            this._zip = await JSZip.loadAsync(handle);
+        } catch (error) {
+            if (Object.prototype.hasOwnProperty.call(error, 'syscall')) {
+                throw new OpenXMLError(1001, {data: {path}, error});
+            } else if ((<Error>error).message.startsWith('Can\'t find end of central directory')) {
+                throw new OpenXMLError(1002, {data: {path}, error});
+            } else {
+                throw new OpenXMLError(1003, {data: {path}, error});
+            }
+        }
         OpenXMLTemplate.showTime('Zip loaded');
     }
 
@@ -130,37 +142,42 @@ class OpenXMLTemplate {
      */
     async _getPartRefs() : Promise<Array<IPartReference>> {
         const ret: Array<IPartReference> = [];
-        OpenXMLTemplate.resetTime();
-        const xml = await this._zip.file(CONTENT_TYPES)?.async('string') || '';
-        OpenXMLTemplate.showTime('Content types loaded as xml');
-        const dom = new DOMParser().parseFromString(xml, 'text/xml');
-        const nodes = dom.childNodes[2].childNodes;
-        for(let i = 0; i < nodes.length; i++) {
-            const node = nodes[i] as Element;
-            // We ignore nodes with nodeName === 'Default' nodes'
-            if (node.nodeName === 'Override') {
-                const { attributes } = node;
-                let name, type;
-                for(let j = 0; j < attributes.length; j++) {
-                    const { nodeName, nodeValue } = attributes[j];
-                    switch (nodeName) {
-                        case 'PartName':
-                            name = (nodeValue || '').slice(1); // Remove /
-                            break;
-                        case 'ContentType':
-                            type = nodeValue;
-                            break;
-                        default:
-                     }
-                }
-                if (name && type) {
-                    const Part = OpenXMLTemplate.parts.get(name.replace(/\d+(.xml)$/, '$1'));
-                    // Note: without registered part in OpenXMLTemplate.parts, no rendering
-                    if (Part) {
-                        ret.push({name, type, Part});
+        let xml;
+        try {
+            OpenXMLTemplate.resetTime();
+            xml = await this._zip.file(CONTENT_TYPES)?.async('string') || '';
+            OpenXMLTemplate.showTime('Content types loaded as xml');
+            const dom = new DOMParser().parseFromString(xml, 'text/xml');
+            const nodes = dom.childNodes[2].childNodes;
+            for(let i = 0; i < nodes.length; i++) {
+                const node = nodes[i] as Element;
+                // We ignore nodes with nodeName === 'Default' nodes'
+                if (node.nodeName === 'Override') {
+                    const { attributes } = node;
+                    let name, type;
+                    for(let j = 0; j < attributes.length; j++) {
+                        const { nodeName, nodeValue } = attributes[j];
+                        switch (nodeName) {
+                            case 'PartName':
+                                name = (nodeValue || '').slice(1); // Remove /
+                                break;
+                            case 'ContentType':
+                                type = nodeValue;
+                                break;
+                            default:
+                         }
+                    }
+                    if (name && type) {
+                        const Part = OpenXMLTemplate.parts.get(name.replace(/\d+(.xml)$/, '$1'));
+                        // Note: without registered part in OpenXMLTemplate.parts, no rendering
+                        if (Part) {
+                            ret.push({name, type, Part});
+                        }
                     }
                 }
             }
+        } catch (error) {
+            throw new OpenXMLError(1004, { data: {xml}, error });
         }
         OpenXMLTemplate.showTime('Content types read');
         return ret;
@@ -216,6 +233,7 @@ class OpenXMLTemplate {
      */
     async saveAs(path: string) {
         OpenXMLTemplate.resetTime();
+        // TODO Check browser versus nodeJS (this is nodeJS)
         const buf = await this._zip.generateAsync({
             type: 'nodebuffer',
             streamFiles: true,
