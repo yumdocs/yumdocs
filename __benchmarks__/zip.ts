@@ -12,7 +12,7 @@ const suite = new Benchmark.Suite;
 // add tests
 suite
     .add('JSZip', { defer: true, fn: function(deferred: { resolve: any, reject: any }) {
-            fs.promises.readFile(path.resolve(__dirname, '../__tests__/data.docx'))
+            fs.promises.readFile(path.resolve(__dirname, '../templates/data.docx'))
                 .then((handle) => {
                     JSZip.loadAsync(handle)
                         .then((zip) => {
@@ -35,7 +35,7 @@ suite
     .add('Pizzip', function() {
         // Load the docx file as binary content
         const content = fs.readFileSync(
-            path.resolve(__dirname, '../__tests__/data.docx'),
+            path.resolve(__dirname, '../templates/data.docx'),
             "binary"
         );
         const zip = new PizZip(content);
@@ -55,6 +55,7 @@ suite
         console.log(String(event.target));
     })
     .on('complete', function() {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         console.log('Fastest is ' + this.filter('fastest').map('name'));
     })

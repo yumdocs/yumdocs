@@ -19,7 +19,7 @@ const DATA = {
 suite
     .add('ooxml', { defer: true, fn: function(deferred: { resolve: any, reject: any }) {
         const file = new OpenXMLTemplate();
-        file.load(path.resolve(__dirname, '../__tests__/data.docx'))
+        file.load(path.resolve(__dirname, '../templates/data.docx'))
             .then(() => {
                 file.render(DATA)
                     .then(() => {
@@ -59,6 +59,7 @@ suite
         console.log(String(event.target));
     })
     .on('complete', function() {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         console.log('Fastest is ' + this.filter('fastest').map('name'));
     })

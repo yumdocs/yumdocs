@@ -24,12 +24,12 @@ suite
         defer: true,
         fn: function(deferred: { resolve: any, reject: any }) {
             new Parser(/* options */).parseStringPromise(XML)
-                .then((obj) => {
+                .then((obj: Record<string, unknown>) => {
                     const out = new Builder().buildObject(obj);
                     // console.log(out === XML); //<-- Big oops here too!
                     deferred.resolve();
                 })
-                .catch((err) => {
+                .catch((err: Error) => {
                     deferred.reject(err);
                 })
         }
@@ -39,6 +39,7 @@ suite
         console.log(String(event.target));
     })
     .on('complete', function() {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         console.log('Fastest is ' + this.filter('fastest').map('name'));
     })
