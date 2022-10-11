@@ -1,23 +1,23 @@
-import en from '../cultures/en-US';
+import OpenXMLTemplate from "../OpenXMLTemplate";
 
-const formatRegExp = /\{(\d+)(:[^\}]+)?\}/g;
+const formatRegExp = /\{(\d+)(:[^}]+)?}/g;
 // const numberRegExp = /^(\+|-?)\d+(\.?)\d*$/;
 const dateFormatRegExp = /dddd|ddd|dd|d|MMMM|MMM|MM|M|yyyy|yy|HH|H|hh|h|mm|m|fff|ff|f|tt|ss|s|zzz|zz|z|"[^"]*"|'[^']*'/g;
 const standardFormatRegExp = /^(n|c|p|e)(\d*)$/i;
 const literalRegExp = /(\\.)|(['][^']*[']?)|(["][^"]*["]?)/g;
-const commaRegExp = /\,/g;
+const commaRegExp = /,/g;
 const EMPTY = "";
 const POINT = ".";
 const COMMA = ",";
 const SHARP = "#";
 const ZERO = "0";
 const PLACEHOLDER = "??";
-// const EN = "en-US";
+const EN_US = "en-US";
 const objectToString = {}.toString;
 
 const argumentNameRegExp = /^\w+/,
-    encodeRegExp = /\$\{([^}]*)\}/g,
-    escapedCurlyRegExp = /\\\}/g,
+    encodeRegExp = /\$\{([^}]*)}/g,
+    escapedCurlyRegExp = /\\}/g,
     curlyRegExp = /__CURLY__/g,
     escapedSharpRegExp = /\\#/g,
     sharpRegExp = /__SHARP__/g,
@@ -25,10 +25,10 @@ const argumentNameRegExp = /^\w+/,
 
 /**
  * getCulture
- * @param culture
+ * @param locale
  */
-function getCulture(culture: string) {
-    return en; // TODO
+export function getCulture(locale: string = EN_US): Record<string, unknown> | undefined {
+    return OpenXMLTemplate.cultures.get(locale);
 }
 
 /**
@@ -37,8 +37,8 @@ function getCulture(culture: string) {
  * @param digits
  * @param end
  */
-function pad(number: number | string, digits?: number, end?: number) {
-    const ret = number + "";
+export function pad(number: number | string, digits?: number, end?: number) {
+    const ret = number + '';
     digits = digits || 2;
     end = digits - ret.length;
     if (end) {
@@ -53,10 +53,11 @@ function pad(number: number | string, digits?: number, end?: number) {
  * @param format
  * @param locale
  */
+/*
 export function formatDate(date: Date, format: string, locale: string) {
     const culture = getCulture(locale);
 
-    const calendar = culture.calendars.standard,
+    const calendar = culture?.calendars.standard,
         days = calendar.days,
         months = calendar.months;
 
@@ -135,6 +136,7 @@ export function formatDate(date: Date, format: string, locale: string) {
         return result !== undefined ? result : match.slice(1, match.length - 1);
     });
 }
+*/
 
 /**
  * formatNumber
@@ -142,6 +144,7 @@ export function formatDate(date: Date, format: string, locale: string) {
  * @param format
  * @param locale
  */
+/*
 export function formatNumber(number, format, locale) {
     const culture = getCulture(locale);
 
@@ -478,7 +481,9 @@ export function formatNumber(number, format, locale) {
 
     return number;
 }
+*/
 
+/*
 export function groupInteger(number, start, end, numberFormat) {
     var decimalIndex = number.indexOf(numberFormat[POINT]);
     var groupSizes = numberFormat.groupSize.slice();
@@ -519,7 +524,9 @@ export function groupInteger(number, start, end, numberFormat) {
 
     return number;
 };
+*/
 
+/*
 export function round(value, precision, negative) {
     precision = precision || 0;
 
@@ -535,7 +542,9 @@ export function round(value, precision, negative) {
 
     return value.toFixed(Math.min(precision, 20));
 };
+*/
 
+/*
 export function toString(value, fmt, culture) {
     if (fmt) {
         if (objectToString.call(value) === "[object Date]") {
@@ -544,14 +553,15 @@ export function toString(value, fmt, culture) {
             return formatNumber(value, fmt, culture);
         }
     }
-
     return value !== undefined ? value : "";
 }
+*/
 
 /**
  * format
  * @param fmt
  */
+/*
 export function format(fmt: string) {
     const values = arguments;
     return fmt.replace(formatRegExp, function(match, index, placeholderFormat) {
@@ -559,8 +569,10 @@ export function format(fmt: string) {
         return toString(value, placeholderFormat ? placeholderFormat.substring(1) : '');
     });
 }
+*/
 
-function compilePart(part, stringPart) {
+/*
+export function compilePart(part, stringPart) {
     if (stringPart) {
         return "'" +
             part.split("'").join("\\'")
@@ -581,8 +593,10 @@ function compilePart(part, stringPart) {
         }
     }
 }
+*/
 
-Template = {
+/*
+const Template = {
     paramName: "data", // name of the parameter of the generated template
     useWithBlock: true, // whether to wrap the template in a with() block
     render: function(template, data) {
@@ -640,3 +654,4 @@ Template = {
         }
     }
 };
+ */
