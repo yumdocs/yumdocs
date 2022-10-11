@@ -1,7 +1,7 @@
 /**
  * en-US
  */
-const culture = {
+const culture: Record<string, unknown> = {
     name: 'en-US',
     numberFormat: {
         pattern: ['-n'],
