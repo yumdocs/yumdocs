@@ -1,6 +1,10 @@
 import Benchmark from 'benchmark';
 import {DOMParser, XMLSerializer} from '@xmldom/xmldom';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import {XMLParser, XMLBuilder} from 'fast-xml-parser';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import {Parser, Builder} from 'xml2js';
 
 const suite = new Benchmark.Suite;
@@ -11,22 +15,22 @@ const XML = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document 
 suite
     .add('@xmldom/xmldom', function() {
         const dom = new DOMParser().parseFromString(XML, 'text/xml');
-        const out = new XMLSerializer().serializeToString(dom);
-        // console.log(out === XML);
+        const xml = new XMLSerializer().serializeToString(dom);
+        // console.log(xml === XML);
     })
     .add('fast-xml-parser', function() {
         const options = {ignoreAttributes : false };
         const obj = new XMLParser(options).parse(XML);
-        const out = new XMLBuilder(options).build(obj);
-        // console.log(out === XML); //<-- Big oops here!
+        const xml = new XMLBuilder(options).build(obj);
+        // console.log(xml === XML); //<-- Big oops here!
     })
     .add('xml2js', {
         defer: true,
         fn: function(deferred: { resolve: any, reject: any }) {
             new Parser(/* options */).parseStringPromise(XML)
                 .then((obj: Record<string, unknown>) => {
-                    const out = new Builder().buildObject(obj);
-                    // console.log(out === XML); //<-- Big oops here too!
+                    const xml = new Builder().buildObject(obj);
+                    // console.log(xml === XML); //<-- Big oops here too!
                     deferred.resolve();
                 })
                 .catch((err: Error) => {
