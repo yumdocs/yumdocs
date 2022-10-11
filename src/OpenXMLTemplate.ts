@@ -210,7 +210,9 @@ class OpenXMLTemplate {
         await this._loadParts(partRefs);
         OpenXMLTemplate.resetTime();
         // Priority in increasing order (1 is highest, 10 is lowest)
-        const parts = Array.from(this._parts.values()).sort((a, b) => (a.priority - b.priority));
+        const parts = Array.from(this._parts.values())
+            .sort((a, b) => (a.priority - b.priority));
+        // Render and serialize each part
         for (const part of parts) {
             part.render(data);
             const xml = part.serialize();
