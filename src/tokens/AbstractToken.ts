@@ -1,9 +1,9 @@
-import IExpression from './IExpression';
+import IToken from './IToken';
 
 /**
- * AbstractExpression
+ * AbstractToken
  */
-abstract class AbstractExpression implements IExpression {
+abstract class AbstractToken implements IToken {
     readonly hasEndNode: boolean;
     protected _startNode: Text;
     protected _children?: Array<Text>;
@@ -50,4 +50,4 @@ abstract class AbstractExpression implements IExpression {
 /**
  * Default export
  */
-export default AbstractExpression;
+export default AbstractToken;

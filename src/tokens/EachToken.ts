@@ -1,6 +1,6 @@
-import AbstractExpression from "./AbstractExpression";
+import AbstractToken from "./AbstractToken";
 
-class EachExpression extends AbstractExpression {
+class EachToken extends AbstractToken {
     static readonly tag = 'each';
 
     /**
@@ -23,4 +23,4 @@ class EachExpression extends AbstractExpression {
 /**
  * Default export
  */
-export default EachExpression;
+export default EachToken;

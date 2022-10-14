@@ -1,6 +1,6 @@
 import AbstractPart from "./AbstractPart";
 import IPart from "./IPart";
-import IExpression from "../expressions/IExpression";
+import IToken from "../tokens/IToken";
 import constants from "../constants";
 import OpenXMLTemplate from "../OpenXMLTemplate";
 import {sanitizeWordMarkupInExpressions} from '../word/wordUtils';
@@ -8,9 +8,9 @@ import {sanitizeWordMarkupInExpressions} from '../word/wordUtils';
 /**
  * DefaultPart
  */
-class ExpressionPart extends AbstractPart {
+class TemplatedPart extends AbstractPart {
     readonly priority: number = 1;
-    private _expressions: Array<IExpression> = [];
+    private _expressions: Array<IToken> = [];
 
     /**
      * constructor
@@ -95,4 +95,4 @@ class ExpressionPart extends AbstractPart {
 /**
  * Default export
  */
-export default ExpressionPart;
+export default TemplatedPart;

@@ -1,4 +1,10 @@
 const constants = {
+    /*
+    delimiters: {
+        start: '{{',
+        end: '}}'
+    },
+    */
     openChar: '}',
     closeChar: '}',
     openExpression: '{{',

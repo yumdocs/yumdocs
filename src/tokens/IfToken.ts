@@ -1,7 +1,8 @@
-import AbstractExpression from "./AbstractExpression";
+import AbstractToken from "./AbstractToken";
 
-class IfExpression extends AbstractExpression {
+class IfToken extends AbstractToken {
     static readonly tag = 'if';
+    static regexp = /{{#if\s+([^}\s]+)}}/;
 
     /**
      * constructor
@@ -24,4 +25,4 @@ class IfExpression extends AbstractExpression {
 /**
  * Default export
  */
-export default IfExpression;
+export default IfToken;

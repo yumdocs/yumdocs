@@ -1,10 +1,10 @@
-import AbstractExpression from "./AbstractExpression";
+import AbstractToken from "./AbstractToken";
 import handlebars from "handlebars";
 
 /**
- * DataExpression
+ * ExpressionToken
  */
-class DataExpression extends AbstractExpression {
+class ExpressionToken extends AbstractToken {
     static readonly tag = '';
 
     /**
@@ -30,4 +30,4 @@ class DataExpression extends AbstractExpression {
 /**
  * Default export
  */
-export default DataExpression;
+export default ExpressionToken;

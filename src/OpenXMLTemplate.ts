@@ -5,11 +5,12 @@ import enGB from './cultures/en-GB';
 import enUS from './cultures/en-US';
 import frFR from './cultures/fr-FR';
 import IPart from "./parts/IPart";
-import AbstractExpression from './expressions/AbstractExpression';
-import DataExpression from "./expressions/DataExpression";
+import AbstractToken from './tokens/AbstractToken';
+import ExpressionToken from "./tokens/ExpressionToken";
 import AbstractPart from "./parts/AbstractPart";
-import ExpressionPart from "./parts/ExpressionPart";
+import TemplatedPart from "./parts/TemplatedPart";
 import OpenXMLError from "./error/OpenXMLError";
+import constants from "./constants";
 //import OpenXMLError from "./error/OpenXMLError";
 
 const CONTENT_TYPES = '[Content_Types].xml';
@@ -34,7 +35,7 @@ interface IPartReference {
  * IPartConstructor
  */
 interface IExpressionConstructor {
-    new(startNode: Text, hasEndNode: boolean): AbstractExpression
+    new(startNode: Text, hasEndNode: boolean): AbstractToken
 }
 
 /**
@@ -79,11 +80,11 @@ class OpenXMLTemplate {
     // static parts: Map<string, typeof AbstractPart> = new Map([
     static parts: Map<string, IPartConstructor > = new Map([
         // Word
-        ['word/document.xml', ExpressionPart],
+        ['word/document.xml', TemplatedPart],
         // Powerpoint
-        ['ppt/slides/slide.xml', ExpressionPart],
+        ['ppt/slides/slide.xml', TemplatedPart],
         // Excel
-        ['xl/sharedStrings.xml', ExpressionPart]
+        ['xl/sharedStrings.xml', TemplatedPart]
     ]);
     // static registerPart(name: string, Part: typeof AbstractPart) {
     static registerPart(name: string, Part: IPartConstructor) {
@@ -94,11 +95,11 @@ class OpenXMLTemplate {
     // ----------------------------------
     // Expressions
     // ----------------------------------
-    // static expressions: Map<string, typeof AbstractExpression> = new Map([
+    // static tokens: Map<string, typeof AbstractToken> = new Map([
     static expressions: Map<string, IExpressionConstructor> = new Map([
-        [DataExpression.tag, DataExpression]
+        [ExpressionToken.tag, ExpressionToken]
     ]);
-    // static registerExpression(tag: string, Expression: typeof AbstractExpression) {
+    // static registerExpression(tag: string, Expression: typeof AbstractToken) {
     static registerExpression(tag: string, Expression: IExpressionConstructor) {
         // Note: a registered expression can be replaced
         OpenXMLTemplate.expressions.set(tag, Expression);
@@ -106,10 +107,11 @@ class OpenXMLTemplate {
 
     /**
      * constructor
-     * @param type
+     * @param options
      */
-    constructor() {
+    constructor(options: Record<string, unknown> = {}) {
         // TODO add options including culture
+        // this._delimiters: [string, string] = options.delimiters || constants.delimiters
         this._parts = new Map();
         this._zip = new JSZip();
     }
