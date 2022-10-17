@@ -1,3 +1,0 @@
-# Handlebars
-
-- https://handlebarsjs.com/
