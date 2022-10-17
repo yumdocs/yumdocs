@@ -11,6 +11,9 @@ import AbstractPart from "./parts/AbstractPart";
 import TemplatedPart from "./parts/TemplatedPart";
 import OpenXMLError from "./error/OpenXMLError";
 import constants from "./constants";
+import TokenizedNode from "./tokens/TokenizedNode";
+import EachToken from "./tokens/EachToken";
+import IfToken from "./tokens/IfToken";
 //import OpenXMLError from "./error/OpenXMLError";
 
 const CONTENT_TYPES = '[Content_Types].xml';
@@ -32,10 +35,11 @@ interface IPartReference {
 }
 
 /**
- * IPartConstructor
+ * ITokenConstructor
  */
-interface IExpressionConstructor {
-    new(startNode: Text, hasEndNode: boolean): AbstractToken
+interface ITokenConstructor {
+    statements: Array<string>;
+    new(node: TokenizedNode): AbstractToken
 }
 
 /**
@@ -75,7 +79,7 @@ class OpenXMLTemplate {
     }
 
     // ----------------------------------
-    // Expressions
+    // Parts
     // ----------------------------------
     // static parts: Map<string, typeof AbstractPart> = new Map([
     static parts: Map<string, IPartConstructor > = new Map([
@@ -96,13 +100,17 @@ class OpenXMLTemplate {
     // Expressions
     // ----------------------------------
     // static tokens: Map<string, typeof AbstractToken> = new Map([
-    static expressions: Map<string, IExpressionConstructor> = new Map([
-        [ExpressionToken.tag, ExpressionToken]
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    static tokens: Map<string, ITokenConstructor> = new Map([
+        [ExpressionToken.tag, ExpressionToken],
+        [EachToken.tag, EachToken],
+        [IfToken.tag, IfToken]
     ]);
     // static registerExpression(tag: string, Expression: typeof AbstractToken) {
-    static registerExpression(tag: string, Expression: IExpressionConstructor) {
+    static registerToken(tag: string, Token: ITokenConstructor) {
         // Note: a registered expression can be replaced
-        OpenXMLTemplate.expressions.set(tag, Expression);
+        OpenXMLTemplate.tokens.set(tag, Token);
     }
 
     /**

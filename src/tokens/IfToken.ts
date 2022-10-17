@@ -1,23 +1,23 @@
 import AbstractToken from "./AbstractToken";
+import TokenizedNode from "./TokenizedNode";
 
 class IfToken extends AbstractToken {
-    static readonly tag = 'if';
-    static regexp = /{{#if\s+([^}\s]+)}}/;
+    static readonly tag = '#if';
+    static readonly statements: Array<string> = ['#if', '#else', '#endif'];
 
     /**
      * constructor
-     * @param startNode
-     * @param endNode
+     * @param node
      */
-    constructor(startNode: Text, endNode: Text) {
-        super(startNode, endNode);
+    constructor(node: TokenizedNode) {
+        super(node);
     }
 
     /**
      * Render
      * @param data
      */
-    render(data: any) {
+    render(data: Record<string, unknown> = {}) {
         this._done = true;
     }
 }

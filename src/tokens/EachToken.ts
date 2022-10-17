@@ -1,21 +1,23 @@
+import IToken from "./IToken";
 import AbstractToken from "./AbstractToken";
+import TokenizedNode from "./TokenizedNode";
 
-class EachToken extends AbstractToken {
-    static readonly tag = 'each';
+class EachToken extends AbstractToken implements IToken {
+    static readonly tag = '#each';
+    static readonly statements: Array<string> = ['#each', '#endeach'];
 
     /**
      * constructor
-     * @param startNode
-     * @param endNode
+     * @param none
      */
-    constructor(startNode: Text, endNode: Text) {
-        super(startNode, endNode);
+    constructor(node: TokenizedNode) {
+        super(node);
     }
 
     /**
      * @param data
      */
-    render(data: any) {
+    render(data: Record<string, unknown> = {}) {
         this._done = true;
     }
 }

@@ -1,43 +1,36 @@
 import IToken from './IToken';
+import TokenizedNode from "./TokenizedNode";
 
 /**
  * AbstractToken
  */
 abstract class AbstractToken implements IToken {
-    readonly hasEndNode: boolean;
-    protected _startNode: Text;
-    protected _children?: Array<Text>;
-    protected _endNode?: Text;
+    public nodes: Map<string, TokenizedNode> = new Map();
     protected _done = false;
 
     /**
      * constructor
-     * @param startNode
-     * @param hasEndNode
+     * @param node
      * @protected
      */
-    protected constructor(startNode: Text, hasEndNode= false) {
-        this._startNode = startNode;
-        this.hasEndNode = hasEndNode;
+    protected constructor(node: TokenizedNode) {
+        this.addNode(node);
     }
 
     /**
      * setEndNode
-     * @param endNode
-     * @param children
+     * @param node
      */
-    setEndNode(endNode: Text, children: Array<Text> = []) {
-        if (this.hasEndNode) {
-            this._endNode = endNode;
-            this._children = children;
-        } // TODO else throw?
+    addNode(node: TokenizedNode) {
+        // TODO Check that it does not already exist?
+        this.nodes.set(node.statement, node);
     }
 
     /**
      * render
      * @param data
      */
-    abstract render(data: any): void
+    abstract render(data: Record<string, unknown>): void
 
     /**
      * done

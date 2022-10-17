@@ -24,6 +24,16 @@ const argumentNameRegExp = /^\w+/,
     zeros = ["", "0", "00", "000", "0000"];
 
 /**
+ * escapeRegExp
+ * polyfill for RegExp.escape
+ * @see https://github.com/tc39/proposal-regex-escaping/blob/main/polyfill.js
+ * @param s
+ */
+export function escapeRegExp(s: string){
+    return s.replace(/[\\^$*+?.()|[\]{}]/g, '\\$&');
+}
+
+/**
  * getCulture
  * @param locale
  */
@@ -655,3 +665,4 @@ const Template = {
     }
 };
  */
+

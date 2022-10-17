@@ -41,8 +41,8 @@ class TemplatedPart extends AbstractPart {
         // Find text nodes including HBS markup
         // @see https://www.w3schools.com/xml/prop_element_nodetype.asp
         if ((node.nodeType === 3) && (constants.matchExpression.test(node.nodeValue || ''))) {
-            const tag = ''; // TODO there may be several tags in nodeValue
-            const Expression = OpenXMLTemplate.expressions.get('');
+            const tag = ''; // TODO there may be several tokens in nodeValue
+            const Expression = OpenXMLTemplate.tokens.get('');
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             const expression = new Expression(node);

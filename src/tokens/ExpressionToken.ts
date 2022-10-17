@@ -1,28 +1,34 @@
 import AbstractToken from "./AbstractToken";
 import handlebars from "handlebars";
+import TokenizedNode from "./TokenizedNode";
+import IToken from "./IToken";
 
 /**
  * ExpressionToken
  */
-class ExpressionToken extends AbstractToken {
+class ExpressionToken extends AbstractToken implements IToken {
     static readonly tag = '';
+    static readonly statements: Array<string> = [''];
 
     /**
      * constructor
-     * @param startNode
+     * @param none
      */
-    constructor(startNode: Text) {
-        super(startNode);
+    constructor(node: TokenizedNode) {
+        super(node);
     }
 
     /**
      * Render
      * @param data
      */
-    render(data: any) {
+    render(data: Record<string, unknown> = {}) {
         // Merge with data
-        const template = handlebars.compile(this._startNode.nodeValue);
-        this._startNode.replaceData(0, (this._startNode.nodeValue || '').length, template(data));
+        const node = this.nodes.get(ExpressionToken.statements[0])?.node;
+        if (node) {
+            const template = handlebars.compile(node.nodeValue);
+            node.replaceData(0, (node.nodeValue || '').length, template(data));
+        }
         this._done = true;
     }
 }
