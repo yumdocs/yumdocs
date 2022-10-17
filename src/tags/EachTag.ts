@@ -1,8 +1,8 @@
-import IToken from "./IToken";
-import AbstractToken from "./AbstractToken";
-import TokenizedNode from "./TokenizedNode";
+import ITag from "./ITag";
+import AbstractTag from "./AbstractTag";
+import TaggedNode from "./TaggedNode";
 
-class EachToken extends AbstractToken implements IToken {
+class EachTag extends AbstractTag implements ITag {
     static readonly tag = '#each';
     static readonly statements: Array<string> = ['#each', '#endeach'];
 
@@ -10,7 +10,7 @@ class EachToken extends AbstractToken implements IToken {
      * constructor
      * @param none
      */
-    constructor(node: TokenizedNode) {
+    constructor(node: TaggedNode) {
         super(node);
     }
 
@@ -25,4 +25,4 @@ class EachToken extends AbstractToken implements IToken {
 /**
  * Default export
  */
-export default EachToken;
+export default EachTag;

@@ -1,6 +1,6 @@
 import AbstractPart from "./AbstractPart";
 import IPart from "./IPart";
-import IToken from "../tokens/IToken";
+import ITag from "../tags/ITag";
 import constants from "../constants";
 import OpenXMLTemplate from "../OpenXMLTemplate";
 import {sanitizeWordMarkupInExpressions} from '../word/wordUtils';
@@ -10,7 +10,7 @@ import {sanitizeWordMarkupInExpressions} from '../word/wordUtils';
  */
 class TemplatedPart extends AbstractPart {
     readonly priority: number = 1;
-    private _expressions: Array<IToken> = [];
+    private _expressions: Array<ITag> = [];
 
     /**
      * constructor
@@ -41,8 +41,8 @@ class TemplatedPart extends AbstractPart {
         // Find text nodes including HBS markup
         // @see https://www.w3schools.com/xml/prop_element_nodetype.asp
         if ((node.nodeType === 3) && (constants.matchExpression.test(node.nodeValue || ''))) {
-            const tag = ''; // TODO there may be several tokens in nodeValue
-            const Expression = OpenXMLTemplate.tokens.get('');
+            const tag = ''; // TODO there may be several tags in nodeValue
+            const Expression = OpenXMLTemplate.tags.get('');
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             const expression = new Expression(node);

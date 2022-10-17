@@ -1,7 +1,7 @@
-import AbstractToken from "./AbstractToken";
-import TokenizedNode from "./TokenizedNode";
+import AbstractTag from "./AbstractTag";
+import TaggedNode from "./TaggedNode";
 
-class IfToken extends AbstractToken {
+class IfToken extends AbstractTag {
     static readonly tag = '#if';
     static readonly statements: Array<string> = ['#if', '#else', '#endif'];
 
@@ -9,7 +9,7 @@ class IfToken extends AbstractToken {
      * constructor
      * @param node
      */
-    constructor(node: TokenizedNode) {
+    constructor(node: TaggedNode) {
         super(node);
     }
 

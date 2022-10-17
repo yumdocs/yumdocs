@@ -1,5 +1,5 @@
 import {faker} from '@faker-js/faker';
-import {getCulture, pad} from '../../src/tokens/tokenUtils';
+import {getCulture, pad} from '../../src/tags/tagUtils';
 
 test('getCulture', () => {
     expect(getCulture('en-US')).toMatchObject({name: 'en-US'})

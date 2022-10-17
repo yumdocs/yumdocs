@@ -5,15 +5,15 @@ import enGB from './cultures/en-GB';
 import enUS from './cultures/en-US';
 import frFR from './cultures/fr-FR';
 import IPart from "./parts/IPart";
-import AbstractToken from './tokens/AbstractToken';
-import ExpressionToken from "./tokens/ExpressionToken";
+import AbstractTag from './tags/AbstractTag';
+import ExpressionTag from "./tags/ExpressionTag";
 import AbstractPart from "./parts/AbstractPart";
 import TemplatedPart from "./parts/TemplatedPart";
 import OpenXMLError from "./error/OpenXMLError";
 import constants from "./constants";
-import TokenizedNode from "./tokens/TokenizedNode";
-import EachToken from "./tokens/EachToken";
-import IfToken from "./tokens/IfToken";
+import TaggedNode from "./tags/TaggedNode";
+import EachTag from "./tags/EachTag";
+import IfToken from "./tags/IfTag";
 //import OpenXMLError from "./error/OpenXMLError";
 
 const CONTENT_TYPES = '[Content_Types].xml';
@@ -35,11 +35,11 @@ interface IPartReference {
 }
 
 /**
- * ITokenConstructor
+ * ITagConstructor
  */
-interface ITokenConstructor {
+interface ITagConstructor {
     statements: Array<string>;
-    new(node: TokenizedNode): AbstractToken
+    new(node: TaggedNode): AbstractTag
 }
 
 /**
@@ -97,20 +97,20 @@ class OpenXMLTemplate {
     }
 
     // ----------------------------------
-    // Expressions
+    // Tags
     // ----------------------------------
-    // static tokens: Map<string, typeof AbstractToken> = new Map([
+    // static tags: Map<string, typeof AbstractTag> = new Map([
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    static tokens: Map<string, ITokenConstructor> = new Map([
-        [ExpressionToken.tag, ExpressionToken],
-        [EachToken.tag, EachToken],
+    static tags: Map<string, ITagConstructor> = new Map([
+        [ExpressionTag.tag, ExpressionTag],
+        [EachTag.tag, EachTag],
         [IfToken.tag, IfToken]
     ]);
-    // static registerExpression(tag: string, Expression: typeof AbstractToken) {
-    static registerToken(tag: string, Token: ITokenConstructor) {
+    // static registerTag(name: string, Tag: typeof AbstractTag) {
+    static registerTag(name: string, Tag: ITagConstructor) {
         // Note: a registered expression can be replaced
-        OpenXMLTemplate.tokens.set(tag, Token);
+        OpenXMLTemplate.tags.set(name, Tag);
     }
 
     /**

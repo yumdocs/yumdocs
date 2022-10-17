@@ -1,11 +1,11 @@
-import IToken from './IToken';
-import TokenizedNode from "./TokenizedNode";
+import ITag from './ITag';
+import TaggedNode from "./TaggedNode";
 
 /**
- * AbstractToken
+ * AbstractTag
  */
-abstract class AbstractToken implements IToken {
-    public nodes: Map<string, TokenizedNode> = new Map();
+abstract class AbstractTag implements ITag {
+    public nodes: Map<string, TaggedNode> = new Map();
     protected _done = false;
 
     /**
@@ -13,7 +13,7 @@ abstract class AbstractToken implements IToken {
      * @param node
      * @protected
      */
-    protected constructor(node: TokenizedNode) {
+    protected constructor(node: TaggedNode) {
         this.addNode(node);
     }
 
@@ -21,7 +21,7 @@ abstract class AbstractToken implements IToken {
      * setEndNode
      * @param node
      */
-    addNode(node: TokenizedNode) {
+    addNode(node: TaggedNode) {
         // TODO Check that it does not already exist?
         this.nodes.set(node.statement, node);
     }
@@ -43,4 +43,4 @@ abstract class AbstractToken implements IToken {
 /**
  * Default export
  */
-export default AbstractToken;
+export default AbstractTag;
