@@ -6,7 +6,7 @@ import TaggedNode from "./TaggedNode";
 interface ITag {
     nodes: Map<string, TaggedNode>;
     addNode(node: TaggedNode): void
-    render(data: Record<string, unknown>): void;
+    render(data: Record<string, unknown>): Promise<void>;
     done: boolean;
 }
 

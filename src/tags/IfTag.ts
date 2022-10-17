@@ -17,7 +17,7 @@ class IfToken extends AbstractTag {
      * Render
      * @param data
      */
-    render(data: Record<string, unknown> = {}) {
+    async render(data: Record<string, unknown> = {}) {
         this._done = true;
     }
 }

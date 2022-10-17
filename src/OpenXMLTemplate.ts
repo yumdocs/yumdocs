@@ -1,20 +1,19 @@
 import * as fs from 'fs';
 import JSZip from 'jszip';
 import { DOMParser } from '@xmldom/xmldom';
+import constants from "./constants";
 import enGB from './cultures/en-GB';
 import enUS from './cultures/en-US';
-import frFR from './cultures/fr-FR';
-import IPart from "./parts/IPart";
-import AbstractTag from './tags/AbstractTag';
-import ExpressionTag from "./tags/ExpressionTag";
-import AbstractPart from "./parts/AbstractPart";
-import TemplatedPart from "./parts/TemplatedPart";
+import frFR from './cultures/fr-FR'
 import OpenXMLError from "./error/OpenXMLError";
-import constants from "./constants";
-import TaggedNode from "./tags/TaggedNode";
+import AbstractPart from "./parts/AbstractPart";
+import IPart from "./parts/IPart";
+import TemplatedPart from "./parts/TemplatedPart";
+import AbstractTag from './tags/AbstractTag';
 import EachTag from "./tags/EachTag";
+import ExpressionTag from "./tags/ExpressionTag";
 import IfToken from "./tags/IfTag";
-//import OpenXMLError from "./error/OpenXMLError";
+import TaggedNode from "./tags/TaggedNode";
 
 const CONTENT_TYPES = '[Content_Types].xml';
 
@@ -22,7 +21,7 @@ const CONTENT_TYPES = '[Content_Types].xml';
  * IPartConstructor
  */
 interface IPartConstructor {
-    new(name: string, type: string, xml: string, parent: Map<string, IPart>): AbstractPart
+    new(name: string, type: string, xml: string, parent: Map<string, IPart>, options: Record<string, unknown>): AbstractPart
 }
 
 /**
@@ -46,6 +45,7 @@ interface ITagConstructor {
  * OpenXMLTemplate
  */
 class OpenXMLTemplate {
+    private readonly _options: Record<string, unknown>;
     private readonly _parts: Map<string, IPart>;
     private _zip: JSZip;
 
@@ -68,7 +68,7 @@ class OpenXMLTemplate {
     // ----------------------------------
     // Cultures
     // ----------------------------------
-    static cultures: Map<string, Record<string, unknown>> = new Map([
+    static readonly cultures: Map<string, Record<string, unknown>> = new Map([
         ['en-GB', enGB],
         ['en-US', enUS],
         ['fr-FR', frFR]
@@ -82,7 +82,7 @@ class OpenXMLTemplate {
     // Parts
     // ----------------------------------
     // static parts: Map<string, typeof AbstractPart> = new Map([
-    static parts: Map<string, IPartConstructor > = new Map([
+    static readonly parts: Map<string, IPartConstructor > = new Map([
         // Word
         ['word/document.xml', TemplatedPart],
         // Powerpoint
@@ -102,7 +102,7 @@ class OpenXMLTemplate {
     // static tags: Map<string, typeof AbstractTag> = new Map([
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    static tags: Map<string, ITagConstructor> = new Map([
+    static readonly tags: Map<string, ITagConstructor> = new Map([
         [ExpressionTag.tag, ExpressionTag],
         [EachTag.tag, EachTag],
         [IfToken.tag, IfToken]
@@ -118,10 +118,24 @@ class OpenXMLTemplate {
      * @param options
      */
     constructor(options: Record<string, unknown> = {}) {
-        // TODO add options including culture
-        // this._delimiters: [string, string] = options.delimiters || constants.delimiters
+        this._options = this._sanitizeOptions(options);
         this._parts = new Map();
         this._zip = new JSZip();
+    }
+
+    /**
+     * _sanitizeOptions
+     *  options.delimiters
+     *  options.locale
+     * @param options
+     * @private
+     */
+    private _sanitizeOptions(options: Record<string, unknown>) {
+        // TODO Possibly check invalid options and raise errors
+        return {
+            delimiters: <{start: string, end: string}>(options.delimiters || constants.delimiters),
+            locale: <string>(options.locale || constants.locale)
+        };
     }
 
     /**
@@ -202,7 +216,10 @@ class OpenXMLTemplate {
         // Note: Priority order is not important here
         const promises = partRefs.map(async (ref: IPartReference) => {
             const xml: string = await this._zip.files[ref.name].async('text');
-            this._parts.set(ref.name, new ref.Part(ref.name, ref.type, xml, this._parts));
+            this._parts.set(
+                ref.name,
+                new ref.Part(ref.name, ref.type, xml, this._parts, this._options)
+            );
         });
         await Promise.all(promises);
         OpenXMLTemplate.showTime('Content parts loaded');
@@ -212,7 +229,7 @@ class OpenXMLTemplate {
      * render
      * @param data
      */
-    async render(data: any = {}): Promise<string | undefined> {
+    async render(data: Record<string, unknown> = {}): Promise<string | undefined> {
         let ret: string | undefined;
         // List partRefs from [Content_Types].xml
         const partRefs = await this._getPartRefs();
@@ -224,7 +241,7 @@ class OpenXMLTemplate {
             .sort((a, b) => (a.priority - b.priority));
         // Render and serialize each part
         for (const part of parts) {
-            part.render(data);
+            await part.render(data);
             const xml = part.serialize();
             // For testing only
             if (part.name === 'word/document.xml' ||

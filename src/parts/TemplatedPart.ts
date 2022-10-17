@@ -6,7 +6,7 @@ import OpenXMLTemplate from "../OpenXMLTemplate";
 import {sanitizeWordMarkupInExpressions} from '../word/wordUtils';
 
 /**
- * DefaultPart
+ * TemplatedPart
  */
 class TemplatedPart extends AbstractPart {
     readonly priority: number = 1;
@@ -18,14 +18,16 @@ class TemplatedPart extends AbstractPart {
      * @param type
      * @param xml
      * @param parent
+     * @param options
      */
     constructor(
         name: string,
         type: string,
         xml: string,
-        parent: Map<string, IPart>
+        parent: Map<string, IPart>,
+        options: Record<string, unknown>
     ) {
-        super(name, type, xml, parent);
+        super(name, type, xml, parent, options);
         // TODO No need to findExpressions without openChar in part
         //  if (xml.indexOf(constants.openChar) > -1) {
         this.findExpressions();
@@ -84,11 +86,11 @@ class TemplatedPart extends AbstractPart {
      * render
      * @param data
      */
-    render(data: any) {
+    async render(data: Record<string, unknown>) {
         for (let i = 0; i < this._expressions.length; i++) {
-            this._expressions[i].render(data);
+            await this._expressions[i].render(data);
         }
-        return this._dom; // for testing purpose only
+        // return this._dom; // for testing purpose only
     }
 }
 

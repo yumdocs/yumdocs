@@ -30,7 +30,7 @@ abstract class AbstractTag implements ITag {
      * render
      * @param data
      */
-    abstract render(data: Record<string, unknown>): void
+    abstract render(data: Record<string, unknown>): Promise<void>
 
     /**
      * done

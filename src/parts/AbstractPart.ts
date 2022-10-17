@@ -10,6 +10,7 @@ abstract class AbstractPart implements IPart {
     protected _type: string;
     protected _dom: Document;
     protected _parent: Map<string, IPart>;
+    protected _options: Record<string, unknown>;
     protected _done = false;
 
     /**
@@ -18,20 +19,22 @@ abstract class AbstractPart implements IPart {
      * @param type
      * @param xml
      * @param parent
+     * @param options
      * @protected
      */
     constructor(
         name: string,
         type: string,
         xml: string,
-        parent: Map<string, IPart>
+        parent: Map<string, IPart>,
+        options: Record<string, unknown>
     ) {
         this._name = name;
         this._type = type;
         this._parent = parent; // The parent list of parts in OpenXMLTemplate
-
-        const output = this._preProcess(xml);
-        this._dom = new DOMParser().parseFromString(output, 'text/xml');
+        this._options = options; // These options
+        const ppXml = this._preProcess(xml);
+        this._dom = new DOMParser().parseFromString(ppXml, 'text/xml');
     }
 
     /**
@@ -68,7 +71,7 @@ abstract class AbstractPart implements IPart {
      * render
      * @param data
      */
-    abstract render(data: any): void
+    abstract render(data: Record<string, unknown>): Promise<void>
 
     /**
      * serialize

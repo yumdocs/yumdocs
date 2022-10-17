@@ -1,5 +1,4 @@
 import AbstractTag from "./AbstractTag";
-import handlebars from "handlebars";
 import TaggedNode from "./TaggedNode";
 import ITag from "./ITag";
 
@@ -12,7 +11,7 @@ class ExpressionTag extends AbstractTag implements ITag {
 
     /**
      * constructor
-     * @param none
+     * @param node
      */
     constructor(node: TaggedNode) {
         super(node);
@@ -22,12 +21,12 @@ class ExpressionTag extends AbstractTag implements ITag {
      * Render
      * @param data
      */
-    render(data: Record<string, unknown> = {}) {
+    async render(data: Record<string, unknown> = {}) {
         // Merge with data
         const node = this.nodes.get(ExpressionTag.statements[0])?.node;
         if (node) {
-            const template = handlebars.compile(node.nodeValue);
-            node.replaceData(0, (node.nodeValue || '').length, template(data));
+            // const template = handlebars.compile(node.nodeValue);
+            // node.replaceData(0, (node.nodeValue || '').length, template(data));
         }
         this._done = true;
     }

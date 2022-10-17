@@ -3,10 +3,9 @@ const constants = {
         start: '{{',
         end: '}}'
     },
-    openChar: '}',
-    closeChar: '}',
-    openExpression: '{{',
-    closeExpression: '}}',
+    locale: 'en-US',
+
+    // ------------ Review
     matchExpression: /{{[^{}]+}}/,
 };
 

@@ -8,7 +8,7 @@ class EachTag extends AbstractTag implements ITag {
 
     /**
      * constructor
-     * @param none
+     * @param node
      */
     constructor(node: TaggedNode) {
         super(node);
@@ -17,7 +17,7 @@ class EachTag extends AbstractTag implements ITag {
     /**
      * @param data
      */
-    render(data: Record<string, unknown> = {}) {
+    async render(data: Record<string, unknown> = {}) {
         this._done = true;
     }
 }
