@@ -1,4 +1,4 @@
-import OpenXMLTemplate from "../OpenXMLTemplate";
+import cultureMap from "../cultures/cultureMap";
 
 const formatRegExp = /\{(\d+)(:[^}]+)?}/g;
 // const numberRegExp = /^(\+|-?)\d+(\.?)\d*$/;
@@ -38,7 +38,7 @@ export function escapeRegExp(s: string){
  * @param locale
  */
 export function getCulture(locale: string = EN_US): Record<string, unknown> | undefined {
-    return OpenXMLTemplate.cultures.get(locale);
+    return cultureMap.get(locale);
 }
 
 /**

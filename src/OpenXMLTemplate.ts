@@ -1,45 +1,17 @@
 import * as fs from 'fs';
 import JSZip from 'jszip';
 import { DOMParser } from '@xmldom/xmldom';
-import constants from "./constants";
-import enGB from './cultures/en-GB';
-import enUS from './cultures/en-US';
-import frFR from './cultures/fr-FR'
+import constants from './constants';
+import cultureMap from './cultures/cultureMap';
 import OpenXMLError from "./error/OpenXMLError";
-import AbstractPart from "./parts/AbstractPart";
 import IPart from "./parts/IPart";
-import TemplatedPart from "./parts/TemplatedPart";
-import AbstractTag from './tags/AbstractTag';
-import EachTag from "./tags/EachTag";
-import ExpressionTag from "./tags/ExpressionTag";
-import IfToken from "./tags/IfTag";
-import TaggedNode from "./tags/TaggedNode";
+import IPartConstructor from "./parts/IPartConstructor";
+import IPartReference from "./parts/IPartReference";
+import partMap from "./parts/partMap";
+import ITagConstructor from "./tags/ITagConstructor";
+import tagMap from "./tags/tagMap";
 
 const CONTENT_TYPES = '[Content_Types].xml';
-
-/**
- * IPartConstructor
- */
-interface IPartConstructor {
-    new(name: string, type: string, xml: string, parent: Map<string, IPart>, options: Record<string, unknown>): AbstractPart
-}
-
-/**
- * IPartReference
- */
-interface IPartReference {
-    name: string,
-    type: string,
-    Part: IPartConstructor // typeof AbstractPart
-}
-
-/**
- * ITagConstructor
- */
-interface ITagConstructor {
-    statements: Array<string>;
-    new(node: TaggedNode): AbstractTag
-}
 
 /**
  * OpenXMLTemplate
@@ -68,49 +40,27 @@ class OpenXMLTemplate {
     // ----------------------------------
     // Cultures
     // ----------------------------------
-    static readonly cultures: Map<string, Record<string, unknown>> = new Map([
-        ['en-GB', enGB],
-        ['en-US', enUS],
-        ['fr-FR', frFR]
-    ]);
     static registerCulture(locale: string, culture: Record<string, unknown>) {
         // Note: a registered culture can be replaced
-        OpenXMLTemplate.cultures.set(locale, culture);
+        cultureMap.set(locale, culture);
     }
 
     // ----------------------------------
     // Parts
     // ----------------------------------
-    // static parts: Map<string, typeof AbstractPart> = new Map([
-    static readonly parts: Map<string, IPartConstructor > = new Map([
-        // Word
-        ['word/document.xml', TemplatedPart],
-        // Powerpoint
-        ['ppt/slides/slide.xml', TemplatedPart],
-        // Excel
-        ['xl/sharedStrings.xml', TemplatedPart]
-    ]);
     // static registerPart(name: string, Part: typeof AbstractPart) {
     static registerPart(name: string, Part: IPartConstructor) {
-        // Note: a registered expression can be replaced
-        OpenXMLTemplate.parts.set(name, Part);
+        // Note: a registered part can be replaced
+        partMap.set(name, Part);
     }
 
     // ----------------------------------
     // Tags
     // ----------------------------------
-    // static tags: Map<string, typeof AbstractTag> = new Map([
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    static readonly tags: Map<string, ITagConstructor> = new Map([
-        [ExpressionTag.tag, ExpressionTag],
-        [EachTag.tag, EachTag],
-        [IfToken.tag, IfToken]
-    ]);
     // static registerTag(name: string, Tag: typeof AbstractTag) {
     static registerTag(name: string, Tag: ITagConstructor) {
-        // Note: a registered expression can be replaced
-        OpenXMLTemplate.tags.set(name, Tag);
+        // Note: a registered tag can be replaced
+        tagMap.set(name, Tag);
     }
 
     /**
@@ -192,7 +142,7 @@ class OpenXMLTemplate {
                          }
                     }
                     if (name && type) {
-                        const Part = OpenXMLTemplate.parts.get(name.replace(/\d+(.xml)$/, '$1'));
+                        const Part = partMap.get(name.replace(/\d+(.xml)$/, '$1'));
                         // Note: without registered part in OpenXMLTemplate.parts, no rendering
                         if (Part) {
                             ret.push({name, type, Part});

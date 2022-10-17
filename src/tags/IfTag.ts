@@ -1,7 +1,8 @@
 import AbstractTag from "./AbstractTag";
+import ITag from "./ITag";
 import TaggedNode from "./TaggedNode";
 
-class IfToken extends AbstractTag {
+class IfTag extends AbstractTag implements ITag {
     static readonly tag = '#if';
     static readonly statements: Array<string> = ['#if', '#else', '#endif'];
 
@@ -14,7 +15,7 @@ class IfToken extends AbstractTag {
     }
 
     /**
-     * Render
+     * render
      * @param data
      */
     async render(data: Record<string, unknown> = {}) {
@@ -25,4 +26,4 @@ class IfToken extends AbstractTag {
 /**
  * Default export
  */
-export default IfToken;
+export default IfTag;

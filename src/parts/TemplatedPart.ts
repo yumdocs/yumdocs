@@ -1,8 +1,8 @@
+import constants from "../constants";
 import AbstractPart from "./AbstractPart";
 import IPart from "./IPart";
 import ITag from "../tags/ITag";
-import constants from "../constants";
-import OpenXMLTemplate from "../OpenXMLTemplate";
+import tagMap from "../tags/tagMap";
 import {sanitizeWordMarkupInExpressions} from '../word/wordUtils';
 
 /**
@@ -44,7 +44,7 @@ class TemplatedPart extends AbstractPart {
         // @see https://www.w3schools.com/xml/prop_element_nodetype.asp
         if ((node.nodeType === 3) && (constants.matchExpression.test(node.nodeValue || ''))) {
             const tag = ''; // TODO there may be several tags in nodeValue
-            const Expression = OpenXMLTemplate.tags.get('');
+            const Expression = tagMap.get('');
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             const expression = new Expression(node);

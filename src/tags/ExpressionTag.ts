@@ -1,6 +1,6 @@
 import AbstractTag from "./AbstractTag";
-import TaggedNode from "./TaggedNode";
 import ITag from "./ITag";
+import TaggedNode from "./TaggedNode";
 
 /**
  * ExpressionTag
@@ -18,7 +18,7 @@ class ExpressionTag extends AbstractTag implements ITag {
     }
 
     /**
-     * Render
+     * render
      * @param data
      */
     async render(data: Record<string, unknown> = {}) {

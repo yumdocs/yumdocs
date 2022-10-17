@@ -1,5 +1,5 @@
-import ITag from "./ITag";
 import AbstractTag from "./AbstractTag";
+import ITag from "./ITag";
 import TaggedNode from "./TaggedNode";
 
 class EachTag extends AbstractTag implements ITag {
@@ -15,6 +15,7 @@ class EachTag extends AbstractTag implements ITag {
     }
 
     /**
+     * render
      * @param data
      */
     async render(data: Record<string, unknown> = {}) {

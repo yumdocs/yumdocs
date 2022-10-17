@@ -1,8 +1,8 @@
 import constants from "../constants";
-import OpenXMLTemplate from "../OpenXMLTemplate";
 import {escapeRegExp} from "../tags/tagUtils";
 import TaggedNode from "../tags/TaggedNode";
 import AbstractTag from "../tags/AbstractTag";
+import tagMap from "../tags/tagMap";
 
 /**
  * TagParser
@@ -35,10 +35,10 @@ class TagParser {
         if (!(this._lexer instanceof RegExp)) {
             const statements: string[] = [];
             // Get registered *Token statements
-            for (const Token of OpenXMLTemplate.tags.values()) {
+            for (const Tag of tagMap.values()) {
                 statements
                     .push(
-                        ...Token.statements
+                        ...Tag.statements
                         .filter(statement => !!statement )
                         .map(statement => escapeRegExp(statement))
                     );
@@ -70,9 +70,9 @@ class TagParser {
                 for (const match of matches) {
                     const taggedNode = new TaggedNode(node, match);
                     const { statement } = <{ statement: string }>match.groups;
-                    const Token = OpenXMLTemplate.tags.get(statement);
-                    if (Token) {
-                        this._tree.push(new Token(taggedNode));
+                    const Tag = tagMap.get(statement);
+                    if (Tag) {
+                        this._tree.push(new Tag(taggedNode));
                         // Todo
                     }
                 }
