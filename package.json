@@ -9,9 +9,10 @@
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
     "@types/benchmark": "^2.1.2",
-    "@types/jest": "^29.1.2",
-    "@typescript-eslint/eslint-plugin": "^5.40.0",
-    "@typescript-eslint/parser": "^5.40.0",
+    "@types/jest": "^29.2.0",
+    "@types/jexl": "^2.3.1",
+    "@typescript-eslint/eslint-plugin": "^5.40.1",
+    "@typescript-eslint/parser": "^5.40.1",
     "benchmark": "^2.1.4",
     "docxtemplater": "^3.31.5",
     "eslint": "^8.25.0",
@@ -29,6 +30,7 @@
     "clean": "tsc --build --clean",
     "dev": "tsc --watch",
     "lint": "eslint --ext .js,.ts .",
-    "test": "jest"
+    "test": "jest",
+    "upgrade": "ncu -u && npm i"
   }
 }
