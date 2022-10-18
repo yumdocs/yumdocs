@@ -4,13 +4,14 @@ import IPart from "./IPart";
 import ITag from "../tags/ITag";
 import tagMap from "../tags/tagMap";
 import {sanitizeWordMarkupInExpressions} from '../word/wordUtils';
+import TaggedNode from "../tags/TaggedNode";
 
 /**
  * TemplatedPart
  */
 class TemplatedPart extends AbstractPart {
     readonly priority: number = 1;
-    private _expressions: Array<ITag> = [];
+    private _tags: Array<ITag> = [];
 
     /**
      * constructor
@@ -30,31 +31,30 @@ class TemplatedPart extends AbstractPart {
         super(name, type, xml, parent, options);
         // TODO No need to findExpressions without openChar in part
         //  if (xml.indexOf(constants.openChar) > -1) {
-        this.findExpressions();
+        this.findTags();
     }
 
     /**
-     * Search recursively
+     * _findTags
      * @param node
-     * @param ret
      * @private
      */
-    private _findExpressions(node: Node) {
+    private _findTags(node: Node) {
         // Find text nodes including HBS markup
         // @see https://www.w3schools.com/xml/prop_element_nodetype.asp
         if ((node.nodeType === 3) && (constants.matchExpression.test(node.nodeValue || ''))) {
-            const tag = ''; // TODO there may be several tags in nodeValue
-            const Expression = tagMap.get('');
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            const expression = new Expression(node);
-            this._expressions.push(expression);
+            const Tag = tagMap.get('');
+            if (Tag) {
+                const taggedNode = new TaggedNode(<Text>node, []);
+                const tag = new Tag(taggedNode);
+                this._tags.push(tag);
+            }
         }
         // Traverse child nodes recursively
         if (node.hasChildNodes()) {
             const { childNodes } = node;
             for (let i = 0, { length } = childNodes; i < length; i++) {
-                this._findExpressions(childNodes.item(i));
+                this._findTags(childNodes.item(i));
             }
         }
     }
@@ -63,8 +63,8 @@ class TemplatedPart extends AbstractPart {
      * Start search
      * @returns {*[]}
      */
-    findExpressions() {
-        this._findExpressions(this._dom);
+    findTags() {
+        this._findTags(this._dom);
     }
 
     /**
@@ -87,8 +87,8 @@ class TemplatedPart extends AbstractPart {
      * @param data
      */
     async render(data: Record<string, unknown>) {
-        for (let i = 0; i < this._expressions.length; i++) {
-            await this._expressions[i].render(data);
+        for (let i = 0; i < this._tags.length; i++) {
+            await this._tags[i].render(data);
         }
         // return this._dom; // for testing purpose only
     }

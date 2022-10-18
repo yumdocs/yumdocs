@@ -58,6 +58,16 @@ class TagParser {
         return this._lexer
     }
 
+    private _findTag(tag: string): AbstractTag | undefined {
+        let ret: AbstractTag | undefined;
+        for (const Tag in tagMap.values()) {
+            // if (tag in Tag.statements) {
+
+            // }
+        }
+        return ret;
+    }
+
     /**
      * _parse
      * @param node
@@ -71,9 +81,11 @@ class TagParser {
                     const taggedNode = new TaggedNode(node, match);
                     const { statement } = <{ statement: string }>match.groups;
                     const Tag = tagMap.get(statement);
-                    if (Tag) {
+                    if (Tag ) {
                         this._tree.push(new Tag(taggedNode));
                         // Todo
+                    } else {
+                        // TODO
                     }
                 }
             }
