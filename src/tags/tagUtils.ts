@@ -1,4 +1,4 @@
-import cultureMap from "../cultures/cultureMap";
+import { getCulture } from "../cultures/cultureUtils";
 
 const formatRegExp = /\{(\d+)(:[^}]+)?}/g;
 // const numberRegExp = /^(\+|-?)\d+(\.?)\d*$/;
@@ -12,7 +12,6 @@ const COMMA = ",";
 const SHARP = "#";
 const ZERO = "0";
 const PLACEHOLDER = "??";
-const EN_US = "en-US";
 const objectToString = {}.toString;
 
 const argumentNameRegExp = /^\w+/,
@@ -31,14 +30,6 @@ const argumentNameRegExp = /^\w+/,
  */
 export function escapeRegExp(s: string){
     return s.replace(/[\\^$*+?.()|[\]{}]/g, '\\$&');
-}
-
-/**
- * getCulture
- * @param locale
- */
-export function getCulture(locale: string = EN_US): Record<string, unknown> | undefined {
-    return cultureMap.get(locale);
 }
 
 /**
