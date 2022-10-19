@@ -1,5 +1,3 @@
-import constants from '../constants';
-
 /**
  * Versioning in Word is tracked with rsidR sections, like:
  * {</w:t></w:r><w:r w:rsidR="00245996"><w:t>{</w:t></w:r><w:r><w:t>te</w:t></w:r><w:r w:rsidR="00130070"><w:t>x</w:t></w:r><w:r w:rsidR="00EE726C"><w:t>t</w:t></w:r><w:r w:rsidR="00060B35"><w:t>}</w:t></w:r><w:r><w:t>}
@@ -11,9 +9,24 @@ import constants from '../constants';
  * {{<w:proofErr w:type="spellStart"/>boolean<w:proofErr w:type="spellEnd"/>}}
  *
  * @param xml
+ * @param delimiters
  */
-export function sanitizeWordMarkupInExpressions (xml: string) {
-    const rx_find = /{(<\/w:t><\/w:r><w:r\s?[^>]*><w:t>)?{[^{}]+}(<\/w:t><\/w:r><w:r\s?[^>]*><w:t>)?}/;
+import {escapeRegExp} from "../tags/tagUtils";
+
+
+export function sanitizeWordMarkup (xml: string, delimiters: { start: string, end: string }) {
+    const { start, end } = delimiters;
+    const garbage = '<\\/w:t><\\/w:r><w:r\\s?[^>]*><w:t\\s?[^>]*>';
+    let str = '';
+    for (let i = 0; i < start.length - 1; i++) {
+        str += `${escapeRegExp(start.charAt(i))}(${garbage})?`;
+    }
+    str += `${start.slice(-1)}[^${escapeRegExp(end.charAt(0))}]+${end.slice(0, 1)}`;
+    for (let i = 1; i < start.length; i++) {
+        str += `(${garbage})?${escapeRegExp(end.charAt(i))}`;
+    }
+    // const rx_find = /{(<\/w:t><\/w:r><w:r\s?[^>]*><w:t\s?[^>]*>)?{[^{}]+}(<\/w:t><\/w:r><w:r\s?[^>]*><w:t\s?[^>]*>)?}/;
+    const rx_find = new RegExp(str);
     const rx_replace = /<\/?w:[^>]+>/g;
     let pos1 = 0, pos2 = 0, ret = '';
     while (xml.length > 0) {
