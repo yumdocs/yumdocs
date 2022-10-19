@@ -1,4 +1,5 @@
 import { getCulture } from "../cultures/cultureUtils";
+import constants from "../constants";
 
 const formatRegExp = /\{(\d+)(:[^}]+)?}/g;
 // const numberRegExp = /^(\+|-?)\d+(\.?)\d*$/;
@@ -19,8 +20,7 @@ const argumentNameRegExp = /^\w+/,
     escapedCurlyRegExp = /\\}/g,
     curlyRegExp = /__CURLY__/g,
     escapedSharpRegExp = /\\#/g,
-    sharpRegExp = /__SHARP__/g,
-    zeros = ["", "0", "00", "000", "0000"];
+    sharpRegExp = /__SHARP__/g;
 
 /**
  * escapeRegExp
@@ -33,12 +33,23 @@ export function escapeRegExp(s: string){
 }
 
 /**
+ * hasTagsRegExp
+ * Note: In word, use after running sanitizeWordMarkup
+ * @param delimiters
+ */
+export function hasTagsRegExp(delimiters: { start: string, end: string } = constants.delimiters): RegExp {
+    // return /{{[^}]+}}/,
+    return new RegExp(`${escapeRegExp(delimiters.start)}[^${escapeRegExp(delimiters.end.slice(0, 1))}]+${escapeRegExp(delimiters.end)}`)
+}
+
+/**
  * pad
  * @param number
  * @param digits
  * @param end
  */
 export function pad(number: number | string, digits?: number, end?: number) {
+    const zeros = ["", "0", "00", "000", "0000"]
     const ret = number + '';
     digits = digits || 2;
     end = digits - ret.length;

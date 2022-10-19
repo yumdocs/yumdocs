@@ -5,9 +5,6 @@ const constants = {
     },
     empty: '',
     locale: 'en-US',
-
-    // ------------ Review
-    matchExpression: /{{[^{}]+}}/,
 };
 
 export default constants;
