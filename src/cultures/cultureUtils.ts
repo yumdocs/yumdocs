@@ -1,9 +1,10 @@
-import cultureMap from "./cultureMap";
+import constants from '../constants';
+import cultureMap from './cultureMap';
 
 /**
  * getCulture
  * @param locale
  */
-export function getCulture(locale= 'en-US'): Record<string, unknown> | undefined {
+export function getCulture(locale= constants.locale): Record<string, unknown> | undefined {
     return cultureMap.get(locale);
 }

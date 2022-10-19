@@ -3,6 +3,7 @@ const constants = {
         start: '{{',
         end: '}}'
     },
+    empty: '',
     locale: 'en-US',
 
     // ------------ Review

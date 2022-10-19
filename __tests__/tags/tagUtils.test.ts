@@ -1,9 +1,5 @@
 import {faker} from '@faker-js/faker';
-import {getCulture, pad} from '../../src/tags/tagUtils';
-
-test('getCulture', () => {
-    expect(getCulture('en-US')).toMatchObject({name: 'en-US'})
-});
+import {pad} from '../../src/tags/tagUtils';
 
 test('pad', () => {
     const i1 = faker.datatype.number({min: 0, max: 9});
