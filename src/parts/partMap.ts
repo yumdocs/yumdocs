@@ -9,6 +9,8 @@ import TemplatedPart from "../parts/TemplatedPart";
 const partMap = new Map<string, IPartConstructor>([
     // Word
     ['word/document.xml', TemplatedPart],
+    ['word/footer.xml', TemplatedPart],
+    ['word/header.xml', TemplatedPart],
     // Powerpoint
     ['ppt/slides/slide.xml', TemplatedPart],
     // Excel
