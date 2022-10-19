@@ -10,6 +10,7 @@ import IPartReference from "./parts/IPartReference";
 import partMap from "./parts/partMap";
 import ITagConstructor from "./tags/ITagConstructor";
 import tagMap from "./tags/tagMap";
+import expressionEngine from "./tags/expressionEngine";
 
 const CONTENT_TYPES = '[Content_Types].xml';
 
@@ -61,6 +62,13 @@ class OpenXMLTemplate {
     static registerTag(name: string, Tag: ITagConstructor) {
         // Note: a registered tag can be replaced
         tagMap.set(name, Tag);
+    }
+
+    // ----------------------------------
+    // Expression Engine
+    // ----------------------------------
+    static setExpressionEval(evaluate: (expression: string, context: Record<string, unknown>) => Promise<unknown>) {
+        expressionEngine.setEval(evaluate)
     }
 
     /**
