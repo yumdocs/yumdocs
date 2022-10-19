@@ -108,11 +108,11 @@ class OpenXMLTemplate {
             this._zip = await JSZip.loadAsync(handle);
         } catch (error) {
             if (Object.prototype.hasOwnProperty.call(error, 'syscall')) {
-                throw new OpenXMLError(1001, {data: {path}, error});
+                throw new OpenXMLError(1011, {data: {path}, error});
             } else if ((<Error>error).message.startsWith('Can\'t find end of central directory')) {
-                throw new OpenXMLError(1002, {data: {path}, error});
+                throw new OpenXMLError(1012, {data: {path}, error});
             } else {
-                throw new OpenXMLError(1003, {data: {path}, error});
+                throw new OpenXMLError(1013, {data: {path}, error});
             }
         }
         OpenXMLTemplate.showTime('Zip loaded');
@@ -159,7 +159,7 @@ class OpenXMLTemplate {
                 }
             }
         } catch (error) {
-            throw new OpenXMLError(1004, { data: {xml}, error });
+            throw new OpenXMLError(1014, { data: {xml}, error });
         }
         OpenXMLTemplate.showTime('Content types read');
         return ret;

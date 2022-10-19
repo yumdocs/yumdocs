@@ -20,4 +20,5 @@ test('Unknown error', () => {
     }
     expect(test).toThrow(OpenXMLError);
     expect(test).toThrow(errorCodes.get(code)?.message);
+    expect(test).toThrow('Unknown error');
 });

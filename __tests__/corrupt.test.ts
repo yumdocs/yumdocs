@@ -16,7 +16,7 @@ test('Missing', async () => {
         expect(true).toBe(false); // file.load should throw
     } catch (e) {
         expect(e).toBeInstanceOf(OpenXMLError);
-        expect(e).toMatchObject(errorCodes.get(1001) || {});
+        expect(e).toMatchObject(errorCodes.get(1011) || {});
         // expect((<OpenXMLError>e).originalError).toBeInstanceOf(Error);
     }
 });
@@ -28,7 +28,7 @@ test('Text File', async () => {
         expect(true).toBe(false); // file.load should throw
     } catch (e) {
         expect(e).toBeInstanceOf(OpenXMLError);
-        expect(e).toMatchObject(errorCodes.get(1002) || {});
+        expect(e).toMatchObject(errorCodes.get(1012) || {});
         expect((<OpenXMLError>e).originalError).toBeInstanceOf(Error);
     }
 });
@@ -41,7 +41,7 @@ test('Odt File', async () => {
         expect(true).toBe(false); // file.load should throw
     } catch (e) {
         expect(e).toBeInstanceOf(OpenXMLError);
-        expect(e).toMatchObject(errorCodes.get(1004) || {});
+        expect(e).toMatchObject(errorCodes.get(1014) || {});
         expect((<OpenXMLError>e).originalError).toBeInstanceOf(Error);
     }
 });
@@ -54,7 +54,7 @@ test('Zip File', async () => {
         expect(true).toBe(false); // file.load should throw
     } catch (e) {
         expect(e).toBeInstanceOf(OpenXMLError);
-        expect(e).toMatchObject(errorCodes.get(1004) || {});
+        expect(e).toMatchObject(errorCodes.get(1014) || {});
         expect((<OpenXMLError>e).originalError).toBeInstanceOf(Error);
     }
 });

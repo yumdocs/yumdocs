@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
-import constants from '../src/constants';
 import OpenXMLTemplate from '../src/OpenXMLTemplate';
+import {hasTagsRegExp} from "../src/tags/tagUtils";
 
 const INPUT_DIR = './templates/';
 const OUTPUT_DIR = './temp/'
@@ -17,7 +17,7 @@ test('Word File', async () => {
     await file.load(`${INPUT_DIR}${DOCX}`);
     const ret = await file.render(DATA);
     await file.saveAs(`${OUTPUT_DIR}${DOCX}`);
-    expect(ret).not.toMatch(constants.matchExpression);
+    expect(ret).not.toMatch(hasTagsRegExp());
 });
 
 test('PowerPoint File', async () => {
@@ -25,7 +25,7 @@ test('PowerPoint File', async () => {
     await file.load(`${INPUT_DIR}${PPTX}`);
     const ret = await file.render(DATA);
     await file.saveAs(`${OUTPUT_DIR}${PPTX}`);
-    expect(ret).not.toMatch(constants.matchExpression);
+    expect(ret).not.toMatch(hasTagsRegExp());
 });
 
 test('Excel File', async () => {
@@ -33,5 +33,5 @@ test('Excel File', async () => {
     await file.load(`${INPUT_DIR}${XLSX}`);
     const ret = await file.render(DATA);
     await file.saveAs(`${OUTPUT_DIR}${XLSX}`);
-    expect(ret).not.toMatch(constants.matchExpression);
+    expect(ret).not.toMatch(hasTagsRegExp());
 });
