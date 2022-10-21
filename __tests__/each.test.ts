@@ -9,10 +9,15 @@ const DOCX = `${TEST}.docx`;
 const PPTX = `${TEST}.pptx`;
 const XLSX = `${TEST}.xlsx`;
 const DATA = {
-    dummy: faker.random.word()
+    persons: [
+        { name: faker.name.fullName() },
+        { name: faker.name.fullName() },
+        { name: faker.name.fullName() },
+        { name: faker.name.fullName() },
+    ]
 };
 
-xtest('Word File', async () => {
+test('Word File', async () => {
     const file = new OpenXMLTemplate();
     await file.load(`${INPUT_DIR}${DOCX}`);
     const ret = await file.render(DATA);
