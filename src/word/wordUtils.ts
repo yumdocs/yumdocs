@@ -1,4 +1,8 @@
+import {escapeRegExp} from "../tags/tagUtils";
+
 /**
+ * sanitizeWordMarkup
+ *
  * Versioning in Word is tracked with rsidR sections, like:
  * {</w:t></w:r><w:r w:rsidR="00245996"><w:t>{</w:t></w:r><w:r><w:t>te</w:t></w:r><w:r w:rsidR="00130070"><w:t>x</w:t></w:r><w:r w:rsidR="00EE726C"><w:t>t</w:t></w:r><w:r w:rsidR="00060B35"><w:t>}</w:t></w:r><w:r><w:t>}
  * {{te</w:t></w:r><w:r w:rsidR="00130070"><w:t>x</w:t></w:r><w:r w:rsidR="00EE726C"><w:t>t</w:t></w:r><w:r w:rsidR="00F00E75"><w:t>}</w:t></w:r><w:r><w:t>}
@@ -11,9 +15,6 @@
  * @param xml
  * @param delimiters
  */
-import {escapeRegExp} from "../tags/tagUtils";
-
-
 export function sanitizeWordMarkup (xml: string, delimiters: { start: string, end: string }) {
     const { start, end } = delimiters;
     const garbage = '<\\/w:t><\\/w:r><w:r\\s?[^>]*><w:t\\s?[^>]*>';
