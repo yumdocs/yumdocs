@@ -9,9 +9,9 @@ import ITagConstructor from "./ITagConstructor";
  */
 // const tagMap = new Map<string, typeof AbstractTag>([
 const tagMap = new Map<string, ITagConstructor>([
-    [ExpressionTag.tag, ExpressionTag],
-    [EachTag.tag, EachTag],
-    [IfTag.tag, IfTag]
+    [ExpressionTag.statement, ExpressionTag],
+    [EachTag.statement, EachTag],
+    [IfTag.statement, IfTag]
 ]);
 
 /**

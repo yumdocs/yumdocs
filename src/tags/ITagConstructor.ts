@@ -5,8 +5,9 @@ import AbstractTag from "./AbstractTag";
  * ITagConstructor
  */
 interface ITagConstructor {
-    statements: Array<string>;
-    new(node: TaggedNode): AbstractTag
+    statement: string;
+    blocks: Array<string>;
+    new(node: TaggedNode, parent: Array<AbstractTag>): AbstractTag;
 }
 
 /**
