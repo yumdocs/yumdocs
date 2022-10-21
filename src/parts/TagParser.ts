@@ -10,7 +10,7 @@ import ITagConstructor from "../tags/ITagConstructor";
  * TagParser
  */
 class TagParser {
-    private readonly _dom: Document;
+    private readonly _dom: Node;
     private _delimiters: { start: string, end: string };
     private _lexer: RegExp | undefined;
     private _ast: Array<AbstractTag> = [];
@@ -22,7 +22,7 @@ class TagParser {
      * @param dom
      * @param options
      */
-    constructor(dom: Document, options: Record<string, unknown> = {}) {
+    constructor(dom: Node, options: Record<string, unknown> = {}) {
         this._dom = dom;
         this._delimiters = <{ start: string, end: string }>(options.delimiters || constants.delimiters);
         this._current = this._ast;
