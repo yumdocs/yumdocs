@@ -3,16 +3,19 @@ import {escapeRegExp} from "../tags/tagUtils";
 import TaggedNode from "../tags/TaggedNode";
 import AbstractTag from "../tags/AbstractTag";
 import tagMap from "../tags/tagMap";
+import ExpressionTag from "../tags/ExpressionTag";
+import ITagConstructor from "../tags/ITagConstructor";
 
 /**
  * TagParser
  */
 class TagParser {
-    private _dom: Document;
+    private readonly _dom: Document;
     private _delimiters: { start: string, end: string };
     private _lexer: RegExp | undefined;
-    private _tree: Array<AbstractTag> = [];
-    private _stack = [];
+    private _ast: Array<AbstractTag> = [];
+    private _current: Array<AbstractTag>;
+    private _stack: Array<AbstractTag> = [];
 
     /**
      * constructor
@@ -22,6 +25,7 @@ class TagParser {
     constructor(dom: Document, options: Record<string, unknown> = {}) {
         this._dom = dom;
         this._delimiters = <{ start: string, end: string }>(options.delimiters || constants.delimiters);
+        this._current = this._ast;
     }
 
     /**
@@ -34,13 +38,12 @@ class TagParser {
         // our simple needs can be handled by a regular expression
         if (!(this._lexer instanceof RegExp)) {
             const statements: string[] = [];
-            // Get registered *Token statements
+            // Get registered *Tag blocks (TODO unicity?)
             for (const Tag of tagMap.values()) {
                 statements
                     .push(
-                        ...Tag.statements
-                        .filter(statement => !!statement )
-                        .map(statement => escapeRegExp(statement))
+                        escapeRegExp(Tag.statement),
+                        ...Tag.blocks.map(block => escapeRegExp(block))
                     );
             }
             // Build the regular expression
@@ -58,14 +61,17 @@ class TagParser {
         return this._lexer
     }
 
-    private _findTag(tag: string): AbstractTag | undefined {
-        let ret: AbstractTag | undefined;
-        for (const Tag in tagMap.values()) {
-            // if (tag in Tag.statements) {
-
-            // }
+    /**
+     * _findTagInBlocks
+     * @param statement
+     * @private
+     */
+    private _findTagInBlocks(statement: string): ITagConstructor | undefined {
+        for (const Tag of tagMap.values()) {
+            if (Tag.blocks.includes(statement)) {
+                return Tag;
+            }
         }
-        return ret;
     }
 
     /**
@@ -74,25 +80,52 @@ class TagParser {
      * @private
      */
     private _parse(node: Node) {
-        if (node instanceof Text && this.lexer instanceof RegExp) {
+        // if (node instanceof Text && this.lexer instanceof RegExp) {
+        if (node.nodeType === 3 && this.lexer instanceof RegExp) {
             const matches = node.nodeValue?.matchAll(this.lexer);
             if (matches) {
                 for (const match of matches) {
-                    const taggedNode = new TaggedNode(node, match);
-                    const { statement } = <{ statement: string }>match.groups;
-                    const Tag = tagMap.get(statement);
-                    if (Tag ) {
-                        this._tree.push(new Tag(taggedNode));
-                        // Todo
+                    const taggedNode = new TaggedNode(<Text>node, match);
+                    const { statement, expression } = <{ statement: string, expression: string }>match.groups;
+                    const Tag = tagMap.get(statement || ExpressionTag.statement) ||
+                        this._findTagInBlocks(statement);
+                    if (Tag && (Tag.statement === ExpressionTag.statement) && expression) {
+                        // If tag is a standalone expression
+                        const tag = new Tag(taggedNode, this._current);
+                        this._current.push(tag);
+                    } else if (Tag && (Tag.statement === statement)) {
+                        // If tag corresponds to an opening statement, e.g. each or if, with or without expression
+                        const tag = new Tag(taggedNode, this._current);
+                        this._stack.push(tag);
+                        this._current.push(tag);
+                        if (Tag.blocks.length >0) {
+                            this._current = tag.children;
+                        }
+                    } else if (Tag && Tag.blocks.includes(statement)) {
+                        // If tag corresponds to a branch, e.g. else, or a closing statement in a block, e.g. endeach or endif
+                        const isClosing = (Tag.blocks.indexOf(statement) === Tag.blocks.length - 1);
+                        const main = isClosing ? this._stack.pop() : this._stack[this._stack.length - 1];
+                        if (main instanceof Tag) {
+                            main.nodes.set(statement, taggedNode);
+                            if (isClosing) {
+                                this._current = main.parent;
+                            }
+                        } else {
+                            debugger;
+                            // TODO throw?
+                        }
                     } else {
-                        // TODO
+                        debugger;
+                        // TODO throw?
                     }
                 }
             }
         }
         if (node.hasChildNodes()) {
-            for (const child of node.childNodes) {
-                this._parse(child);
+            const { childNodes } = node;
+            // for (const child of childNodes) { - childNodes is not iterable
+            for (let i = 0, { length } = childNodes; i < length; i++) {
+                this._parse(childNodes.item(i));
             }
         }
     }
@@ -101,9 +134,9 @@ class TagParser {
      * parse
      */
     parse () {
-        // TODO Check tree;
         this._parse(this._dom);
-        return this._tree;
+        // TODO _stack should be empty and _current should be _ast;
+        return this._ast;
     }
 
 }

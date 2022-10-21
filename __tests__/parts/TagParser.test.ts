@@ -74,4 +74,14 @@ xtest('lexer with custom delimiters that mess with XML', () => {
         count ++;
     }
     expect(count).toEqual(XML.split(delimiters.start).length - 1);
+});
+
+test('Parser', () => {
+    const {delimiters} = constants;
+    const XML = `<?xml version="1.0" encoding="UTF-8"?>
+        <node>Bonjour ${delimiters.start}#if employee.gender${delimiters.end}Mr${delimiters.start}#else${delimiters.end}Ms.${delimiters.start}#endif${delimiters.end} ${delimiters.start}employee.fullName | format${delimiters.end},</node>`;
+    const dom = new DOMParser().parseFromString(XML, 'text/xml');
+    const parser = new TagParser(dom);
+    const ast = parser.parse();
+    expect(ast).toHaveProperty('length', 2);
 })
