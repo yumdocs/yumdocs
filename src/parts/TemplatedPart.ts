@@ -3,6 +3,7 @@ import IPart from "./IPart";
 import {sanitizeWordMarkup} from '../word/wordUtils';
 import TagParser from "./TagParser";
 import AbstractTag from "../tags/AbstractTag";
+import {sanitizePptMarkup} from "../ppt/pptUtils";
 
 /**
  * TemplatedPart
@@ -42,7 +43,9 @@ class TemplatedPart extends AbstractPart {
         const pos2 = pos1 > -1 ? xml.indexOf(end.slice(-1), pos1 + 1) : -1;
         // No need to sanitize if we cannot find the first and last characters of delimiters
         if (this._name.startsWith('word/') && pos1 > 0 && pos2 > 0) {
-            return sanitizeWordMarkup(xml, { start, end });
+            return sanitizeWordMarkup(xml, {start, end});
+        } else if (this._name.startsWith('ppt/') && pos1 > 0 && pos2 > 0) {
+            return sanitizePptMarkup(xml, {start, end});
         } else {
             // Do nothing by default
             return super._preProcess(xml);
