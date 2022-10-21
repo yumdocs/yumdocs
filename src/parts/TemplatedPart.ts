@@ -1,17 +1,15 @@
-import constants from "../constants";
 import AbstractPart from "./AbstractPart";
 import IPart from "./IPart";
-import ITag from "../tags/ITag";
-import tagMap from "../tags/tagMap";
-import {sanitizeWordMarkupInExpressions} from '../word/wordUtils';
-import TaggedNode from "../tags/TaggedNode";
+import {sanitizeWordMarkup} from '../word/wordUtils';
+import TagParser from "./TagParser";
+import AbstractTag from "../tags/AbstractTag";
 
 /**
  * TemplatedPart
  */
 class TemplatedPart extends AbstractPart {
     readonly priority: number = 1;
-    private _tags: Array<ITag> = [];
+    private _ast: Array<AbstractTag> = [];
 
     /**
      * constructor
@@ -29,53 +27,22 @@ class TemplatedPart extends AbstractPart {
         options: Record<string, unknown>
     ) {
         super(name, type, xml, parent, options);
-        // TODO No need to findExpressions without openChar in part
-        //  if (xml.indexOf(constants.openChar) > -1) {
-        this.findTags();
-    }
-
-    /**
-     * _findTags
-     * @param node
-     * @private
-     */
-    private _findTags(node: Node) {
-        // Find text nodes including HBS markup
-        // @see https://www.w3schools.com/xml/prop_element_nodetype.asp
-        if ((node.nodeType === 3) && (constants.matchExpression.test(node.nodeValue || ''))) {
-            const Tag = tagMap.get('');
-            if (Tag) {
-                const taggedNode = new TaggedNode(<Text>node, []);
-                const tag = new Tag(taggedNode);
-                this._tags.push(tag);
-            }
-        }
-        // Traverse child nodes recursively
-        if (node.hasChildNodes()) {
-            const { childNodes } = node;
-            for (let i = 0, { length } = childNodes; i < length; i++) {
-                this._findTags(childNodes.item(i));
-            }
-        }
-    }
-
-    /**
-     * Start search
-     * @returns {*[]}
-     */
-    findTags() {
-        this._findTags(this._dom);
+        this._ast = new TagParser(this._dom, options).parse();
     }
 
     /**
      * _preProcess
+     * Note: executed by parent AbstractPart
      * @param xml
      */
     protected _preProcess(xml: string): string {
-        // TODO No need to _preProcess without openChar in part
-        //  if (xml.indexOf(constants.openChar) > -1) {
-        if (this._name.startsWith('word/')) {
-            return sanitizeWordMarkupInExpressions(xml);
+        const { start, end } = <{ start: string, end: string }>this._options.delimiters;
+        // TODO escape characters like < and >
+        const pos1 = xml.indexOf(start.slice(0,1));
+        const pos2 = pos1 > -1 ? xml.indexOf(end.slice(-1), pos1 + 1) : -1;
+        // No need to sanitize if we cannot find the first and last characters of delimiters
+        if (this._name.startsWith('word/') && pos1 > 0 && pos2 > 0) {
+            return sanitizeWordMarkup(xml, { start, end });
         } else {
             // Do nothing by default
             return super._preProcess(xml);
@@ -87,9 +54,11 @@ class TemplatedPart extends AbstractPart {
      * @param data
      */
     async render(data: Record<string, unknown>) {
-        for (let i = 0; i < this._tags.length; i++) {
-            await this._tags[i].render(data);
+        if (this._done) return;
+        for (const tag of this._ast) {
+            await tag.render(data);
         }
+        this._done = true;
         // return this._dom; // for testing purpose only
     }
 }
