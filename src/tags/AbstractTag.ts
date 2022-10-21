@@ -1,29 +1,35 @@
 import ITag from './ITag';
 import TaggedNode from "./TaggedNode";
+import constants from "../constants";
 
 /**
  * AbstractTag
  */
 abstract class AbstractTag implements ITag {
-    public nodes: Map<string, TaggedNode> = new Map();
+    public readonly nodes: Map<string, TaggedNode> = new Map();
     protected _done = false;
+
+    public readonly children: Array<AbstractTag> = [];
+    public readonly parent: Array<AbstractTag>;
 
     /**
      * constructor
      * @param node
+     * @param parent
      * @protected
      */
-    protected constructor(node: TaggedNode) {
+    protected constructor(node: TaggedNode, parent: Array<AbstractTag>) {
         this.addNode(node);
+        this.parent = parent;
     }
 
     /**
-     * setEndNode
-     * @param node
+     * addNode
+     * @param taggedNode
      */
-    addNode(node: TaggedNode) {
-        // TODO Check that it does not already exist?
-        this.nodes.set(node.statement, node);
+    addNode(taggedNode: TaggedNode) {
+        // TODO Also check that node.statement is part of Tag.statements
+        this.nodes.set(taggedNode.statement || constants.empty /* ExpressionTag.statement */, taggedNode);
     }
 
     /**
