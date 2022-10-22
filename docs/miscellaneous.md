@@ -31,3 +31,7 @@
 - https://github.com/TomFrost/Jexl (based on Apache)
 - https://www.npmjs.com/package/angular-expressions
 - https://jmespath.org/
+
+## e2e tests
+
+- https://www.npmjs.com/package/office-text-extractor
