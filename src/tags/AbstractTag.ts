@@ -2,10 +2,17 @@ import ITag from './ITag';
 import TaggedNode from "./TaggedNode";
 import constants from "../constants";
 
+
+type TagParser = { new(dom: Node, options?: Record<string, unknown>): any; };
+
 /**
  * AbstractTag
  */
 abstract class AbstractTag implements ITag {
+    // Assigned at runtime in TagParser.ts to resolve a circular dependency
+    // src/parts/TagParser.ts -> src/tags/tagMap.ts -> src/tags/EachTag.ts -> src/parts/TagParser.ts
+    public static TagParser: TagParser;
+
     public readonly nodes: Map<string, TaggedNode> = new Map();
     protected _done = false;
 

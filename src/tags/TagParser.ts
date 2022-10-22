@@ -1,10 +1,11 @@
 import constants from "../constants";
-import {escapeRegExp} from "../tags/tagUtils";
-import TaggedNode from "../tags/TaggedNode";
-import AbstractTag from "../tags/AbstractTag";
-import tagMap from "../tags/tagMap";
-import ExpressionTag from "../tags/ExpressionTag";
-import ITagConstructor from "../tags/ITagConstructor";
+import {escapeRegExp} from "./tagUtils";
+import TaggedNode from "./TaggedNode";
+import AbstractTag from "./AbstractTag";
+import tagMap from "./tagMap";
+import ExpressionTag from "./ExpressionTag";
+import ITagConstructor from "./ITagConstructor";
+import {assert} from "../error/assert";
 
 /**
  * TagParser
@@ -135,11 +136,17 @@ class TagParser {
      */
     parse () {
         this._parse(this._dom);
-        // TODO _stack should be empty and _current should be _ast;
+        // _stack should be empty and _current should be _ast;
+        assert(this._stack.length === 0);
+        assert(this._current === this._ast);
         return this._ast;
     }
 
 }
+
+// Assigned at runtime in TagParser.ts to resolve a circular dependency
+// src/parts/TagParser.ts -> src/tags/tagMap.ts -> src/tags/EachTag.ts -> src/parts/TagParser.ts
+AbstractTag.TagParser = TagParser;
 
 /**
  * Default export

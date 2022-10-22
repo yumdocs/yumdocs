@@ -4,7 +4,6 @@ import TaggedNode from "./TaggedNode";
 import {assert} from "../error/assert";
 import {getChildrenOfCommonAncestor, getSiblingsBetween} from "./domUtils";
 import expressionEngine from "./expressionEngine";
-import TagParser from "../parts/TagParser";
 
 class EachTag extends AbstractTag implements ITag {
     static readonly statement = '#each';
@@ -51,7 +50,7 @@ class EachTag extends AbstractTag implements ITag {
                         const node = sibling.cloneNode(true);
                         parent.insertBefore(node, topNodes[1]);
                         // Parse new node
-                        const _ast = new TagParser(node).parse(); // TODO options with delimiters
+                        const _ast = new AbstractTag.TagParser(node).parse(); // TODO options with delimiters
                         // Add to document ast
                         this.children.push(..._ast);
                     }

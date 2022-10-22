@@ -1,5 +1,5 @@
 import {DOMParser} from "@xmldom/xmldom";
-import TagParser from '../../src/parts/TagParser';
+import TagParser from '../../src/tags/TagParser';
 import constants from "../../src/constants";
 import {escapeRegExp} from "../../src/tags/tagUtils";
 

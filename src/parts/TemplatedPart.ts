@@ -1,7 +1,7 @@
 import AbstractPart from "./AbstractPart";
 import IPart from "./IPart";
 import {sanitizeWordMarkup} from '../word/wordUtils';
-import TagParser from "./TagParser";
+import TagParser from "../tags/TagParser";
 import AbstractTag from "../tags/AbstractTag";
 import {sanitizePptMarkup} from "../ppt/pptUtils";
 
