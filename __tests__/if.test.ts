@@ -9,7 +9,8 @@ const DOCX = `${TEST}.docx`;
 const PPTX = `${TEST}.pptx`;
 const XLSX = `${TEST}.xlsx`;
 const DATA = {
-    hasText: faker.datatype.boolean()
+    hasText: faker.datatype.boolean(),
+    text: faker.random.word()
 };
 
 test('Word File', async () => {

@@ -2,7 +2,7 @@ import AbstractTag from "./AbstractTag";
 import ITag from "./ITag";
 import MatchedNode from "./MatchedNode";
 import {assert} from "../error/assert";
-import {getChildrenOfCommonAncestor, getSiblingsBetween} from "./domUtils";
+import {contains, getChildrenOfCommonAncestor, getSiblingsBetween} from "./domUtils";
 import expressionEngine from "./expressionEngine";
 
 class IfTag extends AbstractTag implements ITag {
@@ -23,7 +23,6 @@ class IfTag extends AbstractTag implements ITag {
      * @param data
      */
     async render(data: Record<string, unknown> = {}) {
-        debugger;
         const ifMatchedNode = this.matchedNodes.get(IfTag.statement);
         const elseMatchedNode = this.matchedNodes.get(IfTag.blocks[0]);
         const endMatchedNode = this.matchedNodes.get(IfTag.blocks[1]);
@@ -41,14 +40,26 @@ class IfTag extends AbstractTag implements ITag {
                 [];
             // Evaluate #if condition
             const condition: boolean = <boolean>await expressionEngine.evaluate(ifMatchedNode.expression, data);
-            debugger;
+            // TODO What if condition is not boolean???? What about truthy/falsy?
             // Update xmldom and ast
-            if (condition) {
-                // this.children;
-            } else {
-
+            const parent = <Node>topNodes[0].parentNode;
+            for (const sibling of condition? elseSiblings : ifSiblings) {
+                // Remove tags from ast where condition is not met
+                for (let i = this.children.length - 1; i >= 0; i--) {
+                    const [matchedNode] = this.children[i].matchedNodes.values();                    debugger;
+                    if (contains(sibling, matchedNode.node)) {
+                        this.children.splice(i, 1);
+                    }
+                }
+                // remove nodes from DOM
+                parent.removeChild(sibling);
             }
             // Remove #if, #else and #endif
+            topNodes.forEach(node => { parent.removeChild(node); });
+            // Process children where condition is met (others have been removed)
+            for (let i = 0; i < this.children.length; i++) {
+                await this.children[i].render(data);
+            }
         }
     }
 }
