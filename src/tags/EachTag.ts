@@ -56,8 +56,7 @@ class EachTag extends AbstractTag implements ITag {
                     }
                 }
                 // Remove #each and #endeach
-                parent.removeChild(topNodes[0]);
-                parent.removeChild(topNodes[1]);
+                topNodes.forEach(node => { parent.removeChild(node); });
                 // Process children
                 for (let i = 0; i < this.children.length; i++) {
                     await this.children[i].render(arr[Math.trunc(i / siblings.length)]);
