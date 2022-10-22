@@ -2,7 +2,7 @@
 import typescript from '@rollup/plugin-typescript';
 
 export default {
-    input: 'src/OpenXMLTemplates.ts',
+    input: 'src/OpenXMLTemplate.ts',
     output: {
         format: 'cjs',
         file: 'dist/index.js'
