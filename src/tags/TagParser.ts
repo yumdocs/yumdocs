@@ -87,7 +87,7 @@ class TagParser {
             if (matches) {
                 for (const match of matches) {
                     const matchedNode = new MatchedNode(<Text>node, match);
-                    const { statement, expression } = <{ statement: string, expression: string }>match.groups;
+                    const { statement, expression } = <{ statement: string, expression: string }>matchedNode;
                     const Tag = tagMap.get(statement || ExpressionTag.statement) ||
                         this._findTagInBlocks(statement);
                     if (Tag && (Tag.statement === ExpressionTag.statement) && expression) {

@@ -4,9 +4,8 @@ import constants from "../constants";
  * MatchNode
  */
 class MatchedNode {
-    // TODO consider making node and match private
-    public node: Text;
-    public match: Array<string>;
+    public readonly node: Text;
+    private readonly _match: Array<string>;
 
     /**
      * constructor
@@ -15,7 +14,7 @@ class MatchedNode {
      */
     constructor(node: Text, match: Array<string>) {
         this.node = node;
-        this.match = match;
+        this._match = match;
     }
 
     /**
@@ -24,7 +23,7 @@ class MatchedNode {
     get statement() {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        return this.match.groups.statement;
+        return this._match.groups.statement;
     }
 
     /**
@@ -33,7 +32,7 @@ class MatchedNode {
     get expression() {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        return this.match.groups.expression;
+        return this._match.groups.expression;
     }
 
     /**
@@ -48,7 +47,7 @@ class MatchedNode {
      * @param data
      */
     replaceMatch(data: string) {
-        const tag: string = this.match[0];
+        const tag: string = this._match[0];
         const offset: number = (this.node.nodeValue || constants.empty).indexOf(tag);
         const count = tag.length;
         return this.node.replaceData(offset, count, data);
