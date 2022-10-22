@@ -49,3 +49,20 @@ export function getSiblingsBetween(node1: Node, node2: Node): Array<Node> {
     }
     return ret;
 }
+
+/**
+ * contains
+ * @param parent
+ * @param child
+ */
+export function contains(parent: Node, child: Node): boolean {
+    if(child === parent) return true;
+    let current = child;
+    while(current.parentNode) {
+        if (current.parentNode === parent) {
+            return true;
+        }
+        current = current.parentNode;
+    }
+    return false;
+}

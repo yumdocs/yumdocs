@@ -1,5 +1,5 @@
 import {DOMParser} from '@xmldom/xmldom';
-import {getChildrenOfCommonAncestor, getSiblingsBetween} from "../../src/tags/domUtils";
+import {contains, getChildrenOfCommonAncestor, getSiblingsBetween} from "../../src/tags/domUtils";
 
 const XML = `<?xml version="1.0" encoding="UTF-8"?>
 <company name="Avengers">
@@ -39,4 +39,20 @@ test('getSiblingsBetween', () => {
     expect(bruceWayne).toHaveProperty('nodeName', 'employee');
     const nodes = getSiblingsBetween(peterParker, bruceWayne);
     expect(nodes).toHaveProperty('length', 5);
+});
+
+test('getSiblingsBetween', () => {
+    const company = DOM.childNodes[2];
+    expect(company).toHaveProperty('nodeName', 'company');
+    const employees = company.childNodes[3];
+    expect(employees).toHaveProperty('nodeName', 'employees');
+    const peterParker = employees.childNodes[1];
+    expect(peterParker).toHaveProperty('nodeName', 'employee');
+    const bruceWayne = employees.childNodes[7];
+    expect(bruceWayne).toHaveProperty('nodeName', 'employee');
+    expect(contains(company, employees)).toEqual(true);
+    expect(contains(employees, employees)).toEqual(true);
+    expect(contains(employees, company)).toEqual(false);
+    expect(contains(company, peterParker)).toEqual(true);
+    expect(contains(employees, peterParker)).toEqual(true);
 });
