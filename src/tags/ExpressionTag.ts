@@ -1,6 +1,6 @@
 import AbstractTag from "./AbstractTag";
 import ITag from "./ITag";
-import TaggedNode from "./TaggedNode";
+import MatchedNode from "./MatchedNode";
 import expressionEngine from "./expressionEngine";
 import constants from "../constants";
 import {assert} from "../error/assert";
@@ -14,11 +14,11 @@ class ExpressionTag extends AbstractTag implements ITag {
 
     /**
      * constructor
-     * @param node
+     * @param matchedNode
      * @param parent
      */
-    constructor(node: TaggedNode, parent: Array<AbstractTag>) {
-        super(node, parent);
+    constructor(matchedNode: MatchedNode, parent: Array<AbstractTag>) {
+        super(matchedNode, parent);
     }
 
     /**
@@ -26,10 +26,10 @@ class ExpressionTag extends AbstractTag implements ITag {
      * @param data
      */
     async render(data: Record<string, unknown>) {
-        const taggedNode = this.nodes.get(ExpressionTag.statement);
-        assert(taggedNode instanceof TaggedNode);
-        const str: string = <string>await expressionEngine.evaluate(taggedNode.expression, data);
-        taggedNode.replaceTag(str);
+        const matchedNode = this.matchedNodes.get(ExpressionTag.statement);
+        assert(matchedNode instanceof MatchedNode);
+        const str: string = <string>await expressionEngine.evaluate(matchedNode.expression, data);
+        matchedNode.replaceMatch(str);
         this._done = true;
     }
 }

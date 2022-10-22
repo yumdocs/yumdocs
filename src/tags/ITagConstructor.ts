@@ -1,4 +1,4 @@
-import TaggedNode from "./TaggedNode";
+import MatchedNode from "./MatchedNode";
 import AbstractTag from "./AbstractTag";
 
 /**
@@ -7,7 +7,7 @@ import AbstractTag from "./AbstractTag";
 interface ITagConstructor {
     statement: string;
     blocks: Array<string>;
-    new(node: TaggedNode, parent: Array<AbstractTag>): AbstractTag;
+    new(node: MatchedNode, parent: Array<AbstractTag>): AbstractTag;
 }
 
 /**

@@ -1,6 +1,6 @@
 import constants from "../constants";
 import {escapeRegExp} from "./tagUtils";
-import TaggedNode from "./TaggedNode";
+import MatchedNode from "./MatchedNode";
 import AbstractTag from "./AbstractTag";
 import tagMap from "./tagMap";
 import ExpressionTag from "./ExpressionTag";
@@ -86,17 +86,17 @@ class TagParser {
             const matches = node.nodeValue?.matchAll(this.lexer);
             if (matches) {
                 for (const match of matches) {
-                    const taggedNode = new TaggedNode(<Text>node, match);
+                    const matchedNode = new MatchedNode(<Text>node, match);
                     const { statement, expression } = <{ statement: string, expression: string }>match.groups;
                     const Tag = tagMap.get(statement || ExpressionTag.statement) ||
                         this._findTagInBlocks(statement);
                     if (Tag && (Tag.statement === ExpressionTag.statement) && expression) {
                         // If tag is a standalone expression
-                        const tag = new Tag(taggedNode, this._current);
+                        const tag = new Tag(matchedNode, this._current);
                         this._current.push(tag);
                     } else if (Tag && (Tag.statement === statement)) {
                         // If tag corresponds to an opening statement, e.g. each or if, with or without expression
-                        const tag = new Tag(taggedNode, this._current);
+                        const tag = new Tag(matchedNode, this._current);
                         this._stack.push(tag);
                         this._current.push(tag);
                         if (Tag.blocks.length >0) {
@@ -107,7 +107,7 @@ class TagParser {
                         const isClosing = (Tag.blocks.indexOf(statement) === Tag.blocks.length - 1);
                         const main = isClosing ? this._stack.pop() : this._stack[this._stack.length - 1];
                         if (main instanceof Tag) {
-                            main.nodes.set(statement, taggedNode);
+                            main.matchedNodes.set(statement, matchedNode);
                             if (isClosing) {
                                 this._current = main.parent;
                             }

@@ -1,8 +1,10 @@
 import ITag from './ITag';
-import TaggedNode from "./TaggedNode";
+import MatchedNode from "./MatchedNode";
 import constants from "../constants";
 
-
+/**
+ * TagParser
+ */
 type TagParser = { new(dom: Node, options?: Record<string, unknown>): any; };
 
 /**
@@ -13,7 +15,7 @@ abstract class AbstractTag implements ITag {
     // src/parts/TagParser.ts -> src/tags/tagMap.ts -> src/tags/EachTag.ts -> src/parts/TagParser.ts
     public static TagParser: TagParser;
 
-    public readonly nodes: Map<string, TaggedNode> = new Map();
+    public readonly matchedNodes: Map<string, MatchedNode> = new Map();
     protected _done = false;
 
     public readonly children: Array<AbstractTag> = [];
@@ -21,22 +23,22 @@ abstract class AbstractTag implements ITag {
 
     /**
      * constructor
-     * @param node
+     * @param matchedNode
      * @param parent
      * @protected
      */
-    protected constructor(node: TaggedNode, parent: Array<AbstractTag>) {
-        this.addNode(node);
+    protected constructor(matchedNode: MatchedNode, parent: Array<AbstractTag>) {
+        this.addMatchedNode(matchedNode);
         this.parent = parent;
     }
 
     /**
      * addNode
-     * @param taggedNode
+     * @param matchedNode
      */
-    addNode(taggedNode: TaggedNode) {
+    addMatchedNode(matchedNode: MatchedNode) {
         // TODO Also check that node.statement is part of Tag.statements
-        this.nodes.set(taggedNode.statement || constants.empty /* ExpressionTag.statement */, taggedNode);
+        this.matchedNodes.set(matchedNode.statement || constants.empty /* ExpressionTag.statement */, matchedNode);
     }
 
     /**

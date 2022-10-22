@@ -1,9 +1,9 @@
 import constants from "../constants";
 
 /**
- * TaggedNode
+ * MatchNode
  */
-class TaggedNode {
+class MatchedNode {
     // TODO consider making node and match private
     public node: Text;
     public match: Array<string>;
@@ -47,7 +47,7 @@ class TaggedNode {
      * replaceTag
      * @param data
      */
-    replaceTag(data: string) {
+    replaceMatch(data: string) {
         const tag: string = this.match[0];
         const offset: number = (this.node.nodeValue || constants.empty).indexOf(tag);
         const count = tag.length;
@@ -58,4 +58,4 @@ class TaggedNode {
 /**
  * Default export
  */
-export default TaggedNode;
+export default MatchedNode;
