@@ -21,7 +21,7 @@ test('Word File', async () => {
     expect(ret).not.toMatch(hasTagsRegExp());
 });
 
-xtest('PowerPoint File', async () => {
+test('PowerPoint File', async () => {
     const file = new OpenXMLTemplate();
     await file.load(`${INPUT_DIR}${PPTX}`);
     const ret = await file.render(DATA);
