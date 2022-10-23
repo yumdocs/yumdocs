@@ -22,7 +22,7 @@ suite
                                 // compression: 'DEFLATE'
                             })
                                 .then((buf) => {
-                                    fs.promises.writeFile(path.resolve(__dirname, '../temp/_jszip.docx'), buf)
+                                    fs.promises.writeFile(path.resolve(__dirname, '../../temp/_jszip.docx'), buf)
                                         .then(() => { deferred.resolve(); })
                                         .catch(deferred.reject);
                                 })
@@ -48,7 +48,7 @@ suite
         });
         // buf is a nodejs Buffer, you can either write it to a
         // file or res.send it with express for example.
-        fs.writeFileSync(path.resolve(__dirname, "../temp/_pizzip.docx"), buf);
+        fs.writeFileSync(path.resolve(__dirname, "../../temp/_pizzip.docx"), buf);
     })
     // add listeners
     .on('cycle', function(event: { target: any; }) {

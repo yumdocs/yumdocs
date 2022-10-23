@@ -23,7 +23,7 @@ suite
             .then(() => {
                 file.render(DATA)
                     .then(() => {
-                        file.saveAs(path.resolve(__dirname, '../temp/_ooxml.docx'))
+                        file.saveAs(path.resolve(__dirname, '../../temp/_ooxml.docx'))
                             .then(() => { deferred.resolve(); })
                             .catch(deferred.reject);
                     })
@@ -52,7 +52,7 @@ suite
         });
         // buf is a nodejs Buffer, you can either write it to a
         // file or res.send it with express for example.
-        fs.writeFileSync(path.resolve(__dirname, "../temp/_docxtemplater.docx"), buf);
+        fs.writeFileSync(path.resolve(__dirname, "../../temp/_docxtemplater.docx"), buf);
     })
     // add listeners
     .on('cycle', function(event: { target: any; }) {
