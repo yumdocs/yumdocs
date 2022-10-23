@@ -5,7 +5,7 @@ const constants = {
     },
     empty: '',
     locale: 'en-US',
-    mimeType: constants.mimeType,
+    mimeType: 'text/xml',
 };
 
 export default constants;

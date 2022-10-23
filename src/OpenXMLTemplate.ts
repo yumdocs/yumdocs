@@ -1,6 +1,6 @@
-import * as fs from 'fs';
+import * as fs from './polyfills/fs';
 import JSZip from 'jszip';
-import { DOMParser } from '@xmldom/xmldom';
+import { DOMParser } from './polyfills/xmldom';
 import constants from './constants';
 import cultureMap from './cultures/cultureMap';
 import OpenXMLError from "./error/OpenXMLError";

@@ -1,6 +1,6 @@
-// @ts-expect-error TS2614: Module '"./polyfills/xmldom"' has no exported member 'DOMParser'. Did you mean to use 'import DOMParser from "./polyfills/xmldom"' instead?
 import { DOMParser, XMLSerializer } from "../polyfills/xmldom";
 import IPart from "./IPart";
+import constants from "../constants";
 
 /**
  * Part

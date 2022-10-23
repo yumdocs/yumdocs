@@ -3,6 +3,7 @@
 - https://medium.com/collaborne-engineering/typescript-create-library-for-nodejs-and-browser-fece291d517f
 - https://dev.to/riversun/recipes-on-how-to-create-a-library-that-supports-both-browser-and-node-js-201m
 - https://blog.unterholzer.dev/cross-compatible-typescript-libraries/
+- https://github.com/rollup/rollup-starter-lib/blob/typescript/rollup.config.js
 
 # Lexers and parsers
 
