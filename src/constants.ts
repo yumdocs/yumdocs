@@ -5,6 +5,7 @@ const constants = {
     },
     empty: '',
     locale: 'en-US',
+    mimeType: constants.mimeType,
 };
 
 export default constants;

@@ -1,4 +1,5 @@
-import { DOMParser, XMLSerializer } from "@xmldom/xmldom";
+// @ts-expect-error TS2614: Module '"./polyfills/xmldom"' has no exported member 'DOMParser'. Did you mean to use 'import DOMParser from "./polyfills/xmldom"' instead?
+import { DOMParser, XMLSerializer } from "../polyfills/xmldom";
 import IPart from "./IPart";
 
 /**
@@ -34,7 +35,7 @@ abstract class AbstractPart implements IPart {
         this._parent = parent; // The parent list of parts in OpenXMLTemplate
         this._options = options; // These options
         const ppXml = this._preProcess(xml);
-        this._dom = new DOMParser().parseFromString(ppXml, 'text/xml');
+        this._dom = new DOMParser().parseFromString(ppXml, constants.mimeType);
     }
 
     /**

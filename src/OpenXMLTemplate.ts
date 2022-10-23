@@ -129,7 +129,7 @@ class OpenXMLTemplate {
             OpenXMLTemplate.resetTime();
             xml = await this._zip.file(CONTENT_TYPES)?.async('string') || '';
             OpenXMLTemplate.showTime('Content types loaded as xml');
-            const dom = new DOMParser().parseFromString(xml, 'text/xml');
+            const dom = new DOMParser().parseFromString(xml, constants.mimeType);
             const nodes = dom.childNodes[2].childNodes;
             for(let i = 0; i < nodes.length; i++) {
                 const node = nodes[i] as Element;
