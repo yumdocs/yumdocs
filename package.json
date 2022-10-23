@@ -28,7 +28,7 @@
     "typescript": "^4.8.4"
   },
   "scripts": {
-    "benchmark": "ts-node __benchmarks__/index.ts",
+    "benchmark": "ts-node tests/benchmarks/index.ts",
     "build": "rollup -c",
     "dev": "tsc --watch",
     "lint": "eslint --ext .js,.ts .",

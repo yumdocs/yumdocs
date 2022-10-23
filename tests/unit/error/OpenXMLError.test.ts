@@ -1,5 +1,5 @@
-import OpenXMLError from '../../src/error/OpenXMLError';
-import errorCodes from '../../src/error/errorCodes';
+import OpenXMLError from '../../../src/error/OpenXMLError';
+import errorCodes from '../../../src/error/errorCodes';
 import { faker } from '@faker-js/faker';
 
 // TODO Test options error and data

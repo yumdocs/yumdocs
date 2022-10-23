@@ -1,4 +1,4 @@
-import {hasTagsRegExp} from "../../src/tags/tagUtils";
+import {hasTagsRegExp} from "../../../src/tags/tagUtils";
 
 test('hasTagRegExp', () => {
     const rx = hasTagsRegExp();

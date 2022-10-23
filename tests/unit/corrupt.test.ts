@@ -1,8 +1,8 @@
-import OpenXMLTemplate from "../src/OpenXMLTemplate";
-import errorCodes from "../src/error/errorCodes";
-import OpenXMLError from "../src/error/OpenXMLError";
+import OpenXMLTemplate from "../../src/OpenXMLTemplate";
+import errorCodes from "../../src/error/errorCodes";
+import OpenXMLError from "../../src/error/OpenXMLError";
 
-const INPUT_DIR = './templates/';
+const INPUT_DIR = './tests/templates/';
 // const OUTPUT_DIR = './temp/'
 const DOCX = 'missing.docx';
 const TXT = 'corrupt.txt';

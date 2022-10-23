@@ -1,20 +1,15 @@
 import { faker } from '@faker-js/faker';
-import OpenXMLTemplate from '../src/OpenXMLTemplate';
-import {hasTagsRegExp} from "../src/tags/tagUtils";
+import OpenXMLTemplate from '../../src/OpenXMLTemplate';
+import {hasTagsRegExp} from "../../src/tags/tagUtils";
 
-const INPUT_DIR = './templates/';
+const INPUT_DIR = './tests/templates/';
 const OUTPUT_DIR = './temp/'
-const TEST = 'each';
+const TEST = 'simple';
 const DOCX = `${TEST}.docx`;
 const PPTX = `${TEST}.pptx`;
 const XLSX = `${TEST}.xlsx`;
 const DATA = {
-    persons: [
-        { name: faker.name.fullName() },
-        { name: faker.name.fullName() },
-        { name: faker.name.fullName() },
-        { name: faker.name.fullName() },
-    ]
+    dummy: faker.random.word()
 };
 
 test('Word File', async () => {
@@ -33,7 +28,7 @@ test('PowerPoint File', async () => {
     expect(ret).not.toMatch(hasTagsRegExp());
 });
 
-xtest('Excel File', async () => {
+test('Excel File', async () => {
     const file = new OpenXMLTemplate();
     await file.load(`${INPUT_DIR}${XLSX}`);
     const ret = await file.render(DATA);

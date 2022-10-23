@@ -3,7 +3,7 @@ import * as path from 'path';
 import Benchmark from 'benchmark';
 import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
-import OpenXMLTemplate from "../src/OpenXMLTemplate";
+import OpenXMLTemplate from "../../src/OpenXMLTemplate";
 import {faker} from "@faker-js/faker";
 
 const suite = new Benchmark.Suite;
@@ -34,7 +34,7 @@ suite
     .add('docxtemplater', function() {
         // Load the docx file as binary content
         const content = fs.readFileSync(
-            path.resolve(__dirname, "./docxtemplater.docx"),
+            path.resolve(__dirname, "./data.docx"),
             "binary"
         );
         const zip = new PizZip(content);

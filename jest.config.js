@@ -2,4 +2,5 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
+  testMatch: ['**/tests/unit/**/*.test.[jt]s?(x)']
 };

@@ -1,5 +1,5 @@
 // .prettierrc
 {
-  "singleQuote": true // If you want to use single quotes
+  "singleQuote": true,
   "useTabs": true
 }

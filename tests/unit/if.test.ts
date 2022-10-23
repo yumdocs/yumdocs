@@ -1,8 +1,8 @@
 import { faker } from '@faker-js/faker';
-import OpenXMLTemplate from '../src/OpenXMLTemplate';
-import {hasTagsRegExp} from "../src/tags/tagUtils";
+import OpenXMLTemplate from '../../src/OpenXMLTemplate';
+import {hasTagsRegExp} from "../../src/tags/tagUtils";
 
-const INPUT_DIR = './templates/';
+const INPUT_DIR = './tests/templates/';
 const OUTPUT_DIR = './temp/'
 const TEST = 'if';
 const DOCX = `${TEST}.docx`;

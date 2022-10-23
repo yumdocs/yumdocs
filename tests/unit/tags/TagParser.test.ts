@@ -1,7 +1,7 @@
 import {DOMParser} from "@xmldom/xmldom";
-import TagParser from '../../src/tags/TagParser';
-import constants from "../../src/constants";
-import {escapeRegExp} from "../../src/tags/tagUtils";
+import TagParser from '../../../src/tags/TagParser';
+import constants from "../../../src/constants";
+import {escapeRegExp} from "../../../src/tags/tagUtils";
 
 test('lexer with builtin delimiters', () => {
     const {delimiters} = constants;

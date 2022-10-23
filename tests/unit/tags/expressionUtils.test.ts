@@ -1,5 +1,5 @@
 import {faker} from '@faker-js/faker';
-import {pad} from '../../src/tags/expressionUtils';
+import {pad} from '../../../src/tags/expressionUtils';
 
 test('pad', () => {
     const i1 = faker.datatype.number({min: 0, max: 9});

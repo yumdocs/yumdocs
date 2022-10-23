@@ -1,6 +1,6 @@
 import angular from 'angular-expressions';
 import { faker } from "@faker-js/faker";
-import expressionEngine from "../../src/tags/expressionEngine";
+import expressionEngine from "../../../src/tags/expressionEngine";
 
 const DATA = {
     dummy: faker.random.word(),
