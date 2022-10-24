@@ -136,9 +136,8 @@ class OpenXMLTemplate {
      * load
      * @param handle
      */
-    async load(handle: string | File) {
+    async load(handle: string | File) { // TODO Consider Blob, ArrayBuffer and more...
         OpenXMLTemplate.resetTime();
-        // TODO Consider Blob, ArrayBuffer and more...
         if (isNodeJS && typeof handle === 'string') {
             await this._loadNodePath(<string>handle);
         } else if (!isNodeJS && handle instanceof File) {
@@ -249,7 +248,7 @@ class OpenXMLTemplate {
      * saveAs
      * @param path
      */
-    async saveAs(path: string) {
+    async saveAs(path: string) { // TODO Consider passing JSZip generateAsync options
         OpenXMLTemplate.resetTime();
         if (isNodeJS) {
             const buf = await this._zip.generateAsync({
