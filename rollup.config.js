@@ -1,11 +1,13 @@
-// rollup.config.mjs
+// rollup.config.js
 // see https://github.com/rollup/rollup-starter-lib/blob/typescript/rollup.config.js
-import typescript from '@rollup/plugin-typescript';
-import nodeResolve from "@rollup/plugin-node-resolve";
-import commonjs from "@rollup/plugin-commonjs";
-import pkg from './package.json' assert { type: "json" };
+const typescript = require('@rollup/plugin-typescript');
+const nodeResolve = require('@rollup/plugin-node-resolve');
+const commonjs = require('@rollup/plugin-commonjs');
+// (node:1669) ExperimentalWarning: Importing JSON modules is an experimental feature.
+// import pkg from './package.json' assert { type: "json" };
+const pkg = require('./package.json');
 
-export default [
+module.exports = [
     // Browser friendly UMD build
     {
         input: 'src/OpenXMLTemplate.ts',
