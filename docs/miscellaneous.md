@@ -33,6 +33,12 @@
 - https://www.npmjs.com/package/angular-expressions
 - https://jmespath.org/
 
+# File system options
+
+- https://github.com/eligrey/FileSaver.js
+- https://github.com/jimmywarting/StreamSaver.js
+- https://github.com/jimmywarting/native-file-system-adapter
+
 ## e2e tests
 
 - https://www.npmjs.com/package/office-text-extractor

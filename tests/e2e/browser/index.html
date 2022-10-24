@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../../../dist/index.umd.js"></script>
+</head>
+<body>
+
+<h3>Enter some JSON data</h3>
+<textarea></textarea>
+<p id="message1" style="color:red"></p>
+
+<h3>Choose a document</h3>
+<p>Select <a href="../../templates/simple.docx">simple.docx</a> or update JSON data</p>
+<input type="file" />
+<p id="message2" style="color:red"></p>
+
+<h3>Merge</h3>
+<button>Go</button>
+<p id="message3" style="color:red"></p>
+
+<script>
+    const { OpenXMLTemplate } = window;
+    const template = new OpenXMLTemplate();
+    const textarea = document.getElementsByTagName('textarea')[0];
+    const input = document.getElementsByTagName('input')[0];
+    const button = document.getElementsByTagName('button')[0];
+
+    // data
+    let data = { dummy: "word" };
+    textarea.value = JSON.stringify(data);
+    textarea.addEventListener('change', evt => {
+        const message = document.getElementById('message1');
+        try {
+            data = JSON.parse(evt.currentTarget.value);
+            message.innerHTML = '';
+        } catch(err) {
+            message.innerHTML = err.message;
+        }
+    });
+
+    // file
+    let file;
+    input.addEventListener('change', evt => {
+        file = evt.currentTarget.files[0];
+        const message = document.getElementById('message2');
+        template.load(file)
+            .then(() => {
+                button.disabled = false;
+                message.innerHTML = '';
+            })
+            .catch(err => {
+                button.disabled = true;
+                message.innerHTML = err.message;
+            });
+    });
+
+    // merge
+    button.disabled = true;
+    button.addEventListener('click', evt => {
+        const message = document.getElementById('message3');
+        template.render(data)
+            .then(() => {
+                message.innerHTML = '';
+                template.saveAs(file.name)
+                    .catch(error => {
+                        message.innerHTML = error.message;
+                    });
+            })
+            .catch(error => {
+                message.innerHTML = error.message;
+            });
+    });
+</script>
+
+</body>
+</html>

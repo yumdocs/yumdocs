@@ -1,6 +1,6 @@
-import {g, isNode} from './polyfillsUtils';
+import {g, isNodeJS} from './polyfillsUtils';
 
-const origin = isNode ? require('@xmldom/xmldom') : g;
+const origin = isNodeJS ? require('@xmldom/xmldom') : g;
 
 export const DOMImplementation = origin.DOMImplementation;
 export const DOMParser = origin.DOMParser;

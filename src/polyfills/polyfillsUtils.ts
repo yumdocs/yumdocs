@@ -1,8 +1,8 @@
 /**
- * isNode
+ * isNodeJS
  * @see https://github.com/mozilla/pdf.js/blob/master/src/shared/is_node.js
  */
-export const isNode: boolean =
+export const isNodeJS: boolean =
     typeof process === 'object' &&
     process + '' === '[object process]' &&
     !process.versions.nw &&

@@ -17,7 +17,7 @@ export default [
         plugins: [
             commonjs(),
             nodeResolve({
-                resolveOnly: [/* '@xmldom/xmldom', */ 'jexl', 'jszip']
+                resolveOnly: [/* '@xmldom/xmldom', */ 'file-saver', 'jexl', 'jszip']
             }),
             typescript(),
         ]

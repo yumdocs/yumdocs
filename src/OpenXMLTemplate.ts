@@ -11,6 +11,8 @@ import partMap from "./parts/partMap";
 import ITagConstructor from "./tags/ITagConstructor";
 import tagMap from "./tags/tagMap";
 import expressionEngine from "./tags/expressionEngine";
+import { File, saveAs } from "./polyfills/File";
+import {isNodeJS} from "./polyfills/polyfillsUtils";
 
 const CONTENT_TYPES = '[Content_Types].xml';
 
@@ -97,12 +99,11 @@ class OpenXMLTemplate {
     }
 
     /**
-     * load
+     * _loadNodePath
      * @param path
+     * @private
      */
-    async load(path: string) {
-        OpenXMLTemplate.resetTime();
-        // TODO Check browser versus nodeJS (this is nodeJS)
+    private async _loadNodePath(path: string) {
         try {
             const handle = await fs.promises.readFile(path);
             this._zip = await JSZip.loadAsync(handle);
@@ -115,6 +116,36 @@ class OpenXMLTemplate {
                 throw new OpenXMLError(1013, {data: {path}, error});
             }
         }
+    }
+
+    /**
+     * _loadBrowserFile
+     * @param file
+     * @private
+     */
+    private async _loadBrowserFile(file: File) {
+        try {
+            this._zip = await JSZip.loadAsync(file);
+        } catch(error) {
+            console.log((<Error>error).message);
+            debugger;
+        }
+    }
+
+    /**
+     * load
+     * @param handle
+     */
+    async load(handle: string | File) {
+        OpenXMLTemplate.resetTime();
+        // TODO Consider Blob, ArrayBuffer and more...
+        if (isNodeJS && typeof handle === 'string') {
+            await this._loadNodePath(<string>handle);
+        } else if (!isNodeJS && handle instanceof File) {
+            await this._loadBrowserFile(<File>handle);
+        } else {
+            throw new OpenXMLError(2000); // TODO review code + message
+        }
         OpenXMLTemplate.showTime('Zip loaded');
     }
 
@@ -122,7 +153,7 @@ class OpenXMLTemplate {
      * _getPartRefs
      * @private
      */
-    async _getPartRefs() : Promise<Array<IPartReference>> {
+    private async _getPartRefs() : Promise<Array<IPartReference>> {
         const ret: Array<IPartReference> = [];
         let xml;
         try {
@@ -130,7 +161,7 @@ class OpenXMLTemplate {
             xml = await this._zip.file(CONTENT_TYPES)?.async('string') || '';
             OpenXMLTemplate.showTime('Content types loaded as xml');
             const dom = new DOMParser().parseFromString(xml, constants.mimeType);
-            const nodes = dom.childNodes[2].childNodes;
+            const nodes = dom.childNodes[isNodeJS ? 2 : 0].childNodes;
             for(let i = 0; i < nodes.length; i++) {
                 const node = nodes[i] as Element;
                 // We ignore nodes with nodeName === 'Default' nodes'
@@ -220,13 +251,18 @@ class OpenXMLTemplate {
      */
     async saveAs(path: string) {
         OpenXMLTemplate.resetTime();
-        // TODO Check browser versus nodeJS (this is nodeJS)
-        const buf = await this._zip.generateAsync({
-            type: 'nodebuffer',
-            streamFiles: true,
-            // compression: 'DEFLATE'
-        });
-        await fs.promises.writeFile(path, buf);
+        if (isNodeJS) {
+            const buf = await this._zip.generateAsync({
+                type: 'nodebuffer',
+                streamFiles: true,
+                // compression: 'DEFLATE'
+            });
+            await fs.promises.writeFile(path, buf);
+        } else {
+            const blob = await this._zip.generateAsync({type: 'blob' });
+            saveAs(blob, path);
+
+        }
         OpenXMLTemplate.showTime('Zip saved');
     }
 }
