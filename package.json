@@ -1,6 +1,9 @@
 {
-  "name": "OpenXMLTemplate",
+  "name": "@yumdocs/yumdocs",
   "version": "0.0.1",
+  "author": "https://github.com/jlchereau",
+  "description": "Template engine for office documents",
+  "license": "MIT",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "browser": "dist/index.umd.js",
