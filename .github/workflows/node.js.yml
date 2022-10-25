@@ -3,6 +3,10 @@
 
 name: Node.js CI
 
+# TODO: Consider publishing on gh release in a separate workflow
+# on:
+#   release:
+#     types: [created]
 on: [push, pull_request]
 
 jobs:
@@ -24,11 +28,45 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Test on Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
-      - run: npm run build --if-present
-      - run: mkdir temp
-      - run: npm test
+
+      - name: Install packages
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: |
+          mkdir temp
+          npm test
+
+  publish:
+    name: Publish
+    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      FORCE_COLOR: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup nodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: "lts/*"
+
+      - name: Install packages
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish to npmjs.com
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
