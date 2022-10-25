@@ -20,7 +20,7 @@ Copyright (c) 2022 - Jacques L. Chereau. All rights reserved.
 
 ## Quick Start
 
-Check https://dev.yumdocs.com for browser instructions.
+Check https://dev.yumdocs.com for browser instructions. The following targets nodeJS.
 
 ### Prerequisites
 
@@ -28,7 +28,7 @@ Download and install nodeJS v16+ from https://nodejs.org/.
 
 ### Installation
 
-Create a project directory and run:
+Create a project directory, make it your working directory, and run:
 
 ```shell
 npm init -y
@@ -49,4 +49,6 @@ await t.render({dummy: 'Anything you see fit'});
 await t.saveAs('./output.docx');
 ```
 
-3) `output.docx` has been generated and the `{{dummy}}` placeholder has been replaced with `Anything you see fit`.
+3) Run `node index.mjs`.
+
+4) `output.docx` has been generated and the `{{dummy}}` placeholder has been replaced with `Anything you see fit`.
