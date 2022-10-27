@@ -5,7 +5,7 @@ import ITagConstructor from "./ITagConstructor";
 
 /**
  * tagMap
- * Note: avoids circular references with OpenXMLTemplate
+ * Note: avoids circular references with YumTemplate
  */
 // const tagMap = new Map<string, typeof AbstractTag>([
 const tagMap = new Map<string, ITagConstructor>([

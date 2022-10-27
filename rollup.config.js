@@ -10,7 +10,7 @@ const pkg = require('./package.json');
 module.exports = [
     // Browser friendly UMD build
     {
-        input: 'src/OpenXMLTemplate.ts',
+        input: 'src/index.ts',
         output: {
             format: 'umd',
             file: pkg.browser,
@@ -32,7 +32,7 @@ module.exports = [
     // an array for the `output` option, where we can specify
     // `file` and `format` for each target)
     {
-        input: 'src/OpenXMLTemplate.ts',
+        input: 'src/index.ts',
         external: pkg.bundledDependencies,
         plugins: [
             typescript()

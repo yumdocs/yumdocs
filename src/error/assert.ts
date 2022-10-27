@@ -1,4 +1,4 @@
-import OpenXMLError from './OpenXMLError';
+import YumError from './YumError';
 
 /**
  * assert
@@ -7,6 +7,6 @@ import OpenXMLError from './OpenXMLError';
  */
 export function assert(condition: any, message?: string): asserts condition {
     if (!condition) {
-        throw new OpenXMLError(1001, message ? { data: { message } } : undefined);
+        throw new YumError(1001, message ? { data: { message } } : undefined);
     }
 }

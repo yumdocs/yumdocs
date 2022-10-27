@@ -4,7 +4,7 @@ import frFR from "./fr-FR";
 
 /**
  * cultureMap
- * Note: avoids circular references with OpenXMLTemplate
+ * Note: avoids circular references with YumTemplate
  */
 const cultureMap = new Map<string, Record<string, unknown>>([
     ['en-GB', enGB],

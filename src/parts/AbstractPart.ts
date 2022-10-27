@@ -32,7 +32,7 @@ abstract class AbstractPart implements IPart {
     ) {
         this._name = name;
         this._type = type;
-        this._parent = parent; // The parent list of parts in OpenXMLTemplate
+        this._parent = parent; // The parent list of parts in YumTemplate
         this._options = options; // These options
         const ppXml = this._preProcess(xml);
         this._dom = new DOMParser().parseFromString(ppXml, constants.mimeType);

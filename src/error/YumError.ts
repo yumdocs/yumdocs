@@ -1,10 +1,10 @@
 import errorCodes from './errorCodes';
 
 /**
- * OpenXMLError
+ * YumError
  */
-class OpenXMLError extends Error {
-    readonly name: string = 'OpenXMLError';
+class YumError extends Error {
+    readonly name: string = 'YumError';
     code: number;
     data?: any;
     originalError?: Error;
@@ -30,11 +30,11 @@ class OpenXMLError extends Error {
         if (Object.prototype.toString.call(options.data) === '[object Object]') {
             this.data = options.data;
         }
-        this.name = 'OpenXMLError';
+        this.name = 'YumError';
     }
 }
 
 /**
  * Default export
  */
-export default OpenXMLError;
+export default YumError;

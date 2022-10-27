@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import OpenXMLTemplate from '../../src/OpenXMLTemplate';
+import YumTemplate from '../../src/YumTemplate';
 import {hasTagsRegExp} from "../../src/tags/tagUtils";
 
 const INPUT_DIR = './tests/templates/';
@@ -14,7 +14,7 @@ const DATA = {
 };
 
 test('Word File', async () => {
-    const file = new OpenXMLTemplate();
+    const file = new YumTemplate();
     await file.load(`${INPUT_DIR}${DOCX}`);
     const ret = await file.render(DATA);
     await file.saveAs(`${OUTPUT_DIR}${DOCX}`);
@@ -22,7 +22,7 @@ test('Word File', async () => {
 });
 
 test('PowerPoint File', async () => {
-    const file = new OpenXMLTemplate();
+    const file = new YumTemplate();
     await file.load(`${INPUT_DIR}${PPTX}`);
     const ret = await file.render(DATA);
     await file.saveAs(`${OUTPUT_DIR}${PPTX}`);
@@ -30,7 +30,7 @@ test('PowerPoint File', async () => {
 });
 
 xtest('Excel File', async () => {
-    const file = new OpenXMLTemplate();
+    const file = new YumTemplate();
     await file.load(`${INPUT_DIR}${XLSX}`);
     const ret = await file.render(DATA);
     await file.saveAs(`${OUTPUT_DIR}${XLSX}`);

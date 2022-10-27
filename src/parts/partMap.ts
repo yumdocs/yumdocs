@@ -3,7 +3,7 @@ import TemplatedPart from "../parts/TemplatedPart";
 
 /**
  * partMap
- * Note: avoids circular references with OpenXMLTemplate
+ * Note: avoids circular references with YumTemplate
  */
 // const partMap = new Map<string, typeof AbstractPart>([
 const partMap = new Map<string, IPartConstructor>([

@@ -3,7 +3,7 @@ import JSZip from 'jszip';
 import { DOMParser } from './polyfills/xmldom';
 import constants from './constants';
 import cultureMap from './cultures/cultureMap';
-import OpenXMLError from "./error/OpenXMLError";
+import YumError from "./error/YumError";
 import IPart from "./parts/IPart";
 import IPartConstructor from "./parts/IPartConstructor";
 import IPartReference from "./parts/IPartReference";
@@ -17,9 +17,9 @@ import {isNodeJS} from "./polyfills/polyfillsUtils";
 const CONTENT_TYPES = '[Content_Types].xml';
 
 /**
- * OpenXMLTemplate
+ * YumTemplate
  */
-class OpenXMLTemplate {
+class YumTemplate {
     private readonly _options: Record<string, unknown>;
     private readonly _parts: Map<string, IPart>;
     private _zip: JSZip;
@@ -30,13 +30,13 @@ class OpenXMLTemplate {
     static instrument = false;
     static time = 0;
     static resetTime() {
-        OpenXMLTemplate.time = Date.now();
+        YumTemplate.time = Date.now();
     };
     static showTime(message: string) {
-        if (OpenXMLTemplate.instrument) {
+        if (YumTemplate.instrument) {
             const t = Date.now();
-            console.log(`${message}: ${t - OpenXMLTemplate.time} ms`)
-            OpenXMLTemplate.time = t;
+            console.log(`${message}: ${t - YumTemplate.time} ms`)
+            YumTemplate.time = t;
         }
     };
 
@@ -109,11 +109,11 @@ class OpenXMLTemplate {
             this._zip = await JSZip.loadAsync(handle);
         } catch (error) {
             if (Object.prototype.hasOwnProperty.call(error, 'syscall')) {
-                throw new OpenXMLError(1011, {data: {path}, error});
+                throw new YumError(1011, {data: {path}, error});
             } else if ((<Error>error).message.startsWith('Can\'t find end of central directory')) {
-                throw new OpenXMLError(1012, {data: {path}, error});
+                throw new YumError(1012, {data: {path}, error});
             } else {
-                throw new OpenXMLError(1013, {data: {path}, error});
+                throw new YumError(1013, {data: {path}, error});
             }
         }
     }
@@ -137,15 +137,15 @@ class OpenXMLTemplate {
      * @param handle
      */
     async load(handle: string | File) { // TODO Consider Blob, ArrayBuffer and more...
-        OpenXMLTemplate.resetTime();
+        YumTemplate.resetTime();
         if (isNodeJS && typeof handle === 'string') {
             await this._loadNodePath(<string>handle);
         } else if (!isNodeJS && handle instanceof File) {
             await this._loadBrowserFile(<File>handle);
         } else {
-            throw new OpenXMLError(2000); // TODO review code + message
+            throw new YumError(2000); // TODO review code + message
         }
-        OpenXMLTemplate.showTime('Zip loaded');
+        YumTemplate.showTime('Zip loaded');
     }
 
     /**
@@ -156,9 +156,9 @@ class OpenXMLTemplate {
         const ret: Array<IPartReference> = [];
         let xml;
         try {
-            OpenXMLTemplate.resetTime();
+            YumTemplate.resetTime();
             xml = await this._zip.file(CONTENT_TYPES)?.async('string') || '';
-            OpenXMLTemplate.showTime('Content types loaded as xml');
+            YumTemplate.showTime('Content types loaded as xml');
             const dom = new DOMParser().parseFromString(xml, constants.mimeType);
             const nodes = dom.childNodes[isNodeJS ? 2 : 0].childNodes;
             for(let i = 0; i < nodes.length; i++) {
@@ -181,7 +181,7 @@ class OpenXMLTemplate {
                     }
                     if (name && type) {
                         const Part = partMap.get(name.replace(/\d+(.xml)$/, '$1'));
-                        // Note: without registered part in OpenXMLTemplate.parts, no rendering
+                        // Note: without registered part in YumTemplate.parts, no rendering
                         if (Part) {
                             ret.push({name, type, Part});
                         }
@@ -189,9 +189,9 @@ class OpenXMLTemplate {
                 }
             }
         } catch (error) {
-            throw new OpenXMLError(1014, { data: {xml}, error });
+            throw new YumError(1014, { data: {xml}, error });
         }
-        OpenXMLTemplate.showTime('Content types read');
+        YumTemplate.showTime('Content types read');
         return ret;
     }
 
@@ -200,7 +200,7 @@ class OpenXMLTemplate {
      * @private
      */
     private async _loadParts(partRefs: Array<IPartReference>) : Promise<void> {
-        OpenXMLTemplate.resetTime();
+        YumTemplate.resetTime();
         // Note: Priority order is not important here
         const promises = partRefs.map(async (ref: IPartReference) => {
             const xml: string = await this._zip.files[ref.name].async('text');
@@ -210,7 +210,7 @@ class OpenXMLTemplate {
             );
         });
         await Promise.all(promises);
-        OpenXMLTemplate.showTime('Content parts loaded');
+        YumTemplate.showTime('Content parts loaded');
     }
 
     /**
@@ -223,7 +223,7 @@ class OpenXMLTemplate {
         const partRefs = await this._getPartRefs();
         // Load xml files into Parts including xml dom
         await this._loadParts(partRefs);
-        OpenXMLTemplate.resetTime();
+        YumTemplate.resetTime();
         // Priority in increasing order (1 is highest, 10 is lowest)
         const parts = Array.from(this._parts.values())
             .sort((a, b) => (a.priority - b.priority));
@@ -240,7 +240,7 @@ class OpenXMLTemplate {
             // Update zip stream
             this._zip.file(part.name, xml);
         }
-        OpenXMLTemplate.showTime('Data merged');
+        YumTemplate.showTime('Data merged');
         return ret; // For testing
     }
 
@@ -249,7 +249,7 @@ class OpenXMLTemplate {
      * @param path
      */
     async saveAs(path: string) { // TODO Consider passing JSZip generateAsync options
-        OpenXMLTemplate.resetTime();
+        YumTemplate.resetTime();
         if (isNodeJS) {
             const buf = await this._zip.generateAsync({
                 type: 'nodebuffer',
@@ -262,8 +262,8 @@ class OpenXMLTemplate {
             saveAs(blob, path);
 
         }
-        OpenXMLTemplate.showTime('Zip saved');
+        YumTemplate.showTime('Zip saved');
     }
 }
 
-export default OpenXMLTemplate;
+export default YumTemplate;
