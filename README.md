@@ -42,7 +42,7 @@ npm i @yumdocs/yumdocs
 2) Create a file named `index.mjs` and copy paste:
 
 ```js
-import YumTemplate from '@yumdocs/yumdocs';
+import {YumTemplate} from '@yumdocs/yumdocs';
 const t = new YumTemplate();
 await t.load('./input.docx');
 await t.render({field: 'Anything you see fit'});
