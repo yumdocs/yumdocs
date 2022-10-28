@@ -1,14 +1,12 @@
 import jexl from "jexl";
 import IExpressionEngine from "./IExpressionEngine";
 
-// TODO Configure jexl here
+// TODO Configure jexl with number and date formatting here
 
 /**
  * ExpressionEngine
  */
 class ExpressionEngine implements IExpressionEngine {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     private _evaluate: (expression: string, context: Record<string, unknown>) => Promise<unknown>;
 
     /**
@@ -16,7 +14,7 @@ class ExpressionEngine implements IExpressionEngine {
      * @param evaluate
      */
     constructor(evaluate: (expression: string, context: Record<string, unknown>) => Promise<unknown>) {
-        this.setEval(evaluate);
+        this._evaluate = evaluate;
     }
 
     /**

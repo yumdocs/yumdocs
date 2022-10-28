@@ -20,18 +20,16 @@ class MatchedNode {
     /**
      * statement
      */
-    get statement() {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
+    get statement(): string {
+        // @ts-expect-error TS2339: Property 'groups' does not exist on type 'string[]'.
         return this._match.groups.statement;
     }
 
     /**
      * expression
      */
-    get expression() {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
+    get expression(): string {
+        // @ts-expect-error TS2339: Property 'groups' does not exist on type 'string[]'.
         return this._match.groups.expression;
     }
 
@@ -49,7 +47,7 @@ class MatchedNode {
     replaceMatch(data: string) {
         const tag: string = this._match[0];
         const offset: number = (this.node.nodeValue || constants.empty).indexOf(tag);
-        const count = tag.length;
+        const count: number = tag.length;
         return this.node.replaceData(offset, count, data);
     }
 }
