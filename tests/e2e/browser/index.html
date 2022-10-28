@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script src="../../../dist/index.umd.js"></script>
+    <script src="https://unpkg.com/@yumdocs/yumdocs"></script>
 </head>
 <body>
 
 <h3>Enter some JSON data</h3>
-<textarea></textarea>
+<textarea>{"dummy":"Anything you see fit"}</textarea>
 <p id="message1" style="color:red"></p>
 
 <h3>Choose a document</h3>
@@ -21,8 +21,8 @@
 <p id="message3" style="color:red"></p>
 
 <script>
-    const { OpenXMLTemplate } = window;
-    const template = new OpenXMLTemplate();
+    const { YumTemplate } = window["@yumdocs/yumdocs"];
+    const template = new YumTemplate();
     const textarea = document.getElementsByTagName('textarea')[0];
     const input = document.getElementsByTagName('input')[0];
     const button = document.getElementsByTagName('button')[0];
