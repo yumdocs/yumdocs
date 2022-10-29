@@ -1,4 +1,5 @@
 import angular from 'angular-expressions';
+import jmespath from 'jmespath';
 import { faker } from "@faker-js/faker";
 import expressionEngine from "../../../src/tags/expressionEngine";
 
@@ -7,6 +8,18 @@ const DATA = {
 }
 
 test('Simple expression', async () => {
+    const ret = await expressionEngine.evaluate('dummy', DATA);
+    expect(ret).toEqual(DATA.dummy);
+});
+
+test('Jmespath', async () => {
+    function evaluate(expression: string, context: Record<string, unknown>): Promise<unknown> {
+        return new Promise((resolve /*, reject */) => {
+            const ret = jmespath.search(context, expression);
+            resolve(ret);
+        });
+    }
+    expressionEngine.setEval(evaluate);
     const ret = await expressionEngine.evaluate('dummy', DATA);
     expect(ret).toEqual(DATA.dummy);
 });
