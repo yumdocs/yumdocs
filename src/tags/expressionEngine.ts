@@ -1,8 +1,6 @@
 import jexl from "jexl";
 import IExpressionEngine from "./IExpressionEngine";
 
-// TODO Configure jexl with number and date formatting here
-
 /**
  * ExpressionEngine
  */
@@ -38,6 +36,9 @@ class ExpressionEngine implements IExpressionEngine {
 /**
  * Our expression engine
  */
+jexl.addFunction('min', Math.min);
+jexl.addFunction('max', Math.max);
+// TODO Configure
 const expressionEngine = new ExpressionEngine(jexl.eval.bind(jexl));
 
 /**
