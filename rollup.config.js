@@ -26,7 +26,7 @@ module.exports = [
             nodeResolve({
                 resolveOnly: [/* '@xmldom/xmldom', */ 'file-saver', 'jexl', 'jszip']
             }),
-            nodePolyfills(),
+            nodePolyfills(), // TODO Check customisation options to reduce bundle size
             typescript(),
         ]
     },
