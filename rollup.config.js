@@ -7,7 +7,10 @@ const nodePolyfills =require('rollup-plugin-polyfill-node');
 // (node:1669) ExperimentalWarning: Importing JSON modules is an experimental feature.
 // import pkg from './package.json' assert { type: "json" };
 const pkg = require('./package.json');
-
+const globals = {
+    'safe-buffer': 'buffer',
+    'lie': 'lie'
+}
 module.exports = [
     // Browser friendly UMD build
     {
@@ -16,6 +19,7 @@ module.exports = [
             format: 'umd',
             file: pkg.browser,
             name: pkg.name,
+            globals
         },
         plugins: [
             commonjs(),
@@ -40,8 +44,16 @@ module.exports = [
             typescript()
         ],
         output: [
-            { file: pkg.main, format: 'cjs' },
-            { file: pkg.module, format: 'esm' }
+            {
+                file: pkg.main,
+                format: 'cjs',
+                globals
+            },
+            {
+                file: pkg.module,
+                format: 'esm',
+                globals
+            }
         ]
     }
 ];
