@@ -3,6 +3,7 @@
 const typescript = require('@rollup/plugin-typescript');
 const nodeResolve = require('@rollup/plugin-node-resolve');
 const commonjs = require('@rollup/plugin-commonjs');
+const nodePolyfills =require('rollup-plugin-polyfill-node');
 // (node:1669) ExperimentalWarning: Importing JSON modules is an experimental feature.
 // import pkg from './package.json' assert { type: "json" };
 const pkg = require('./package.json');
@@ -21,6 +22,7 @@ module.exports = [
             nodeResolve({
                 resolveOnly: [/* '@xmldom/xmldom', */ 'file-saver', 'jexl', 'jszip']
             }),
+            nodePolyfills(),
             typescript(),
         ]
     },
