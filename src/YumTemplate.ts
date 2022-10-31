@@ -11,8 +11,8 @@ import partMap from "./parts/partMap";
 import ITagConstructor from "./tags/ITagConstructor";
 import tagMap from "./tags/tagMap";
 import expressionEngine from "./tags/expressionEngine";
-import { File, saveAs } from "./polyfills/File";
-import {isNodeJS} from "./polyfills/polyfillsUtils";
+import { Blob, File, saveAs } from "./polyfills/File";
+import { isNodeJS } from "./polyfills/polyfillsUtils";
 
 const CONTENT_TYPES = '[Content_Types].xml';
 
@@ -119,6 +119,19 @@ class YumTemplate {
     }
 
     /**
+     * _loadBrowserBlob
+     * @param file
+     * @private
+     */
+    private async _loadBrowserBlob(blob: Blob) {
+        try {
+            this._zip = await JSZip.loadAsync(blob);
+        } catch(error) {
+            console.log((<Error>error).message);
+        }
+    }
+
+    /**
      * _loadBrowserFile
      * @param file
      * @private
@@ -128,7 +141,6 @@ class YumTemplate {
             this._zip = await JSZip.loadAsync(file);
         } catch(error) {
             console.log((<Error>error).message);
-            debugger;
         }
     }
 
@@ -142,6 +154,8 @@ class YumTemplate {
             await this._loadNodePath(<string>handle);
         } else if (!isNodeJS && handle instanceof File) {
             await this._loadBrowserFile(<File>handle);
+        } else if (!isNodeJS && handle instanceof Blob) {
+            await this._loadBrowserBlob(<Blob>handle);
         } else {
             throw new YumError(2000); // TODO review code + message
         }
