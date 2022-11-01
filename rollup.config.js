@@ -3,6 +3,7 @@
 const typescript = require('@rollup/plugin-typescript');
 const nodeResolve = require('@rollup/plugin-node-resolve');
 const commonjs = require('@rollup/plugin-commonjs');
+const alias = require('@rollup/plugin-alias');
 const nodePolyfills =require('rollup-plugin-polyfill-node');
 // (node:1669) ExperimentalWarning: Importing JSON modules is an experimental feature.
 // import pkg from './package.json' assert { type: "json" };
@@ -23,6 +24,11 @@ module.exports = [
         },
         plugins: [
             commonjs(),
+            alias({
+                entries: [
+                    { find: 'fs', replacement: './src/polyfills/fs.ts' }
+                ]
+            }),
             nodeResolve({
                 resolveOnly: [/* '@xmldom/xmldom', */ 'file-saver', 'jexl', 'jszip']
             }),

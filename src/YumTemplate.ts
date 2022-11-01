@@ -1,4 +1,4 @@
-import * as fs from './polyfills/fs';
+import {promises as fs} from 'fs';
 import JSZip from 'jszip';
 import { DOMParser } from './polyfills/xmldom';
 import constants from './constants';
@@ -105,7 +105,7 @@ class YumTemplate {
      */
     private async _loadNodePath(path: string) {
         try {
-            const handle = await fs.promises.readFile(path);
+            const handle = await fs.readFile(path);
             this._zip = await JSZip.loadAsync(handle);
         } catch (error) {
             if (Object.prototype.hasOwnProperty.call(error, 'syscall')) {
@@ -270,7 +270,7 @@ class YumTemplate {
                 streamFiles: true,
                 // compression: 'DEFLATE'
             });
-            await fs.promises.writeFile(path, buf);
+            await fs.writeFile(path, buf);
         } else {
             const blob = await this._zip.generateAsync({type: 'blob' });
             saveAs(blob, path);
