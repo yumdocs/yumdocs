@@ -1,6 +1,6 @@
 {
   "name": "@yumdocs/yumdocs",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "author": "https://github.com/jlchereau",
   "description": "Template engine for office documents",
   "license": "MIT",
