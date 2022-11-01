@@ -45,7 +45,7 @@ jexl.addFunction('@max', Math.max);
 // Transforms
 jexl.addTransform('upper', (val) => String(val).toUpperCase())
 jexl.addTransform('lower', (val) => String(val).toLowerCase())
-jexl.addTransform('substring', (val, start, end) => String(val).substring(start, end))
+jexl.addTransform('substr', (val, start, end) => String(val).substring(start, end))
 
 const expressionEngine = new ExpressionEngine(jexl.eval.bind(jexl));
 
