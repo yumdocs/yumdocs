@@ -1,4 +1,4 @@
-import {YumError, YumTemplate} from '../../src/index';
+import {YumError, YumTemplate, expressionEngine} from '../../src/index';
 
 describe('Entry Points', () => {
     test('YumError', () => {
@@ -7,5 +7,10 @@ describe('Entry Points', () => {
 
     test('YumTemplate', () => {
         expect(YumTemplate).toBeInstanceOf(Function);
+    });
+
+    test('expressionEngine', () => {
+        // Note: required for our ExpressionPlayground considering configuration
+        expect(expressionEngine).toHaveProperty('evaluate');
     });
 });
