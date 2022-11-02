@@ -2,7 +2,30 @@
   "name": "@yumdocs/yumdocs",
   "version": "0.1.8",
   "author": "https://github.com/jlchereau",
-  "description": "Template engine for office documents",
+  "description": "Template engine to automate Word, PowerPoint and Excel documents",
+  "keywords": [
+    "Microsoft Office",
+    "Word",
+    "PowerPoint",
+    "Excel",
+    "docx",
+    "pptx",
+    "xlsx",
+    "json",
+    "automation",
+    "generation",
+    "creation",
+    "automate",
+    "generate",
+    "create",
+    "merge",
+    "template",
+    "engine",
+    "Node",
+    "JavaScript",
+    "js",
+    "TypeScript"
+  ],
   "license": "MIT",
   "homepage": "https://github.com/yumdocs/yumdocs#readme",
   "repository": {
@@ -67,11 +90,5 @@
   },
   "engines": {
     "node": ">=14.18.0"
-  },
-  "bundleDependencies": [
-    "@xmldom/xmldom",
-    "file-saver",
-    "jexl",
-    "jszip"
-  ]
+  }
 }
