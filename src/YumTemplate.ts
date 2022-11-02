@@ -109,11 +109,11 @@ class YumTemplate {
             this._zip = await JSZip.loadAsync(handle);
         } catch (error) {
             if (Object.prototype.hasOwnProperty.call(error, 'syscall')) {
-                throw new YumError(1011, {data: {path}, error});
+                throw new YumError(1010, {data: {path}, error});
             } else if ((<Error>error).message.startsWith('Can\'t find end of central directory')) {
-                throw new YumError(1012, {data: {path}, error});
+                throw new YumError(1011, {data: {path}, error});
             } else {
-                throw new YumError(1013, {data: {path}, error});
+                throw new YumError(1012, {data: {path}, error});
             }
         }
     }

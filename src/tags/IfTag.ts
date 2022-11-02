@@ -42,10 +42,10 @@ class IfTag extends AbstractTag implements ITag {
             // Evaluate #if condition
             let condition: boolean;
             try {
-                // TODO What if condition is not boolean???? What about truthy/falsy?
+                // Note: a condition which is truthy/falsy get converted to true/false
                 condition = <boolean>await expressionEngine.evaluate(ifMatchedNode.expression, data);
             } catch(error) {
-                throw new YumError( 1060,{error});
+                throw new YumError( 1060,{error, data: { expression: ifMatchedNode.expression, data }});
             }
             // Update xmldom and ast
             const parent = <Node>topNodes[0].parentNode;

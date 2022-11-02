@@ -34,7 +34,7 @@ class ExpressionTag extends AbstractTag implements ITag {
             // TODO what if condition is not a string???
             str = <string>await expressionEngine.evaluate(matchedNode.expression, data);
         } catch(error) {
-            throw new YumError( 1060,{error});
+            throw new YumError( 1060,{error, data: { expression: matchedNode.expression, data }});
         }
         matchedNode.replaceMatch(str);
         this._done = true;
