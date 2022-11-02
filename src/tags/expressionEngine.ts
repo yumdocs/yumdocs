@@ -44,9 +44,10 @@ jexl.addFunction('$min', Math.min);
 jexl.addFunction('$max', Math.max);
 
 // String transforms
-jexl.addTransform('upper', (val) => String(val).toUpperCase());
 jexl.addTransform('lower', (val) => String(val).toLowerCase());
+jexl.addTransform('replace', (val, search, replacement) => String(val).replace(search, replacement));
 jexl.addTransform('substr', (val, start, end) => String(val).substring(start, end));
+jexl.addTransform('upper', (val) => String(val).toUpperCase());
 
 // Boolean
 

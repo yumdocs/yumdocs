@@ -6,6 +6,7 @@ import tagMap from "./tagMap";
 import ExpressionTag from "./ExpressionTag";
 import ITagConstructor from "./ITagConstructor";
 import {assert} from "../error/assert";
+import YumError from "../error/YumError";
 
 /**
  * TagParser
@@ -112,12 +113,11 @@ class TagParser {
                                 this._current = main.parent;
                             }
                         } else {
-                            debugger;
-                            // TODO throw?
+                            // Possibly main could be undefined
+                            throw new YumError(2000); // TODO Review code
                         }
                     } else {
-                        debugger;
-                        // TODO throw?
+                        throw new YumError(2000); // TODO Review code
                     }
                 }
             }

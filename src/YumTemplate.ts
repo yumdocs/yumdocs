@@ -203,7 +203,7 @@ class YumTemplate {
                 }
             }
         } catch (error) {
-            throw new YumError(1014, { data: {xml}, error });
+            throw new YumError(1020, { data: {xml}, error });
         }
         YumTemplate.showTime('Content types read');
         return ret;
