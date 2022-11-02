@@ -36,16 +36,25 @@ class ExpressionEngine implements IExpressionEngine {
 /**
  * Our expression engine
  */
-// TODO Configure
 
 // Functions
-jexl.addFunction('@min', Math.min);
-jexl.addFunction('@max', Math.max);
+// Note: interestingly, there is no collision between function names and json property names,
+// so the $ prefix could be discarded
+jexl.addFunction('$min', Math.min);
+jexl.addFunction('$max', Math.max);
 
-// Transforms
-jexl.addTransform('upper', (val) => String(val).toUpperCase())
-jexl.addTransform('lower', (val) => String(val).toLowerCase())
-jexl.addTransform('substr', (val, start, end) => String(val).substring(start, end))
+// String transforms
+jexl.addTransform('upper', (val) => String(val).toUpperCase());
+jexl.addTransform('lower', (val) => String(val).toLowerCase());
+jexl.addTransform('substr', (val, start, end) => String(val).substring(start, end));
+
+// Boolean
+
+// Number
+
+// Date
+
+// Array
 
 const expressionEngine = new ExpressionEngine(jexl.eval.bind(jexl));
 
