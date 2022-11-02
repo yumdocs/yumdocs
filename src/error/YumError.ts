@@ -6,7 +6,7 @@ import errorCodes from './errorCodes';
 class YumError extends Error {
     readonly name: string = 'YumError';
     code: number;
-    data?: any;
+    data?: Record<string, unknown>;
     originalError?: Error;
     // TODO stack
 
@@ -28,7 +28,7 @@ class YumError extends Error {
             this.originalError = options.error;
         }
         if (Object.prototype.toString.call(options.data) === '[object Object]') {
-            this.data = options.data;
+            this.data = <Record<string, unknown>>options.data;
         }
         this.name = 'YumError';
     }
