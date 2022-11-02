@@ -4,6 +4,7 @@ import MatchedNode from "./MatchedNode";
 import expressionEngine from "./expressionEngine";
 import constants from "../constants";
 import {assert} from "../error/assert";
+import YumError from "../error/YumError";
 
 /**
  * ExpressionTag
@@ -28,7 +29,13 @@ class ExpressionTag extends AbstractTag implements ITag {
     async render(data: Record<string, unknown>) {
         const matchedNode = this.matchedNodes.get(ExpressionTag.statement);
         assert(matchedNode instanceof MatchedNode);
-        const str: string = <string>await expressionEngine.evaluate(matchedNode.expression, data);
+        let str: string;
+        try {
+            // TODO what if condition is not a string???
+            str = <string>await expressionEngine.evaluate(matchedNode.expression, data);
+        } catch(error) {
+            throw new YumError( 1060,{error});
+        }
         matchedNode.replaceMatch(str);
         this._done = true;
     }

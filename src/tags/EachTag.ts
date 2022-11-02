@@ -4,6 +4,7 @@ import MatchedNode from "./MatchedNode";
 import {assert} from "../error/assert";
 import {getChildrenOfCommonAncestor, getSiblingsBetween} from "./domUtils";
 import expressionEngine from "./expressionEngine";
+import YumError from "../error/YumError";
 
 class EachTag extends AbstractTag implements ITag {
     static readonly statement = '#each';
@@ -37,7 +38,12 @@ class EachTag extends AbstractTag implements ITag {
                 // Find siblings to repeat between #each and #endeach
                 const siblings = getSiblingsBetween(topNodes[0], topNodes[1]);
                 // Evaluate #each expression, which should be an array
-                const arr = await expressionEngine.evaluate(eachMatchedNode.expression, data);
+                let arr: Array<unknown>;
+                try {
+                    arr = Array<unknown>(await expressionEngine.evaluate(eachMatchedNode.expression, data));
+                } catch(error) {
+                    throw new YumError( 1060,{error});
+                }
                 if (!Array.isArray(arr)) {
                     // TODO What if arr is not an array?
                     return;

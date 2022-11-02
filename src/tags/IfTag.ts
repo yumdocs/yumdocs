@@ -4,6 +4,7 @@ import MatchedNode from "./MatchedNode";
 import {assert} from "../error/assert";
 import {contains, getChildrenOfCommonAncestor, getSiblingsBetween} from "./domUtils";
 import expressionEngine from "./expressionEngine";
+import YumError from "../error/YumError";
 
 class IfTag extends AbstractTag implements ITag {
     static readonly statement = '#if';
@@ -39,8 +40,13 @@ class IfTag extends AbstractTag implements ITag {
                 getSiblingsBetween(topNodes[1], topNodes[2]) :
                 [];
             // Evaluate #if condition
-            const condition: boolean = <boolean>await expressionEngine.evaluate(ifMatchedNode.expression, data);
-            // TODO What if condition is not boolean???? What about truthy/falsy?
+            let condition: boolean;
+            try {
+                // TODO What if condition is not boolean???? What about truthy/falsy?
+                condition = <boolean>await expressionEngine.evaluate(ifMatchedNode.expression, data);
+            } catch(error) {
+                throw new YumError( 1060,{error});
+            }
             // Update xmldom and ast
             const parent = <Node>topNodes[0].parentNode;
             for (const sibling of condition? elseSiblings : ifSiblings) {
