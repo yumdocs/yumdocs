@@ -10,7 +10,7 @@ import {sanitizePptMarkup} from "../ppt/pptUtils";
  */
 class TemplatedPart extends AbstractPart {
     readonly priority: number = 1;
-    private _ast: Array<AbstractTag> = [];
+    private readonly _ast: Array<AbstractTag> = [];
 
     /**
      * constructor
