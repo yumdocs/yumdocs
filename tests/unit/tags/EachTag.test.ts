@@ -4,19 +4,20 @@ import {hasTagsRegExp} from "../../../src/tags/tagUtils";
 
 const INPUT_DIR = './tests/templates/';
 const OUTPUT_DIR = './temp/'
-const DATA = {
-    persons: [
-        { name: faker.name.fullName() },
-        { name: faker.name.fullName() },
-        { name: faker.name.fullName() },
-        { name: faker.name.fullName() },
-    ]
-};
-describe('Each tag - ok', () => {
-    const TEST = 'each-tag-ok';
+
+describe('Each tag simple case - ok', () => {
+    const TEST = 'each-tag-simple-ok';
     const DOCX = `${TEST}.docx`;
     const PPTX = `${TEST}.pptx`;
     const XLSX = `${TEST}.xlsx`;
+    const DATA = {
+        persons: [
+            { name: faker.name.fullName() },
+            { name: faker.name.fullName() },
+            { name: faker.name.fullName() },
+            { name: faker.name.fullName() },
+        ]
+    };
 
     test('Word File', async () => {
         const file = new YumTemplate();
@@ -39,6 +40,32 @@ describe('Each tag - ok', () => {
         await file.load(`${INPUT_DIR}${XLSX}`);
         const ret = await file.render(DATA);
         await file.saveAs(`${OUTPUT_DIR}${XLSX}`);
+        expect(ret).not.toMatch(hasTagsRegExp());
+    });
+});
+
+describe('Each tag simple case - missing data', () => {
+    const TEST = 'each-tag-simple-ok';
+    const DOCX = `${TEST}.docx`;
+    // const PPTX = `${TEST}.pptx`;
+    // const XLSX = `${TEST}.xlsx`;
+    const DATA = {
+        a: 1,
+        /*
+        persons: [
+            {name: faker.name.fullName()},
+            {name: faker.name.fullName()},
+            {name: faker.name.fullName()},
+            {name: faker.name.fullName()},
+        ]
+        */
+    };
+
+    test('Word File', async () => {
+        const file = new YumTemplate();
+        await file.load(`${INPUT_DIR}${DOCX}`);
+        const ret = await file.render(DATA);
+        await file.saveAs(`${OUTPUT_DIR}${DOCX}`);
         expect(ret).not.toMatch(hasTagsRegExp());
     });
 });

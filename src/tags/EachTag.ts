@@ -2,7 +2,7 @@ import AbstractTag from "./AbstractTag"; // <-- Use AbstractTag.TagParser to avo
 import ITag from "./ITag";
 import MatchedNode from "./MatchedNode";
 import {assert} from "../error/assert";
-import {getChildrenOfCommonAncestor, getSiblingsBetween} from "./domUtils";
+import {contains, getChildrenOfCommonAncestor, getSiblingsBetween} from "./domUtils";
 import expressionEngine from "./expressionEngine";
 import YumError from "../error/YumError";
 
@@ -38,34 +38,50 @@ class EachTag extends AbstractTag implements ITag {
                 // Find siblings to repeat between #each and #endeach
                 const siblings = getSiblingsBetween(topNodes[0], topNodes[1]);
                 // Evaluate #each expression, which should be an array
-                let arr: Array<unknown>;
+                let arr: unknown; // avoid Array<unknown> because a value which is not an array becomes new Array(value);
                 try {
-                    arr = Array<unknown>(await expressionEngine.evaluate(eachMatchedNode.expression, data));
-                } catch(error) {
-                    throw new YumError( 1060,{error});
+                    arr = await expressionEngine.evaluate(eachMatchedNode.expression, data);
+                } catch (error) {
+                    throw new YumError(1060, {error, data: { expression: eachMatchedNode.expression, data }});
                 }
-                if (!Array.isArray(arr)) {
-                    // TODO What if arr is not an array?
-                    return;
+                if (typeof arr === 'undefined') {
+                    arr = [];
+                } else if (!Array.isArray(arr)) {
+                    throw new YumError(1110, {data: { expression: eachMatchedNode.expression, data }});
                 }
+                const array = arr as Array<Record<string, unknown>>;
                 // Update xmldom and ast
                 const parent = <Node>topNodes[0].parentNode;
-                for (let i = 1; i < arr.length; i++) {
-                    // Duplicate siblings for each array item
+                if (array.length === 0) {
                     for (const sibling of siblings) {
-                        const node = sibling.cloneNode(true);
-                        parent.insertBefore(node, topNodes[1]);
-                        // Parse new node
-                        const _ast = new AbstractTag.TagParser(node).parse(); // TODO options with delimiters
-                        // Add to document ast
-                        this.children.push(..._ast);
+                        // Remove tags from ast
+                        for (let i = this.children.length - 1; i >= 0; i--) {
+                            const [matchedNode] = this.children[i].matchedNodes.values();
+                            if (contains(sibling, matchedNode.node)) {
+                                this.children.splice(i, 1);
+                            }
+                        }
+                        // remove nodes from DOM
+                        parent.removeChild(sibling);
+                    }
+                } else {
+                    for (let i = 1; i < array.length; i++) {
+                        // Duplicate siblings for each array item
+                        for (const sibling of siblings) {
+                            const node = sibling.cloneNode(true);
+                            parent.insertBefore(node, topNodes[1]);
+                            // Parse new node
+                            const _ast = new AbstractTag.TagParser(node).parse(); // TODO options with delimiters
+                            // Add to document ast
+                            this.children.push(..._ast);
+                        }
                     }
                 }
                 // Remove #each and #endeach
                 topNodes.forEach(node => { parent.removeChild(node); });
                 // Process children
                 for (let i = 0; i < this.children.length; i++) {
-                    await this.children[i].render(arr[Math.trunc(i / siblings.length)]);
+                    await this.children[i].render(array[Math.trunc(i / siblings.length)]);
                 }
             }
             this._done = true;
