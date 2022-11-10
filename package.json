@@ -73,7 +73,7 @@
     "angular-expressions": "^1.1.8",
     "eslint": "^8.27.0",
     "eslint-config-prettier": "^8.5.0",
-    "jest": "^29.3.0",
+    "jest": "^29.3.1",
     "jmespath": "^0.16.0",
     "prettier": "^2.7.1",
     "rollup": "^3.2.5",
