@@ -56,10 +56,11 @@ jexl.addTransform('upper', (val: unknown) => String(val).toUpperCase());
 // Boolean - N/A
 
 // Number and Date
-jexl.addTransform('format', (val: unknown, fmt: unknown, culture: unknown) => toString(val as string, fmt as string | undefined, culture as string | undefined));
+jexl.addTransform('format', (val: unknown, fmt: unknown, culture: unknown) =>
+    toString(typeof val !== 'string' || isNaN(Date.parse(val as string)) ? val : Date.parse(val as string), fmt as string | undefined, culture as string | undefined));
 
 // Array
-jexl.addTransform('join', (val: unknown, separator: unknown) => Array.isArray(val) ? val.join(String(separator)) : val);
+jexl.addTransform('join', (val: unknown, separator: unknown) => Array.isArray(val) ? val.join(typeof separator === 'undefined' ? '' : String(separator)) : val);
 jexl.addTransform('orderBy', async (val: unknown, expression: unknown, reverse = false) => {
     if (Array.isArray(val)) {
         // Eval async jexl expressions on all array items
@@ -79,7 +80,7 @@ jexl.addTransform('orderBy', async (val: unknown, expression: unknown, reverse =
             }
         });
         // Return an array of values
-        return val.map(el => el._v);
+        return _val.map(el => el._v);
     } else {
         return val;
     }

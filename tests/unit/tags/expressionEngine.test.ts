@@ -4,10 +4,16 @@ import { faker } from "@faker-js/faker";
 import expressionEngine from "../../../src/tags/expressionEngine";
 
 const DATA = {
-    text: faker.datatype.string(),
-    number: faker.datatype.number(),
     boolean: faker.datatype.boolean(),
     date: faker.datatype.datetime(),
+    number: faker.datatype.number(),
+    text: faker.datatype.string(),
+    words: new Array(1 + Math.trunc(10 * Math.random())).fill('').map(() => faker.random.words()),
+    persons: new Array(1 + Math.trunc(10 * Math.random())).fill({}).map(() => ({
+        firstName: faker.name.firstName(),
+        lastName: faker.name.firstName(),
+        age: faker.datatype.number({min: 18, max: 100, precision: 0})
+    })),
 }
 
 describe('Basic test', () => {
@@ -25,9 +31,16 @@ describe('Functions', () => {
 });
 
 describe('Transforms', () => {
+    // String
     test('lower', async () => {
         const ret = await expressionEngine.evaluate('text|lower', DATA);
         expect(ret).toEqual(DATA.text.toLowerCase());
+    });
+    test('replace', async () => {
+        const search = DATA.text.substring(Math.floor(DATA.text.length/2), Math.ceil(DATA.text.length/2)).replace('"', '\\"');
+        const replace = faker.datatype.string().replace('"', '\\"');
+        const ret = await expressionEngine.evaluate(`text|replace("${search}","${replace}")`, DATA);
+        expect(ret).toEqual(DATA.text.replace(search,replace));
     });
     test('substr', async () => {
         const ret = await expressionEngine.evaluate('text|substr(0,2)', DATA);
@@ -36,6 +49,24 @@ describe('Transforms', () => {
     test('upper', async () => {
         const ret = await expressionEngine.evaluate('text|upper', DATA);
         expect(ret).toEqual(DATA.text.toUpperCase());
+    });
+
+    // Number and Date
+    test('format', async () => {
+        const ret = await expressionEngine.evaluate('number|format("c", "en-US")', DATA);
+        expect(ret).toMatch(/^\$\d{1,3}(,\d{3})*\.\d{2}$/);
+    });
+
+    // Array
+    test('join', async () => {
+        const ret = await expressionEngine.evaluate('words|join(",")', DATA);
+        expect(ret).toEqual(DATA.words.join(','));
+    });
+    test('orderBy', async () => {
+        let ret = await expressionEngine.evaluate('words|orderBy', DATA);
+        expect(ret).toEqual(DATA.words);
+        ret = await expressionEngine.evaluate('persons|orderBy("age", true)', DATA);
+        expect(ret).toEqual(DATA.persons.sort((a, b) => a.age - b.age));
     });
 });
 
