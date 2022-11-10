@@ -13,6 +13,7 @@ import tagMap from "./tags/tagMap";
 import expressionEngine from "./tags/expressionEngine";
 import { Blob, File, saveAs } from "./polyfills/File";
 import { isNodeJS } from "./polyfills/polyfillsUtils";
+import ICulture from "./cultures/ICulture";
 
 const CONTENT_TYPES = '[Content_Types].xml';
 
@@ -43,7 +44,7 @@ class YumTemplate {
     // ----------------------------------
     // Cultures
     // ----------------------------------
-    static registerCulture(locale: string, culture: Record<string, unknown>) {
+    static registerCulture(locale: string, culture: ICulture) {
         // Note: a registered culture can be replaced
         cultureMap.set(locale, culture);
     }

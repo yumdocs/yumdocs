@@ -5,13 +5,14 @@ import AbstractTag from "./AbstractTag";
 import tagMap from "./tagMap";
 import ExpressionTag from "./ExpressionTag";
 import ITagConstructor from "./ITagConstructor";
+import ITagParser from "./ITagParser";
 import {assert} from "../error/assert";
 import YumError from "../error/YumError";
 
 /**
  * TagParser
  */
-class TagParser {
+class TagParser implements ITagParser {
     private readonly _dom: Node;
     private _delimiters: { start: string, end: string };
     private _lexer: RegExp | undefined;

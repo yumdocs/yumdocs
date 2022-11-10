@@ -1,11 +1,12 @@
 import ITag from './ITag';
 import MatchedNode from "./MatchedNode";
 import constants from "../constants";
+import ITagParser from "./ITagParser";
 
 /**
  * TagParser
  */
-type TagParser = { new(dom: Node, options?: Record<string, unknown>): unknown; };
+type TagParser = { new(dom: Node, options?: Record<string, unknown>): ITagParser; };
 
 /**
  * AbstractTag
