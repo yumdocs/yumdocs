@@ -1,5 +1,6 @@
 import jexl from "jexl";
 import IExpressionEngine from "./IExpressionEngine";
+import {toString} from "./expressionUtils";
 
 /**
  * ExpressionEngine
@@ -44,18 +45,43 @@ jexl.addFunction('$min', Math.min);
 jexl.addFunction('$max', Math.max);
 
 // String transforms
-jexl.addTransform('lower', (val) => String(val).toLowerCase());
-jexl.addTransform('replace', (val, search, replacement) => String(val).replace(search, replacement));
-jexl.addTransform('substr', (val, start, end) => String(val).substring(start, end));
-jexl.addTransform('upper', (val) => String(val).toUpperCase());
+jexl.addTransform('lower', (val: unknown) => String(val).toLowerCase());
+jexl.addTransform('replace', (val: unknown, search: unknown, replacement: unknown) => String(val).replace(String(search), String(replacement)));
+jexl.addTransform('substr', (val: unknown, start: unknown, end: unknown) => String(val).substring(
+    typeof start === "number"? Math.trunc(start) : 0,
+    typeof end === "number" ? Math.trunc(end) : String(val).length - 1)
+);
+jexl.addTransform('upper', (val: unknown) => String(val).toUpperCase());
 
-// Boolean
+// Boolean - N/A
 
-// Number
-
-// Date
+// Number and Date
+jexl.addTransform('format', (val: unknown, fmt: unknown, culture: unknown) => toString(val as string, fmt as string | undefined, culture as string | undefined));
 
 // Array
+jexl.addTransform('join', (val: unknown, separator: unknown) => Array.isArray(val) ? val.join(String(separator)) : val);
+jexl.addTransform('orderBy', async (val: unknown, expression: unknown, reverse = false) => {
+    if (Array.isArray(val)) {
+        // Eval async jexl expressions on all array items
+        const _evals = await Promise.all(val.map(el => jexl.eval(String(expression), el)));
+        // Build an array that has both items and expression evals
+        const _val = val.map((el, idx) => ({_v: el, _e: _evals[idx]}));
+        // Sort based on expression evals
+        _val.sort((a: { _e: any; _v: any }, b: { _e: any; _v: any }) => {
+            if (typeof a === typeof b && a._e < b._e) {
+                return reverse ? 1 : -1;
+            } else if (typeof a === typeof b && a._e > b._e) {
+                return reverse ? -1 : 1;
+            } else {
+                return 0;
+            }
+        });
+        // Return an array of values
+        return val.map(el => el._v);
+    } else {
+        return val;
+    }
+});
 
 const expressionEngine = new ExpressionEngine(jexl.eval.bind(jexl));
 
