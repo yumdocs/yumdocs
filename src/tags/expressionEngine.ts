@@ -67,10 +67,12 @@ jexl.addTransform('orderBy', async (val: unknown, expression: unknown, reverse =
         // Build an array that has both items and expression evals
         const _val = val.map((el, idx) => ({_v: el, _e: _evals[idx]}));
         // Sort based on expression evals
+        // _val.sort((a: { _e: unknown; _v: unknown }, b: { _e: unknown; _v: unknown }) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         _val.sort((a: { _e: any; _v: any }, b: { _e: any; _v: any }) => {
-            if (typeof a === typeof b && a._e < b._e) {
+            if (typeof a._e === typeof b._e && a._e < b._e) {
                 return reverse ? 1 : -1;
-            } else if (typeof a === typeof b && a._e > b._e) {
+            } else if (typeof a._e === typeof b._e && a._e > b._e) {
                 return reverse ? -1 : 1;
             } else {
                 return 0;
