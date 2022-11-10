@@ -56,8 +56,8 @@ jexl.addTransform('upper', (val: unknown) => String(val).toUpperCase());
 // Boolean - N/A
 
 // Number and Date
-jexl.addTransform('format', (val: unknown, fmt: unknown, culture: unknown) =>
-    toString(typeof val !== 'string' || isNaN(Date.parse(val as string)) ? val : new Date(Date.parse(val as string)), fmt as string | undefined, culture as string | undefined));
+jexl.addTransform('format', (val: unknown, fmt: unknown, locale: unknown) =>
+    toString(typeof val !== 'string' || isNaN(Date.parse(val as string)) ? val : new Date(Date.parse(val as string)), fmt as string | undefined, locale as string | undefined));
 
 // Array
 jexl.addTransform('join', (val: unknown, separator: unknown) => Array.isArray(val) ? val.join(typeof separator === 'undefined' ? '' : String(separator)) : val);
