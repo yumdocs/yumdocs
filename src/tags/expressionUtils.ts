@@ -1,5 +1,6 @@
 import { getCulture } from "../cultures/cultureUtils";
 import constants from "../constants";
+import ICulture from "../cultures/ICulture";
 
 const formatRegExp = /\{(\d+)(:[^}]+)?}/g;
 // const numberRegExp = /^(\+|-?)\d+(\.?)\d*$/;
@@ -14,14 +15,6 @@ const SHARP = "#";
 const ZERO = "0";
 const PLACEHOLDER = "??";
 const objectToString = {}.toString;
-
-const argumentNameRegExp = /^\w+/,
-    encodeRegExp = /\$\{([^}]*)}/g,
-    escapedCurlyRegExp = /\\}/g,
-    curlyRegExp = /__CURLY__/g,
-    escapedSharpRegExp = /\\#/g,
-    sharpRegExp = /__SHARP__/g;
-
 
 /**
  * pad
@@ -46,20 +39,19 @@ export function pad(number: number | string, digits?: number, end?: number) {
  * @param format
  * @param locale
  */
-/*
-export function formatDate(date: Date, format: string, locale: string) {
-    const culture = getCulture(locale);
+export function formatDate(date: Date, format: string, locale: string = constants.locale): string {
+    const culture = <ICulture>getCulture(locale);
 
-    const calendar = culture?.calendars.standard,
+    const calendar = culture.calendars.standard,
         days = calendar.days,
         months = calendar.months;
 
     format = calendar.patterns[format] || format;
 
-    return format.replace(dateFormatRegExp, function(match) {
-        let minutes;
-        let result: any;
-        let sign;
+    return format.replace(dateFormatRegExp, function(match): string {
+        let minutes: number;
+        let result: number | string | undefined;
+        let sign: boolean;
 
         if (match === "d") {
             result = date.getDate();
@@ -114,7 +106,7 @@ export function formatDate(date: Date, format: string, locale: string) {
             sign = minutes < 0;
 
             result = Math.abs(minutes / 60).toString().split(".")[0];
-            minutes = Math.abs(minutes) - (result * 60);
+            minutes = Math.abs(minutes) - (+result * 60);
 
             result = (sign ? "+" : "-") + pad(result);
             result += ":" + pad(minutes);
@@ -126,10 +118,81 @@ export function formatDate(date: Date, format: string, locale: string) {
             result = (sign ? "+" : "-") + (match === "zz" ? pad(result) : result);
         }
 
-        return result !== undefined ? result : match.slice(1, match.length - 1);
+        return result !== undefined ?
+            result as string :
+            match.slice(1, match.length - 1) as string;
     });
 }
-*/
+
+
+/**
+ * groupInteger
+ * @param number
+ * @param start
+ * @param end
+ * @param numberFormat
+ */
+export function groupInteger(number: string, start: number, end: number, numberFormat: Record<string, unknown>) {
+    const decimalIndex = number.indexOf(<string>numberFormat[POINT]);
+    const groupSizes = (numberFormat.groupSize as Array<number>).slice();
+    let groupSize = groupSizes.shift() as number;
+    let idx, parts, value;
+    let newGroupSize;
+
+    end = decimalIndex !== -1 ? decimalIndex : end + 1;
+
+    let integer = number.substring(start, end);
+    const integerLength = integer.length;
+
+    if (integerLength >= groupSize) {
+        idx = integerLength;
+        parts = [];
+
+        while (idx > -1) {
+            value = integer.substring(idx - groupSize, idx);
+            if (value) {
+                parts.push(value);
+            }
+            idx -= groupSize;
+            newGroupSize = groupSizes.shift();
+            groupSize = newGroupSize !== undefined ? newGroupSize : groupSize;
+
+            if (groupSize === 0) {
+                if (idx > 0) {
+                    parts.push(integer.substring(0, idx));
+                }
+                break;
+            }
+        }
+
+        integer = parts.reverse().join(numberFormat[COMMA] as string);
+        number = number.substring(0, start) + integer + number.substring(end);
+    }
+
+    return number;
+}
+
+/**
+ * round
+ * @param value
+ * @param precision
+ * @param negative
+ */
+export function round(value: number, precision: number, negative= false) {
+    precision = precision || 0;
+
+    let strValue = value.toString().split('e');
+    let numValue = Math.round(+(strValue[0] + 'e' + (strValue[1] ? (+strValue[1] + precision) : precision)));
+
+    if (negative) {
+        numValue = -numValue;
+    }
+
+    strValue = numValue.toString().split('e');
+    numValue = +(strValue[0] + 'e' + (strValue[1] ? (+strValue[1] - precision) : -precision));
+
+    return numValue.toFixed(Math.min(precision, 20));
+};
 
 /**
  * formatNumber
@@ -137,38 +200,32 @@ export function formatDate(date: Date, format: string, locale: string) {
  * @param format
  * @param locale
  */
-/*
-export function formatNumber(number, format, locale) {
-    const culture = getCulture(locale);
-
-    let numberFormat = culture.numberFormat,
-        decimal = numberFormat[POINT],
-        precision = numberFormat.decimals,
-        pattern = numberFormat.pattern[0],
-        literals = [],
-        symbol,
-        isCurrency, isPercent,
+export function formatNumber(number: number, format: string, locale: string = constants.locale): string {
+    const culture = <ICulture>getCulture(locale);
+    const literals: Array<string> = [];
+    let numString: string,
+        numberFormat: Record<string, unknown> = culture.numberFormat,
+        decimal = numberFormat[POINT] as string,
+        precision = numberFormat.decimals as number,
+        pattern = (numberFormat.pattern as Array<string>)[0],
+        symbol = EMPTY,
+        isCurrency: boolean, isPercent: boolean,
         customPrecision,
-        formatAndPrecision,
         negative = number < 0,
         integer,
         fraction,
-        integerLength,
-        fractionLength,
+        integerLength: number,
+        // fractionLength: number,
         replacement = EMPTY,
         value = EMPTY,
-        idx,
-        length,
-        ch,
-        hasGroup,
+        idx = 0,
+        length: number,
+        ch: string,
         hasNegativeFormat,
         decimalIndex,
         sharpIndex,
         zeroIndex,
         hasZero, hasSharp,
-        percentIndex,
-        currencyIndex,
-        startZeroIndex,
         start = -1,
         end;
 
@@ -178,7 +235,7 @@ export function formatNumber(number, format, locale) {
     }
 
     if (!isFinite(number)) {
-        return number;
+        return number.toString();
     }
 
     //if no format then return number.toString() or number.toLocaleString() if culture.name is not defined
@@ -186,7 +243,7 @@ export function formatNumber(number, format, locale) {
         return culture.name.length ? number.toLocaleString() : number.toString();
     }
 
-    formatAndPrecision = standardFormatRegExp.exec(format);
+    const formatAndPrecision = standardFormatRegExp.exec(format);
 
     // standard formatting
     if (formatAndPrecision) {
@@ -197,11 +254,13 @@ export function formatNumber(number, format, locale) {
 
         if (isCurrency || isPercent) {
             //get specific number format information if format is currency or percent
-            numberFormat = isCurrency ? numberFormat.currency : numberFormat.percent;
-            decimal = numberFormat[POINT];
-            precision = numberFormat.decimals;
-            symbol = numberFormat.symbol;
-            pattern = numberFormat.pattern[negative ? 0 : 1];
+            numberFormat = isCurrency ?
+                numberFormat.currency as Record<string, unknown> :
+                numberFormat.percent as Record<string, unknown>;
+            decimal = numberFormat[POINT] as string;
+            precision = numberFormat.decimals as number;
+            symbol = numberFormat.symbol as string;
+            pattern = (numberFormat.pattern as Array<string>)[negative ? 0 : 1];
         }
 
         customPrecision = formatAndPrecision[2];
@@ -213,8 +272,7 @@ export function formatNumber(number, format, locale) {
         //return number in exponential format
         if (format === "e") {
             const exp = customPrecision ? number.toExponential(precision) : number.toExponential(); // toExponential() and toExponential(undefined) differ in FF #653438.
-
-            return exp.replace(POINT, numberFormat[POINT]);
+            return exp.replace(POINT, numberFormat[POINT] as string);
         }
 
         // multiply if format is percent
@@ -222,12 +280,13 @@ export function formatNumber(number, format, locale) {
             number *= 100;
         }
 
-        number = round(number, precision);
+        numString = round(number, precision);
+        // TODO negative = numString < 0;
         negative = number < 0;
-        number = number.split(POINT);
+        const numArray = numString.split(POINT);
 
-        integer = number[0];
-        fraction = number[1];
+        integer = numArray[0];
+        fraction = numArray[1];
 
         //exclude "-" if number is negative.
         if (negative) {
@@ -244,21 +303,21 @@ export function formatNumber(number, format, locale) {
             return value;
         }
 
-        number = EMPTY;
+        numString = EMPTY;
 
         for (idx = 0, length = pattern.length; idx < length; idx++) {
             ch = pattern.charAt(idx);
 
             if (ch === "n") {
-                number += value;
+                numString += value;
             } else if (ch === "$" || ch === "%") {
-                number += symbol;
+                numString += symbol;
             } else {
-                number += ch;
+                numString += ch;
             }
         }
 
-        return number;
+        return numString;
     }
 
     //custom formatting
@@ -276,24 +335,24 @@ export function formatNumber(number, format, locale) {
         });
     }
 
-    format = format.split(";");
+    const formatArray = format.split(";");
     if (negative && format[1]) {
         //get negative format
-        format = format[1];
+        format = formatArray[1];
         hasNegativeFormat = true;
     } else if (number === 0 && format[2]) {
         //format for zeros
-        format = format[2];
+        format = formatArray[2];
         if (format.indexOf(SHARP) == -1 && format.indexOf(ZERO) == -1) {
             //return format if it is string constant.
             return format;
         }
     } else {
-        format = format[0];
+        format = formatArray[0];
     }
 
-    percentIndex = format.indexOf("%");
-    currencyIndex = format.indexOf("$");
+    const percentIndex = format.indexOf("%");
+    const currencyIndex = format.indexOf("$");
 
     isPercent = percentIndex != -1;
     isCurrency = currencyIndex != -1;
@@ -310,13 +369,15 @@ export function formatNumber(number, format, locale) {
 
     if (isCurrency || isPercent) {
         //get specific number format information if format is currency or percent
-        numberFormat = isCurrency ? numberFormat.currency : numberFormat.percent;
-        decimal = numberFormat[POINT];
-        precision = numberFormat.decimals;
-        symbol = numberFormat.symbol;
+        numberFormat = isCurrency ?
+            numberFormat.currency as Record<string, unknown> :
+            numberFormat.percent as Record<string, unknown>;
+        decimal = numberFormat[POINT] as string;
+        precision = numberFormat.decimals as number;
+        symbol = numberFormat.symbol as string;
     }
 
-    hasGroup = format.indexOf(COMMA) > -1;
+    const hasGroup = format.indexOf(COMMA) > -1;
     if (hasGroup) {
         format = format.replace(commaRegExp, EMPTY);
     }
@@ -325,11 +386,11 @@ export function formatNumber(number, format, locale) {
     length = format.length;
 
     if (decimalIndex != -1) {
-        fraction = number.toString().split("e");
-        if (fraction[1]) {
-            fraction = round(number, Math.abs(fraction[1]));
+        const fractionArray = number.toString().split("e");
+        if (fractionArray[1]) {
+            fraction = round(number, Math.abs(+fractionArray[1]));
         } else {
-            fraction = fraction[0];
+            fraction = fractionArray[0];
         }
         fraction = fraction.split(POINT)[1] || EMPTY;
         zeroIndex = format.lastIndexOf(ZERO) - decimalIndex;
@@ -364,10 +425,11 @@ export function formatNumber(number, format, locale) {
         }
     }
 
-    number = round(number, idx, negative);
+    numString = round(number, idx as number, negative);
 
     sharpIndex = format.indexOf(SHARP);
-    startZeroIndex = zeroIndex = format.indexOf(ZERO);
+    // const startZeroIndex = zeroIndex = format.indexOf(ZERO);
+    zeroIndex = format.indexOf(ZERO);
 
     //define the index of the first digit placeholder
     if (sharpIndex == -1 && zeroIndex != -1) {
@@ -395,21 +457,21 @@ export function formatNumber(number, format, locale) {
     }
 
     if (start != -1) {
-        value = number.toString().split(POINT);
-        integer = value[0];
-        fraction = value[1] || EMPTY;
+        const valArray = numString.toString().split(POINT);
+        integer = valArray[0];
+        fraction = valArray[1] || EMPTY;
 
         integerLength = integer.length;
-        fractionLength = fraction.length;
+        // fractionLength = fraction.length;
 
-        if (negative && (number * -1) >= 0) {
+        if (negative && (+numString * -1) >= 0) {
             negative = false;
         }
 
-        number = format.substring(0, start);
+        numString = format.substring(0, start);
 
         if (negative && !hasNegativeFormat) {
-            number += "-";
+            numString += "-";
         }
 
         for (idx = start; idx < length; idx++) {
@@ -417,7 +479,7 @@ export function formatNumber(number, format, locale) {
 
             if (decimalIndex == -1) {
                 if (end - idx < integerLength) {
-                    number += integer;
+                    numString += integer;
                     break;
                 }
             } else {
@@ -426,225 +488,79 @@ export function formatNumber(number, format, locale) {
                 }
 
                 if ((decimalIndex - idx) <= integerLength && decimalIndex - idx > -1) {
-                    number += integer;
+                    numString += integer;
                     idx = decimalIndex;
                 }
 
                 if (decimalIndex === idx) {
-                    number += (fraction ? decimal : EMPTY) + fraction;
+                    numString += (fraction ? decimal : EMPTY) + fraction;
                     idx += end - decimalIndex + 1;
                     continue;
                 }
             }
 
             if (ch === ZERO) {
-                number += ch;
+                numString += ch;
                 replacement = ch;
             } else if (ch === SHARP) {
-                number += replacement;
+                numString += replacement;
             }
         }
 
         if (hasGroup) {
-            number = groupInteger(number, start + (negative && !hasNegativeFormat ? 1 : 0), Math.max(end, (integerLength + start)), numberFormat);
+            numString = groupInteger(numString, start + (negative && !hasNegativeFormat ? 1 : 0), Math.max(end, (integerLength + start)), numberFormat);
         }
 
         if (end >= start) {
-            number += format.substring(end + 1);
+            numString += format.substring(end + 1);
         }
 
         //replace symbol placeholders
         if (isCurrency || isPercent) {
             value = EMPTY;
-            for (idx = 0, length = number.length; idx < length; idx++) {
-                ch = number.charAt(idx);
+            for (idx = 0, length = numString.length; idx < length; idx++) {
+                ch = numString.charAt(idx);
                 value += (ch === "$" || ch === "%") ? symbol : ch;
             }
-            number = value;
+            numString = value;
         }
 
         length = literals.length;
 
         if (length) {
             for (idx = 0; idx < length; idx++) {
-                number = number.replace(PLACEHOLDER, literals[idx]);
+                numString = numString.replace(PLACEHOLDER, literals[idx]);
             }
         }
     }
 
-    return number;
+    return numString;
 }
-*/
 
-/*
-export function groupInteger(number, start, end, numberFormat) {
-    var decimalIndex = number.indexOf(numberFormat[POINT]);
-    var groupSizes = numberFormat.groupSize.slice();
-    var groupSize = groupSizes.shift();
-    var integer, integerLength;
-    var idx, parts, value;
-    var newGroupSize;
-
-    end = decimalIndex !== -1 ? decimalIndex : end + 1;
-
-    integer = number.substring(start, end);
-    integerLength = integer.length;
-
-    if (integerLength >= groupSize) {
-        idx = integerLength;
-        parts = [];
-
-        while (idx > -1) {
-            value = integer.substring(idx - groupSize, idx);
-            if (value) {
-                parts.push(value);
-            }
-            idx -= groupSize;
-            newGroupSize = groupSizes.shift();
-            groupSize = newGroupSize !== undefined ? newGroupSize : groupSize;
-
-            if (groupSize === 0) {
-                if (idx > 0) {
-                    parts.push(integer.substring(0, idx));
-                }
-                break;
-            }
-        }
-
-        integer = parts.reverse().join(numberFormat[COMMA]);
-        number = number.substring(0, start) + integer + number.substring(end);
-    }
-
-    return number;
-};
-*/
-
-/*
-export function round(value, precision, negative) {
-    precision = precision || 0;
-
-    value = value.toString().split('e');
-    value = Math.round(+(value[0] + 'e' + (value[1] ? (+value[1] + precision) : precision)));
-
-    if (negative) {
-        value = -value;
-    }
-
-    value = value.toString().split('e');
-    value = +(value[0] + 'e' + (value[1] ? (+value[1] - precision) : -precision));
-
-    return value.toFixed(Math.min(precision, 20));
-};
-*/
-
-/*
-export function toString(value, fmt, culture) {
+/**
+ * toString
+ * @param value
+ * @param fmt
+ * @param culture
+ */
+export function toString(value: unknown, fmt: string | undefined, culture = constants.locale): string {
     if (fmt) {
         if (objectToString.call(value) === "[object Date]") {
-            return formatDate(value, fmt, culture);
-        } else if (typeof value === NUMBER) {
+            return formatDate(value as Date, fmt, culture);
+        } else if (typeof value === "number") {
             return formatNumber(value, fmt, culture);
         }
     }
-    return value !== undefined ? value : "";
+    return value !== undefined ? value as string : EMPTY;
 }
-*/
 
 /**
  * format
  * @param fmt
  */
-/*
-export function format(fmt: string) {
-    const values = arguments;
-    return fmt.replace(formatRegExp, function(match, index, placeholderFormat) {
-        const value = values[parseInt(index, 10) + 1];
+export function format(fmt: string, ...values : Array<unknown>) {
+    return fmt.replace(formatRegExp, function(match, index, placeholderFormat): string {
+        const value = values[parseInt(index, 10)];
         return toString(value, placeholderFormat ? placeholderFormat.substring(1) : '');
     });
 }
-*/
-
-/*
-export function compilePart(part, stringPart) {
-    if (stringPart) {
-        return "'" +
-            part.split("'").join("\\'")
-                .split('\\"').join('\\\\\\"')
-                .replace(/\n/g, "\\n")
-                .replace(/\r/g, "\\r")
-                .replace(/\t/g, "\\t") + "'";
-    } else {
-        var first = part.charAt(0),
-            rest = part.substring(1);
-
-        if (first === "=") {
-            return "+(" + rest + ")+";
-        } else if (first === ":") {
-            return "+$kendoHtmlEncode(" + rest + ")+";
-        } else {
-            return ";" + part + ";$kendoOutput+=";
-        }
-    }
-}
-*/
-
-/*
-const Template = {
-    paramName: "data", // name of the parameter of the generated template
-    useWithBlock: true, // whether to wrap the template in a with() block
-    render: function(template, data) {
-        var idx,
-            length,
-            html = "";
-
-        for (idx = 0, length = data.length; idx < length; idx++) {
-            html += template(data[idx]);
-        }
-
-        return html;
-    },
-    compile: function(template, options) {
-        var settings = extend({}, this, options),
-            paramName = settings.paramName,
-            argumentName = paramName.match(argumentNameRegExp)[0],
-            useWithBlock = settings.useWithBlock,
-            functionBody = "var $kendoOutput, $kendoHtmlEncode = kendo.htmlEncode;",
-            fn,
-            parts,
-            idx;
-
-        if (isFunction(template)) {
-            return template;
-        }
-
-        functionBody += useWithBlock ? "with(" + paramName + "){" : "";
-
-        functionBody += "$kendoOutput=";
-
-        parts = template
-            .replace(escapedCurlyRegExp, "__CURLY__")
-            .replace(encodeRegExp, "#=$kendoHtmlEncode($1)#")
-            .replace(curlyRegExp, "}")
-            .replace(escapedSharpRegExp, "__SHARP__")
-            .split("#");
-
-        for (idx = 0; idx < parts.length; idx ++) {
-            functionBody += compilePart(parts[idx], idx % 2 === 0);
-        }
-
-        functionBody += useWithBlock ? ";}" : ";";
-
-        functionBody += "return $kendoOutput;";
-
-        functionBody = functionBody.replace(sharpRegExp, "#");
-
-        try {
-            fn = new Function(argumentName, functionBody);
-            fn._slotCount = Math.floor(parts.length / 2);
-            return fn;
-        } catch (e) {
-            throw new Error(kendo.format("Invalid template:'{0}' Generated code:'{1}'", template, functionBody));
-        }
-    }
-};
- */

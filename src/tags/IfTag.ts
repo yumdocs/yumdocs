@@ -52,7 +52,7 @@ class IfTag extends AbstractTag implements ITag {
             for (const sibling of condition? elseSiblings : ifSiblings) {
                 // Remove tags from ast where condition is not met
                 for (let i = this.children.length - 1; i >= 0; i--) {
-                    const [matchedNode] = this.children[i].matchedNodes.values();                    debugger;
+                    const [matchedNode] = this.children[i].matchedNodes.values();
                     if (contains(sibling, matchedNode.node)) {
                         this.children.splice(i, 1);
                     }

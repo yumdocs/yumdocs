@@ -1,7 +1,12 @@
 /**
  * ar-EG
  */
-const culture: Record<string, unknown> = {
+import ICulture from "./ICulture";
+
+/**
+ * ar-EG
+ */
+const culture: ICulture = {
     name: "ar-EG",
     numberFormat: {
         pattern: ["-n"],

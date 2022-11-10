@@ -6,7 +6,7 @@ interface IPart {
     readonly priority: number,
     readonly name: string,
     readonly type: string,
-    /* async */ render(data: any): Promise<void>,
+    /* async */ render(data: Record<string, unknown>): Promise<void>,
     serialize(): string
 }
 

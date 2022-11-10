@@ -1,7 +1,9 @@
+import ICulture from "./ICulture";
+
 /**
  * en-US
  */
-const culture: Record<string, unknown> = {
+const culture: ICulture = {
     name: 'en-US',
     numberFormat: {
         pattern: ['-n'],
@@ -49,10 +51,10 @@ const culture: Record<string, unknown> = {
                 G: 'M/d/yyyy h:mm:ss tt',
                 m: 'MMMM dd',
                 M: 'MMMM dd',
-                // s: "yyyy'-'MM'-'ddTHH':'mm':'ss",
+                s: "yyyy'-'MM'-'ddTHH':'mm':'ss",
                 t: 'h:mm tt',
                 T: 'h:mm:ss tt',
-                // u: "yyyy'-'MM'-'dd HH':'mm':'ss'Z'",
+                u: "yyyy'-'MM'-'dd HH':'mm':'ss'Z'",
                 y: 'MMMM, yyyy',
                 Y: 'MMMM, yyyy'
             },

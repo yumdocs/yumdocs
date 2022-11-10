@@ -1,7 +1,9 @@
+import ICulture from "./ICulture";
+
 /**
  * de-DE
  */
-const culture: Record<string, unknown> = {
+const culture: ICulture = {
     name: "de-DE",
     numberFormat: {
         pattern: ["-n"],

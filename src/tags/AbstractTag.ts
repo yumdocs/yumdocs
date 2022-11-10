@@ -5,7 +5,7 @@ import constants from "../constants";
 /**
  * TagParser
  */
-type TagParser = { new(dom: Node, options?: Record<string, unknown>): any; };
+type TagParser = { new(dom: Node, options?: Record<string, unknown>): unknown; };
 
 /**
  * AbstractTag

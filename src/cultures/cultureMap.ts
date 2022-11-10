@@ -1,3 +1,4 @@
+import ICulture from "./ICulture";
 import arEG from "./ar-EG";
 import bnIN from "./bn-IN";
 import deDE from "./de-DE";
@@ -16,7 +17,7 @@ import zhCN from "./zh-CN";
  * cultureMap
  * Note: avoids circular references with YumTemplate
  */
-const cultureMap = new Map<string, Record<string, unknown>>([
+const cultureMap = new Map<string, ICulture>([
     ['ar-EG', arEG],
     ['bn-IN', bnIN],
     ['de-DE', deDE],
