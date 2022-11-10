@@ -336,11 +336,11 @@ export function formatNumber(number: number, format: string, locale: string = co
     }
 
     const formatArray = format.split(";");
-    if (negative && format[1]) {
+    if (negative && formatArray[1]) {
         //get negative format
         format = formatArray[1];
         hasNegativeFormat = true;
-    } else if (number === 0 && format[2]) {
+    } else if (number === 0 && formatArray[2]) {
         //format for zeros
         format = formatArray[2];
         if (format.indexOf(SHARP) == -1 && format.indexOf(ZERO) == -1) {
