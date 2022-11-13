@@ -13,11 +13,3 @@ export const isNodeJS: boolean =
  * global/window
  */
 export const g = new Function('return this')();
-
-/**
- * Avoid complaints
- */
-//
-// if (typeof g.require === 'undefined') {
-//     g.require = function(obj) { return obj; };
-// }
