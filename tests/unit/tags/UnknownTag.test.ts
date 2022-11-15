@@ -24,7 +24,7 @@ describe('Unknown or misspelled statement', () => {
             expect(true).toBe(false); // file.render should throw
         } catch (e) {
             expect(e).toBeInstanceOf(YumError);
-            expect(e).toMatchObject(errorCodes.get(1014) || {});
+            expect(e).toMatchObject(errorCodes.get(1060) || {});
             // expect((<YumError>e).originalError).toBeInstanceOf(Error);
         }
     });

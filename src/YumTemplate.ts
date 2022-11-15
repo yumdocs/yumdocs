@@ -1,45 +1,36 @@
 import {promises as fs} from 'fs';
 import JSZip from 'jszip';
-import { DOMParser } from './polyfills/xmldom';
+import axios from 'axios';
 import constants from './constants';
 import cultureMap from './cultures/cultureMap';
 import YumError from "./error/YumError";
 import IPart from "./parts/IPart";
 import IPartConstructor from "./parts/IPartConstructor";
-import IPartReference from "./parts/IPartReference";
 import partMap from "./parts/partMap";
 import ITagConstructor from "./tags/ITagConstructor";
 import tagMap from "./tags/tagMap";
 import expressionEngine from "./tags/expressionEngine";
-import { Blob, File, saveAs } from "./polyfills/File";
+import { saveAs } from "./polyfills/File";
 import { isNodeJS } from "./polyfills/polyfillsUtils";
 import ICulture from "./cultures/ICulture";
+import OpenXMLContentTypes from "./OpenXMLContentTypes";
 
-const CONTENT_TYPES = '[Content_Types].xml';
+type OptionsType = {
+    delimiters? : {
+        start? : string,
+        end? : string
+    },
+    locale?: string
+}
 
 /**
  * YumTemplate
  */
 class YumTemplate {
-    private readonly _options: Record<string, unknown>;
+    private readonly _options: OptionsType;
     private readonly _parts: Map<string, IPart>;
     private _zip: JSZip;
-
-    // ----------------------------------
-    // Instrumentation (can be removed)
-    // ----------------------------------
-    static instrument = false;
-    static time = 0;
-    static resetTime() {
-        YumTemplate.time = Date.now();
-    };
-    static showTime(message: string) {
-        if (YumTemplate.instrument) {
-            const t = Date.now();
-            console.log(`${message}: ${t - YumTemplate.time} ms`)
-            YumTemplate.time = t;
-        }
-    };
+    private _rendered: boolean;
 
     // ----------------------------------
     // Cultures
@@ -78,24 +69,25 @@ class YumTemplate {
      * constructor
      * @param options
      */
-    constructor(options: Record<string, unknown> = {}) {
+    constructor(options: OptionsType = {}) {
         this._options = this._sanitizeOptions(options);
         this._parts = new Map();
         this._zip = new JSZip();
+        this._rendered = false;
     }
 
     /**
      * _sanitizeOptions
-     *  options.delimiters
-     *  options.locale
      * @param options
      * @private
      */
-    private _sanitizeOptions(options: Record<string, unknown>) {
-        // TODO Possibly check invalid options and raise errors
+    private _sanitizeOptions(options: OptionsType = {}) {
         return {
-            delimiters: <{start: string, end: string}>(options.delimiters || constants.delimiters),
-            locale: <string>(options.locale || constants.locale)
+            delimiters: {
+                start: options.delimiters?.start || constants.delimiters.start,
+                end: options.delimiters?.start || constants.delimiters.end,
+            },
+            locale: options.locale || constants.locale
         };
     }
 
@@ -120,28 +112,35 @@ class YumTemplate {
     }
 
     /**
-     * _loadBrowserBlob
-     * @param file
+     * _loadWithAxios
+     * @param options
      * @private
      */
-    private async _loadBrowserBlob(blob: Blob) {
+    private async _loadWithAxios(options: Record<string, unknown>) {
         try {
-            this._zip = await JSZip.loadAsync(blob);
+            // Force get
+            options.method = 'get';
+            // Force blob
+            options.responseType = 'blob';
+            const response = await axios(options);
+            this._zip = await JSZip.loadAsync(response.data);
         } catch(error) {
-            console.log((<Error>error).message);
+            throw new YumError(1013, { error });
         }
     }
 
     /**
-     * _loadBrowserFile
-     * @param file
+     * _loadAnythingElse
+     * @param handle
      * @private
      */
-    private async _loadBrowserFile(file: File) {
+    private async _loadAnythingElse(handle: unknown) {
         try {
-            this._zip = await JSZip.loadAsync(file);
+            // Unfortunately, JSZip does not export InputFileFormat
+            // @ts-expect-error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'InputFileFormat'.
+            this._zip = await JSZip.loadAsync(handle);
         } catch(error) {
-            console.log((<Error>error).message);
+            throw new YumError(1014, { error });
         }
     }
 
@@ -149,83 +148,17 @@ class YumTemplate {
      * load
      * @param handle
      */
-    async load(handle: string | File) { // TODO Consider Blob, ArrayBuffer and more...
-        YumTemplate.resetTime();
+    async load(handle: unknown) {
+        this._rendered = false;
+        this._parts.clear();
+        // Reset JSZip if called twice?
         if (isNodeJS && typeof handle === 'string') {
             await this._loadNodePath(<string>handle);
-        } else if (!isNodeJS && handle instanceof File) {
-            await this._loadBrowserFile(<File>handle);
-        } else if (!isNodeJS && handle instanceof Blob) {
-            await this._loadBrowserBlob(<Blob>handle);
+        } else if (Object.prototype.toString.call(handle) === '[object Object]') {
+            await this._loadWithAxios(<Record<string, unknown>>handle);
         } else {
-            throw new YumError(2000); // TODO review code + message
+            await this._loadAnythingElse(handle);
         }
-        YumTemplate.showTime('Zip loaded');
-    }
-
-    /**
-     * _getPartRefs
-     * @private
-     */
-    private async _getPartRefs() : Promise<Array<IPartReference>> {
-        const ret: Array<IPartReference> = [];
-        let xml;
-        try {
-            YumTemplate.resetTime();
-            xml = await this._zip.file(CONTENT_TYPES)?.async('string') || '';
-            YumTemplate.showTime('Content types loaded as xml');
-            const dom = new DOMParser().parseFromString(xml, constants.mimeType);
-            const nodes = dom.childNodes[isNodeJS ? 2 : 0].childNodes;
-            for(let i = 0; i < nodes.length; i++) {
-                const node = nodes[i] as Element;
-                // We ignore nodes with nodeName === 'Default' nodes'
-                if (node.nodeName === 'Override') {
-                    const { attributes } = node;
-                    let name, type;
-                    for(let j = 0; j < attributes.length; j++) {
-                        const { nodeName, nodeValue } = attributes[j];
-                        switch (nodeName) {
-                            case 'PartName':
-                                name = (nodeValue || '').slice(1); // Remove /
-                                break;
-                            case 'ContentType':
-                                type = nodeValue;
-                                break;
-                            default:
-                         }
-                    }
-                    if (name && type) {
-                        const Part = partMap.get(name.replace(/\d+(.xml)$/, '$1'));
-                        // Note: without registered part in YumTemplate.parts, no rendering
-                        if (Part) {
-                            ret.push({name, type, Part});
-                        }
-                    }
-                }
-            }
-        } catch (error) {
-            throw new YumError(1020, { data: {xml}, error });
-        }
-        YumTemplate.showTime('Content types read');
-        return ret;
-    }
-
-    /**
-     * _loadParts
-     * @private
-     */
-    private async _loadParts(partRefs: Array<IPartReference>) : Promise<void> {
-        YumTemplate.resetTime();
-        // Note: Priority order is not important here
-        const promises = partRefs.map(async (ref: IPartReference) => {
-            const xml: string = await this._zip.files[ref.name].async('text');
-            this._parts.set(
-                ref.name,
-                new ref.Part(ref.name, ref.type, xml, this._parts, this._options)
-            );
-        });
-        await Promise.all(promises);
-        YumTemplate.showTime('Content parts loaded');
     }
 
     /**
@@ -233,12 +166,13 @@ class YumTemplate {
      * @param data
      */
     async render(data: Record<string, unknown> = {}): Promise<string | undefined> {
+        if (this._parts.size !== 0) throw new YumError(1005);
+        if (this._rendered) throw new YumError(1006);
+        this._rendered = true;
         let ret: string | undefined;
-        // List partRefs from [Content_Types].xml
-        const partRefs = await this._getPartRefs();
         // Load xml files into Parts including xml dom
-        await this._loadParts(partRefs);
-        YumTemplate.resetTime();
+        const contentTypes = new OpenXMLContentTypes(this._zip, this._options);
+        await contentTypes.loadParts(this._parts);
         // Priority in increasing order (1 is highest, 10 is lowest)
         const parts = Array.from(this._parts.values())
             .sort((a, b) => (a.priority - b.priority));
@@ -255,8 +189,7 @@ class YumTemplate {
             // Update zip stream
             this._zip.file(part.name, xml);
         }
-        YumTemplate.showTime('Data merged');
-        return ret; // For testing
+        return ret; // For testing only
     }
 
     /**
@@ -264,7 +197,7 @@ class YumTemplate {
      * @param path
      */
     async saveAs(path: string) { // TODO Consider passing JSZip generateAsync options
-        YumTemplate.resetTime();
+        if (!this._rendered) throw new YumError(1007);
         if (isNodeJS) {
             const buf = await this._zip.generateAsync({
                 type: 'nodebuffer',
@@ -277,8 +210,10 @@ class YumTemplate {
             saveAs(blob, path);
 
         }
-        YumTemplate.showTime('Zip saved');
     }
 }
 
+/**
+ * Default export
+ */
 export default YumTemplate;
