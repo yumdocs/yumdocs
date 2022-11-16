@@ -43,7 +43,7 @@ describe('Corrupt file', () => {
             expect(true).toBe(false); // file.load should throw
         } catch (e) {
             expect(e).toBeInstanceOf(YumError);
-            expect(e).toMatchObject(errorCodes.get(1020) || {});
+            expect(e).toMatchObject(errorCodes.get(1022) || {});
             expect((<YumError>e).originalError).toBeInstanceOf(Error);
         }
     });
@@ -57,7 +57,7 @@ describe('Corrupt file', () => {
             expect(true).toBe(false); // file.load should throw
         } catch (e) {
             expect(e).toBeInstanceOf(YumError);
-            expect(e).toMatchObject(errorCodes.get(1020) || {});
+            expect(e).toMatchObject(errorCodes.get(1022) || {});
             expect((<YumError>e).originalError).toBeInstanceOf(Error);
         }
     });

@@ -65,7 +65,7 @@ class OpenXMLContentTypes {
                 }
             }
         } catch (error) {
-            throw new YumError(1020, { data: {xml}, error });
+            throw new YumError(1022, { data: {xml}, error });
         }
         return ret;
     }

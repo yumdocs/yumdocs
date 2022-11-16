@@ -1,6 +1,5 @@
 import {promises as fs} from 'fs';
 import JSZip from 'jszip';
-import axios from 'axios';
 import constants from './constants';
 import cultureMap from './cultures/cultureMap';
 import YumError from "./error/YumError";
@@ -30,7 +29,6 @@ class YumTemplate {
     private readonly _options: OptionsType;
     private readonly _parts: Map<string, IPart>;
     private _zip: JSZip;
-    private _rendered: boolean;
 
     // ----------------------------------
     // Cultures
@@ -73,7 +71,6 @@ class YumTemplate {
         this._options = this._sanitizeOptions(options);
         this._parts = new Map();
         this._zip = new JSZip();
-        this._rendered = false;
     }
 
     /**
@@ -112,24 +109,6 @@ class YumTemplate {
     }
 
     /**
-     * _loadWithAxios
-     * @param options
-     * @private
-     */
-    private async _loadWithAxios(options: Record<string, unknown>) {
-        try {
-            // Force get
-            options.method = 'get';
-            // Force blob
-            options.responseType = 'blob';
-            const response = await axios(options);
-            this._zip = await JSZip.loadAsync(response.data);
-        } catch(error) {
-            throw new YumError(1013, { error });
-        }
-    }
-
-    /**
      * _loadAnythingElse
      * @param handle
      * @private
@@ -140,7 +119,7 @@ class YumTemplate {
             // @ts-expect-error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'InputFileFormat'.
             this._zip = await JSZip.loadAsync(handle);
         } catch(error) {
-            throw new YumError(1014, { error });
+            throw new YumError(1013, { error });
         }
     }
 
@@ -149,13 +128,10 @@ class YumTemplate {
      * @param handle
      */
     async load(handle: unknown) {
-        this._rendered = false;
         this._parts.clear();
         // Reset JSZip if called twice?
         if (isNodeJS && typeof handle === 'string') {
             await this._loadNodePath(<string>handle);
-        } else if (Object.prototype.toString.call(handle) === '[object Object]') {
-            await this._loadWithAxios(<Record<string, unknown>>handle);
         } else {
             await this._loadAnythingElse(handle);
         }
@@ -166,9 +142,8 @@ class YumTemplate {
      * @param data
      */
     async render(data: Record<string, unknown> = {}): Promise<string | undefined> {
-        if (this._parts.size !== 0) throw new YumError(1005);
-        if (this._rendered) throw new YumError(1006);
-        this._rendered = true;
+        if (Object.keys(this._zip.files).length === 0) throw new YumError(1020);
+        if (this._parts.size !== 0) throw new YumError(1021);
         let ret: string | undefined;
         // Load xml files into Parts including xml dom
         const contentTypes = new OpenXMLContentTypes(this._zip, this._options);
@@ -197,7 +172,8 @@ class YumTemplate {
      * @param path
      */
     async saveAs(path: string) { // TODO Consider passing JSZip generateAsync options
-        if (!this._rendered) throw new YumError(1007);
+        if (Object.keys(this._zip.files).length === 0) throw new YumError(1030);
+        if (this._parts.size === 0) throw new YumError(1031);
         if (isNodeJS) {
             const buf = await this._zip.generateAsync({
                 type: 'nodebuffer',
@@ -206,9 +182,10 @@ class YumTemplate {
             });
             await fs.writeFile(path, buf);
         } else {
-            const blob = await this._zip.generateAsync({type: 'blob' });
+            const blob = await this._zip.generateAsync({
+                type: 'blob'
+            });
             saveAs(blob, path);
-
         }
     }
 }
