@@ -178,7 +178,7 @@ class YumTemplate {
             const buf = await this._zip.generateAsync({
                 type: 'nodebuffer',
                 streamFiles: true,
-                // compression: 'DEFLATE'
+                compression: 'DEFLATE'
             });
             await fs.writeFile(path, buf);
         } else {
