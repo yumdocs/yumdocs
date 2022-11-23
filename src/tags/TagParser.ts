@@ -1,4 +1,3 @@
-import constants from "../constants";
 import {escapeRegExp} from "./tagUtils";
 import MatchedNode from "./MatchedNode";
 import AbstractTag from "./AbstractTag";
@@ -8,13 +7,14 @@ import ITagConstructor from "./ITagConstructor";
 import ITagParser from "./ITagParser";
 import {assert} from "../error/assert";
 import YumError from "../error/YumError";
+import OptionsType from "../OptionsType";
 
 /**
  * TagParser
  */
 class TagParser implements ITagParser {
     private readonly _dom: Node;
-    private _delimiters: { start: string, end: string };
+    private _options: OptionsType;
     private _lexer: RegExp | undefined;
     private _ast: Array<AbstractTag> = [];
     private _current: Array<AbstractTag>;
@@ -25,9 +25,9 @@ class TagParser implements ITagParser {
      * @param dom
      * @param options
      */
-    constructor(dom: Node, options: Record<string, unknown> = {}) {
+    constructor(dom: Node, options: OptionsType) {
         this._dom = dom;
-        this._delimiters = <{ start: string, end: string }>(options.delimiters || constants.delimiters);
+        this._options = options;
         this._current = this._ast;
     }
 
@@ -51,13 +51,14 @@ class TagParser implements ITagParser {
             }
             // Build the regular expression
             // TODO: we might have to escape certain characters like < and >
+            const { end, start } = <{ end: string, start: string }>this._options.delimiters;
             this._lexer = new RegExp(
-                escapeRegExp(this._delimiters.start) +
+                escapeRegExp(start) +
                 '[ \t]*' +
                 (statements.length? `(?<statement>${statements.join('|')})?[ \t]*` : '') +
-                `(?<expression>[^${escapeRegExp(this._delimiters.end.slice(0,1))}]+)?` +
+                `(?<expression>[^${escapeRegExp(end.slice(0,1))}]+)?` +
                 '[ \t]*' +
-                escapeRegExp(this._delimiters.end),
+                escapeRegExp(end),
                 'g'
             );
         }
@@ -83,22 +84,23 @@ class TagParser implements ITagParser {
      * @private
      */
     private _parse(node: Node) {
+        const { _options } = this;
         // if (node instanceof Text && this.lexer instanceof RegExp) {
         if (node.nodeType === 3 && this.lexer instanceof RegExp) {
             const matches = node.nodeValue?.matchAll(this.lexer);
             if (matches) {
                 for (const match of matches) {
-                    const matchedNode = new MatchedNode(<Text>node, match);
+                    const matchedNode = new MatchedNode(<Text>node, match, _options);
                     const { statement, expression } = <{ statement: string, expression: string }>matchedNode;
                     const Tag = tagMap.get(statement || ExpressionTag.statement) ||
                         this._findTagInBlocks(statement);
                     if (Tag && (Tag.statement === ExpressionTag.statement) && expression) {
                         // If tag is a standalone expression
-                        const tag = new Tag(matchedNode, this._current);
+                        const tag = new Tag(matchedNode, this._current, this._options);
                         this._current.push(tag);
                     } else if (Tag && (Tag.statement === statement)) {
                         // If tag corresponds to an opening statement, e.g. each or if, with or without expression
-                        const tag = new Tag(matchedNode, this._current);
+                        const tag = new Tag(matchedNode, this._current, this._options);
                         this._stack.push(tag);
                         this._current.push(tag);
                         if (Tag.blocks.length >0) {

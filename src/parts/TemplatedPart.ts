@@ -4,6 +4,7 @@ import {sanitizeWordMarkup} from '../word/wordUtils';
 import TagParser from "../tags/TagParser";
 import AbstractTag from "../tags/AbstractTag";
 import {sanitizePptMarkup} from "../ppt/pptUtils";
+import OptionsType from '../OptionsType';
 
 /**
  * TemplatedPart
@@ -25,7 +26,7 @@ class TemplatedPart extends AbstractPart {
         type: string,
         xml: string,
         parent: Map<string, IPart>,
-        options: Record<string, unknown>
+        options: OptionsType
     ) {
         super(name, type, xml, parent, options);
         this._ast = new TagParser(this._dom, options).parse();

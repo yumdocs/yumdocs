@@ -2,11 +2,12 @@ import ITag from './ITag';
 import MatchedNode from "./MatchedNode";
 import constants from "../constants";
 import ITagParser from "./ITagParser";
+import OptionsType from "../OptionsType";
 
 /**
  * TagParser
  */
-type TagParser = { new(dom: Node, options?: Record<string, unknown>): ITagParser; };
+type TagParser = { new(dom: Node, options: OptionsType): ITagParser; };
 
 /**
  * AbstractTag
@@ -21,16 +22,19 @@ abstract class AbstractTag implements ITag {
 
     public readonly children: Array<AbstractTag> = [];
     public readonly parent: Array<AbstractTag>;
+    public readonly _options: OptionsType;
 
     /**
      * constructor
      * @param matchedNode
      * @param parent
+     * @param options
      * @protected
      */
-    protected constructor(matchedNode: MatchedNode, parent: Array<AbstractTag>) {
+    protected constructor(matchedNode: MatchedNode, parent: Array<AbstractTag>, options: OptionsType) {
         this.addMatchedNode(matchedNode);
         this.parent = parent;
+        this._options = options;
     }
 
     /**

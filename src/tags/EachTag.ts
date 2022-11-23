@@ -5,6 +5,7 @@ import {assert} from "../error/assert";
 import {contains, getChildrenOfCommonAncestor, getSiblingsBetween} from "./domUtils";
 import expressionEngine from "./expressionEngine";
 import YumError from "../error/YumError";
+import OptionsType from "../OptionsType";
 
 class EachTag extends AbstractTag implements ITag {
     static readonly statement = '#each';
@@ -14,9 +15,10 @@ class EachTag extends AbstractTag implements ITag {
      * constructor
      * @param matchedNode
      * @param parent
+     * @param options
      */
-    constructor(matchedNode: MatchedNode, parent: Array<AbstractTag>) {
-        super(matchedNode, parent);
+    constructor(matchedNode: MatchedNode, parent: Array<AbstractTag>, options: OptionsType) {
+        super(matchedNode, parent, options);
     }
 
     /**
@@ -71,7 +73,7 @@ class EachTag extends AbstractTag implements ITag {
                             const node = sibling.cloneNode(true);
                             parent.insertBefore(node, topNodes[1]);
                             // Parse new node
-                            const _ast = new AbstractTag.TagParser(node).parse(); // TODO options with delimiters
+                            const _ast = new AbstractTag.TagParser(node, this._options).parse(); // TODO options with delimiters
                             // Add to document ast
                             this.children.push(..._ast);
                         }

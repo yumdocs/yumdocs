@@ -4,11 +4,11 @@ import constants from "../../../src/constants";
 import {escapeRegExp} from "../../../src/tags/tagUtils";
 
 test('lexer with builtin delimiters', () => {
-    const {delimiters} = constants;
+    const {delimiters, locale} = constants;
     const XML = `<?xml version="1.0" encoding="UTF-8"?>
         <node>Bonjour ${delimiters.start}#if employee.gender${delimiters.end}Mr${delimiters.start}#else${delimiters.end}Ms.${delimiters.start}#endif${delimiters.end} ${delimiters.start}employee.fullName | format${delimiters.end},</node>`;
     const dom = new DOMParser().parseFromString(XML, 'text/xml');
-    const parser = new TagParser(dom);
+    const parser = new TagParser(dom, {delimiters, locale});
     const {lexer} = parser;
     const str = lexer?.toString();
     const start = escapeRegExp(delimiters.start);
@@ -30,10 +30,11 @@ test('lexer with custom delimiters', () => {
         start: '${',
         end: '}'
     };
+    const {locale} = constants;
     const XML = `<?xml version="1.0" encoding="UTF-8"?>
         <node>Bonjour ${delimiters.start}#if employee.gender${delimiters.end}Mr${delimiters.start}#else${delimiters.end}Ms.${delimiters.start}#endif${delimiters.end} ${delimiters.start}employee.fullName | format${delimiters.end},</node>`;
     const dom = new DOMParser().parseFromString(XML, 'text/xml');
-    const parser = new TagParser(dom, {delimiters});
+    const parser = new TagParser(dom, {delimiters, locale});
     const {lexer} = parser;
     const str = lexer?.toString();
     const start = escapeRegExp(delimiters.start);
@@ -56,10 +57,11 @@ xtest('lexer with custom delimiters that mess with XML', () => {
         start: '<%',
         end: '%>'
     };
+    const {locale} = constants;
     const XML = `<?xml version="1.0" encoding="UTF-8"?>
         <node>Bonjour ${delimiters.start}#if employee.gender${delimiters.end}Mr${delimiters.start}#else${delimiters.end}Ms.${delimiters.start}#endif${delimiters.end} ${delimiters.start}employee.fullName | format${delimiters.end},</node>`;
     const dom = new DOMParser().parseFromString(XML, 'text/xml');
-    const parser = new TagParser(dom, {delimiters});
+    const parser = new TagParser(dom, {delimiters, locale});
     const {lexer} = parser;
     const str = lexer?.toString();
     const start = escapeRegExp(delimiters.start);
@@ -77,11 +79,11 @@ xtest('lexer with custom delimiters that mess with XML', () => {
 });
 
 test('Parser', () => {
-    const {delimiters} = constants;
+    const {delimiters, locale} = constants;
     const XML = `<?xml version="1.0" encoding="UTF-8"?>
         <node>Bonjour ${delimiters.start}#if employee.gender${delimiters.end}Mr${delimiters.start}#else${delimiters.end}Ms.${delimiters.start}#endif${delimiters.end} ${delimiters.start}employee.fullName | format${delimiters.end},</node>`;
     const dom = new DOMParser().parseFromString(XML, 'text/xml');
-    const parser = new TagParser(dom);
+    const parser = new TagParser(dom, {delimiters, locale});
     const ast = parser.parse();
     expect(ast).toHaveProperty('length', 2);
 })

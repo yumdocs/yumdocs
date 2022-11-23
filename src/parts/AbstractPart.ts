@@ -1,6 +1,7 @@
 import { DOMParser, XMLSerializer } from "../polyfills/xmldom";
 import IPart from "./IPart";
 import constants from "../constants";
+import OptionsType from "../OptionsType";
 
 /**
  * Part
@@ -11,7 +12,7 @@ abstract class AbstractPart implements IPart {
     protected _type: string;
     protected _dom: Document;
     protected _parent: Map<string, IPart>;
-    protected _options: Record<string, unknown>;
+    protected _options: OptionsType;
     protected _done = false;
 
     /**
@@ -28,7 +29,7 @@ abstract class AbstractPart implements IPart {
         type: string,
         xml: string,
         parent: Map<string, IPart>,
-        options: Record<string, unknown>
+        options: OptionsType
     ) {
         this._name = name;
         this._type = type;
