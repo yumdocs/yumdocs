@@ -5,6 +5,8 @@ import {assert} from "../error/assert";
 import {contains, getChildrenOfCommonAncestor, getSiblingsBetween} from "./domUtils";
 import expressionEngine from "./expressionEngine";
 import YumError from "../error/YumError";
+import constants from "../constants";
+import OptionsType from "../OptionsType";
 
 class IfTag extends AbstractTag implements ITag {
     static readonly statement = '#if';
@@ -14,9 +16,10 @@ class IfTag extends AbstractTag implements ITag {
      * constructor
      * @param matchedNode
      * @param parent
+     * @param options
      */
-    constructor(matchedNode: MatchedNode, parent: Array<AbstractTag>) {
-        super(matchedNode, parent);
+    constructor(matchedNode: MatchedNode, parent: Array<AbstractTag>, options: OptionsType) {
+        super(matchedNode, parent, options);
     }
 
     /**
@@ -60,8 +63,42 @@ class IfTag extends AbstractTag implements ITag {
                 // remove nodes from DOM
                 parent.removeChild(sibling);
             }
+            // Process #if node
+            const removeNodes: Array<Node> = [];
+            if ((!condition && elseMatchedNode instanceof MatchedNode) ||
+                (condition && !(elseMatchedNode instanceof MatchedNode))){
+                ifMatchedNode.replaceMatchAndAfter(constants.empty)
+            } else {
+                ifMatchedNode.replaceMatch(constants.empty);
+            }
+            if (ifMatchedNode.nodeValue === constants.empty) {
+                removeNodes.push(topNodes[0]);
+            }
+            // Process #else node
+            if (elseMatchedNode instanceof MatchedNode) {
+                if (condition) {
+                    elseMatchedNode.replaceMatchAndAfter(constants.empty);
+                } else {
+                    elseMatchedNode.replaceMatchAndBefore(constants.empty);
+                }
+                if (elseMatchedNode.nodeValue === constants.empty) {
+                    removeNodes.push(topNodes[1]);
+                }
+            }
+            // Process #end node
+            if ((condition && elseMatchedNode instanceof MatchedNode) ||
+                (!condition && !(elseMatchedNode instanceof MatchedNode))){
+                endMatchedNode.replaceMatchAndBefore(constants.empty)
+            } else {
+                endMatchedNode.replaceMatch(constants.empty);
+            }
+            if (endMatchedNode.nodeValue === constants.empty) {
+                removeNodes.push(topNodes[topNodes.length - 1]);
+            }
             // Remove #if, #else and #endif
-            topNodes.forEach(node => { parent.removeChild(node); });
+            removeNodes.forEach(node => {
+                parent.removeChild(node);
+            });
             // Process children where condition is met (others have been removed)
             for (let i = 0; i < this.children.length; i++) {
                 await this.children[i].render(data);

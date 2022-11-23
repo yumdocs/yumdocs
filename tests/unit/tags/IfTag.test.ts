@@ -40,6 +40,21 @@ describe('If tag - ok', () => {
     });
 });
 
+describe('If tag - one line', () => {
+    const TEST = 'if-tag-oneline-ok';
+    const DOCX = `${TEST}.docx`;
+    // const PPTX = `${TEST}.pptx`;
+    // const XLSX = `${TEST}.xlsx`;
+
+    test('Word File', async () => {
+        const file = new YumTemplate();
+        await file.load(`${INPUT_DIR}${DOCX}`);
+        const ret = await file.render(DATA);
+        await file.saveAs(`${OUTPUT_DIR}${DOCX}`);
+        expect(ret).not.toMatch(hasTagsRegExp());
+    });
+});
+
 xdescribe('If tag - nested', () => {
     // TODO
 });
