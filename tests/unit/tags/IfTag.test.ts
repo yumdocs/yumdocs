@@ -5,8 +5,10 @@ import {hasTagsRegExp} from "../../../src/tags/tagUtils";
 const INPUT_DIR = './tests/templates/';
 const OUTPUT_DIR = './temp/'
 const DATA = {
+    float: faker.datatype.float(),
+    hasExpression: faker.datatype.boolean(),
     hasText: faker.datatype.boolean(),
-    text: faker.random.word()
+    text: faker.random.word(),
 };
 
 describe('If tag - ok', () => {
@@ -55,6 +57,17 @@ describe('If tag - one line', () => {
     });
 });
 
-xdescribe('If tag - nested', () => {
-    // TODO
+describe('If tag - nested', () => {
+    const TEST = 'if-tag-nested-ok';
+    const DOCX = `${TEST}.docx`;
+    // const PPTX = `${TEST}.pptx`;
+    // const XLSX = `${TEST}.xlsx`;
+
+    test('Word File', async () => {
+        const file = new YumTemplate();
+        await file.load(`${INPUT_DIR}${DOCX}`);
+        const ret = await file.render(DATA);
+        await file.saveAs(`${OUTPUT_DIR}${DOCX}`);
+        expect(ret).not.toMatch(hasTagsRegExp());
+    });
 });
