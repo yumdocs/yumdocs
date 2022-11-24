@@ -86,8 +86,8 @@ class IfTag extends AbstractTag implements ITag {
                 }
             }
             // Process #end node
-            if ((condition && elseMatchedNode instanceof MatchedNode) ||
-                (!condition && !(elseMatchedNode instanceof MatchedNode))){
+            if ((condition && endMatchedNode.node !== elseMatchedNode?.node) ||
+                (!condition && !elseMatchedNode && endMatchedNode.node !== ifMatchedNode.node)){
                 endMatchedNode.replaceMatchAndBefore(constants.empty)
             } else {
                 endMatchedNode.replaceMatch(constants.empty);
