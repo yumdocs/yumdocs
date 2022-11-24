@@ -1,6 +1,6 @@
 {
   "name": "@yumdocs/yumdocs",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "author": "https://github.com/jlchereau",
   "description": "Yumdocs is a template engine to automate Word, PowerPoint and Excel documents",
   "keywords": [
