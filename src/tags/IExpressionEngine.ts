@@ -1,11 +1,11 @@
 /**
- * IExpressionEngine
+ * EvaluateType
  */
-interface IExpressionEngine {
-    evaluate(expression: string, context: Record<string, unknown>): Promise<unknown>
-}
+export type EvaluateType = (expression: string, context: Record<string, unknown>) => Promise<unknown>
 
 /**
- * Default export
+ * IExpressionEngine
  */
-export default IExpressionEngine;
+export interface IExpressionEngine {
+    evaluate: EvaluateType
+}

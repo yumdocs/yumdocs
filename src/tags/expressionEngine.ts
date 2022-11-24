@@ -1,27 +1,41 @@
 import jexl from "jexl";
-import IExpressionEngine from "./IExpressionEngine";
+import {EvaluateType, IExpressionEngine} from "./IExpressionEngine";
 import {toString} from "./expressionUtils";
+import constants from "../constants";
 
 /**
  * ExpressionEngine
  */
 class ExpressionEngine implements IExpressionEngine {
-    private _evaluate: (expression: string, context: Record<string, unknown>) => Promise<unknown>;
+    private _evaluate: EvaluateType;
+    private _global: unknown;
 
     /**
      * constructor
      * @param evaluate
+     * @param g
      */
-    constructor(evaluate: (expression: string, context: Record<string, unknown>) => Promise<unknown>) {
+    constructor(evaluate: EvaluateType, g : unknown = {}) {
         this._evaluate = evaluate;
+        this._global = g;
     }
 
     /**
      * setEval
      * @param evaluate
+     * @param g
      */
-    setEval(evaluate: (expression: string, context: Record<string, unknown>) => Promise<unknown>) {
+    setEval(evaluate: EvaluateType, g : unknown = {}) {
         this._evaluate = evaluate;
+        this._global = g;
+    }
+
+    /**
+     * setLocale
+     * @param locale
+     */
+    setLocale(locale: string = constants.locale)  {
+        if (this._global) Object.assign(this._global, {locale});
     }
 
     /**
@@ -56,7 +70,8 @@ jexl.addTransform('upper', (val: unknown) => String(val).toUpperCase());
 // Boolean - N/A
 
 // Number and Date
-jexl.addTransform('format', (val: unknown, fmt: unknown, locale: unknown) =>
+// @ts-expect-error TS2339: Property 'locale' does not exist on type 'BuildableJexl'.
+jexl.addTransform('format', (val: unknown, fmt: unknown, locale: unknown = jexl.locale || constants.locale) =>
     toString(typeof val !== 'string' || isNaN(Date.parse(val as string)) ? val : new Date(Date.parse(val as string)), fmt as string | undefined, locale as string | undefined));
 
 // Array
@@ -86,7 +101,7 @@ jexl.addTransform('orderBy', async (val: unknown, expression: unknown, reverse =
     }
 });
 
-const expressionEngine = new ExpressionEngine(jexl.eval.bind(jexl));
+const expressionEngine = new ExpressionEngine(jexl.eval.bind(jexl), jexl);
 
 /**
  * Default export

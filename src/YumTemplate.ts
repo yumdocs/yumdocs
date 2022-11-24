@@ -59,8 +59,8 @@ class YumTemplate {
     // ----------------------------------
     // Expression Engine
     // ----------------------------------
-    static setExpressionEval(evaluate: (expression: string, context: Record<string, unknown>) => Promise<unknown>) {
-        expressionEngine.setEval(evaluate)
+    static setExpressionEval(evaluate: (expression: string, context: Record<string, unknown>) => Promise<unknown>, g?: unknown) {
+        expressionEngine.setEval(evaluate, g);
     }
 
     /**
@@ -71,6 +71,7 @@ class YumTemplate {
         this._options = this._sanitizeOptions(options);
         this._parts = new Map();
         this._zip = new JSZip();
+        expressionEngine.setLocale(this._options.locale);
     }
 
     /**
