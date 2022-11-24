@@ -36,7 +36,8 @@ class OpenXMLContentTypes {
         try {
             xml = await this._zip.file(CONTENT_TYPES)?.async('string') || '';
             const dom = new DOMParser().parseFromString(xml, constants.mimeType);
-            const nodes = dom.childNodes[isNodeJS ? 2 : 0].childNodes;
+            // const nodes = dom.childNodes[dom.childNodes.length - 1].childNodes; // TODO: might always work
+            const nodes = dom.childNodes[isNodeJS ? dom.childNodes.length - 1 : 0].childNodes;
             for(let i = 0; i < nodes.length; i++) {
                 const node = nodes[i] as Element;
                 // We ignore nodes with nodeName === 'Default' nodes'
