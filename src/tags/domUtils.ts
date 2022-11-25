@@ -66,3 +66,36 @@ export function contains(parent: Node, child: Node): boolean {
     }
     return false;
 }
+
+/**
+ * indexOfNode
+ * @param list
+ * @param node
+ */
+export function indexOfNode(list: NodeListOf<ChildNode>, node: Node) {
+    let index = 0;
+    let found = false;
+    for (; index < list.length; index++) {
+        if (list[index] === node) {
+            found = true;
+            break;
+        }
+    }
+    return found? index : -1;
+}
+
+/**
+ * cloneRunFromText
+ * @param text
+ * @param data
+ */
+export function cloneRunFromText(element: Text, data: string) {
+    const text = <Node>element.parentNode;
+    const j = indexOfNode(text.childNodes, element);
+    const run = <Node>text.parentNode;
+    const i = indexOfNode(run.childNodes, text);
+    const ret = run.cloneNode(true);
+    const retElement = <Text>ret.childNodes[i].childNodes[j];
+    retElement.replaceData(0, retElement.length, data);
+    return ret;
+}

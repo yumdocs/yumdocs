@@ -29,7 +29,8 @@ class TemplatedPart extends AbstractPart {
         options: OptionsType
     ) {
         super(name, type, xml, parent, options);
-        this._ast = new TagParser(this._dom, options).parse();
+        // this._ast = new AbstractTag.TagParser([this._dom], options).parse();
+        this._ast = new TagParser([this._dom], options).parse();
     }
 
     /**

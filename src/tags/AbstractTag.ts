@@ -7,7 +7,7 @@ import OptionsType from "../OptionsType";
 /**
  * TagParser
  */
-type TagParser = { new(dom: Node, options: OptionsType): ITagParser; };
+type TagParser = { new(nodes: Array<Node>, options: OptionsType): ITagParser; };
 
 /**
  * AbstractTag

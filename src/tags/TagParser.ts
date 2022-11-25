@@ -13,7 +13,7 @@ import OptionsType from "../OptionsType";
  * TagParser
  */
 class TagParser implements ITagParser {
-    private readonly _dom: Node;
+    private readonly _nodes: Array<Node>;
     private _options: OptionsType;
     private _lexer: RegExp | undefined;
     private _ast: Array<AbstractTag> = [];
@@ -25,8 +25,8 @@ class TagParser implements ITagParser {
      * @param dom
      * @param options
      */
-    constructor(dom: Node, options: OptionsType) {
-        this._dom = dom;
+    constructor(nodes: Array<Node>, options: OptionsType) {
+        this._nodes = nodes;
         this._options = options;
         this._current = this._ast;
     }
@@ -138,7 +138,9 @@ class TagParser implements ITagParser {
      * parse
      */
     parse () {
-        this._parse(this._dom);
+        for (const node of this._nodes) {
+            this._parse(node);
+        }
         // _stack should be empty and _current should be _ast;
         assert(this._stack.length === 0);
         assert(this._current === this._ast);
