@@ -4,8 +4,9 @@ const constants = {
         end: '}}'
     },
     empty: '',
+    htmlMimeType: 'text/html',
     locale: 'en-US',
-    mimeType: 'application/xml',
+    xmlMimeType: 'application/xml',
 };
 
 export default constants;
