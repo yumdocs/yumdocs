@@ -2,7 +2,7 @@ import AbstractTag from "./AbstractTag"; // <-- Use AbstractTag.TagParser to avo
 import ITag from "./ITag";
 import MatchedNode from "./MatchedNode";
 import {assert} from "../error/assert";
-import {cloneRunFromText, contains, getChildrenOfCommonAncestor, getSiblingsBetween, indexOfNode} from "./domUtils";
+import {cloneRunFromText, contains, getChildrenOfCommonAncestor, getSiblingsBetween} from "./domUtils";
 import expressionEngine from "./expressionEngine";
 import YumError from "../error/YumError";
 import OptionsType from "../OptionsType";
