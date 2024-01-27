@@ -3,11 +3,11 @@
 > Yumdocs is a template engine for Office documents, including Word, PowerPoint and Excel, in JavaScript environments.
 > It merges documents with data, executing statements and expressions found in tags.
 
-![Yumdocs Animation](https://github.com/yumdocs/dev.yumdocs.com/blob/master/graphics/lottie.gif?raw=true)
+![Yumdocs Animation](https://github.com/yumdocs/www.yumdocs.com/blob/master/graphics/lottie.gif?raw=true)
 
 ## Documentation
 
-Yumdocs is fully documented at https://dev.yumdocs.com.
+Yumdocs is fully documented at https://www.yumdocs.com.
 
 ## License and Copyright
 
@@ -22,7 +22,7 @@ Copyright (c) 2022 - Jacques L. Chereau. All rights reserved.
 
 ## Quick Start
 
-Check https://dev.yumdocs.com for browser instructions. The following targets nodeJS.
+Check https://www.yumdocs.com for browser instructions. The following targets nodeJS.
 
 ### Prerequisites
 
