@@ -21,7 +21,16 @@ const errorCodes = new Map<number, { code: number, message: string }>([
     [1030, { code: 1030, message: 'Cannot save without template. Load a template first.'}],
     [1031, { code: 1031, message: 'Cannot save without rendering. Render data first.'}],
 
-    // TODO Parsing Errors
+    // File system polyfill errors
+    [1040, { code: 1040, message: 'File system operations not available in browser environment'}],
+    [1041, { code: 1041, message: 'Directory creation not supported in browser environment'}],
+    [1042, { code: 1042, message: 'File reading not supported in browser environment'}],
+    [1043, { code: 1043, message: 'File writing not supported in browser environment'}],
+
+    // Parsing Errors
+    [2000, { code: 2000, message: 'Template parsing error: Unrecognized tag or malformed template structure'}],
+    [2001, { code: 2001, message: 'Template parsing error: Mismatched opening and closing tags'}],
+    [2002, { code: 2002, message: 'Template parsing error: Unexpected tag sequence or invalid nesting'}],
 
     // JEXL Expression error (unless the expression engine is replaced)
     [1060, { code: 1060, message: 'Expression evaluation error'}],

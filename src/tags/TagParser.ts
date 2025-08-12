@@ -133,11 +133,26 @@ class TagParser implements ITagParser, ITagContext {
                                 this._current = main.parent;
                             }
                         } else {
-                            // Possibly main could be undefined
-                            throw new YumError(2000); // TODO Review code
+                            // Stack is empty or tag type mismatch - mismatched opening/closing tags
+                            throw new YumError(2001, {
+                                data: { 
+                                    statement, 
+                                    expression: expression || '', 
+                                    expectedTag: Tag?.statement || 'unknown',
+                                    stackLength: this._stack.length
+                                }
+                            });
                         }
                     } else {
-                        throw new YumError(2000); // TODO Review code
+                        // Unrecognized tag pattern or invalid template structure
+                        throw new YumError(2002, {
+                            data: { 
+                                statement: statement || 'none', 
+                                expression: expression || 'none',
+                                nodeValue: node.nodeValue || '',
+                                availableTags: Array.from(tagMap.keys())
+                            }
+                        });
                     }
                 }
             }

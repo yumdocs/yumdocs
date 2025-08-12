@@ -8,7 +8,19 @@ class YumError extends Error {
     code: number;
     data?: Record<string, unknown>;
     originalError?: Error;
-    // TODO stack
+    
+    /**
+     * Enhanced stack trace that includes original error stack when available
+     */
+    get stackTrace(): string {
+        let result = this.stack || 'No stack trace available';
+        
+        if (this.originalError?.stack) {
+            result += '\n\nCaused by: ' + this.originalError.stack;
+        }
+        
+        return result;
+    }
 
     /**
      * constructor
@@ -31,6 +43,11 @@ class YumError extends Error {
             this.data = <Record<string, unknown>>options.data;
         }
         this.name = 'YumError';
+        
+        // Ensure stack trace is properly captured
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, YumError);
+        }
     }
 }
 
