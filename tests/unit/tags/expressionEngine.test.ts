@@ -5,14 +5,14 @@ import expressionEngine from "../../../src/tags/expressionEngine";
 
 const DATA = {
     boolean: faker.datatype.boolean(),
-    date: faker.datatype.datetime(),
-    number: faker.datatype.number(),
-    text: faker.datatype.string(),
-    words: new Array(1 + Math.trunc(10 * Math.random())).fill('').map(() => faker.random.words()),
+    date: faker.date.anytime(),
+    number: faker.number.int(),
+    text: faker.string.sample(),
+    words: new Array(1 + Math.trunc(10 * Math.random())).fill('').map(() => faker.lorem.words()),
     persons: new Array(1 + Math.trunc(10 * Math.random())).fill({}).map(() => ({
-        firstName: faker.name.firstName(),
-        lastName: faker.name.firstName(),
-        age: faker.datatype.number({min: 18, max: 100, precision: 0})
+        firstName: faker.person.firstName(),
+        lastName: faker.person.firstName(),
+        age: faker.number.int({min: 18, max: 100})
     })),
 }
 
@@ -39,7 +39,7 @@ describe('Transforms', () => {
     xtest('replace', async () => { // TODO: too many errors
         console.log(DATA.text);
         const search = DATA.text.substring(Math.floor(DATA.text.length/2), Math.ceil(DATA.text.length/2) + 1).replace(/(^\\)"/g, '$1\\"');
-        const replace = faker.datatype.string().replace(/(^\\)"/g, '$1\\"');
+        const replace = faker.string.sample().replace(/(^\\)"/g, '$1\\"');
         console.log(search + ' ---> ' + replace);
         const ret = await expressionEngine.evaluate(`text|replace("${search}","${replace}")`, DATA);
         expect(ret).toEqual(DATA.text.replace(search,replace));
@@ -68,7 +68,7 @@ describe('Transforms', () => {
         let ret = await expressionEngine.evaluate('words|orderBy', DATA);
         expect(ret).toEqual(DATA.words);
         ret = await expressionEngine.evaluate('persons|orderBy("age", true)', DATA);
-        expect(ret).toEqual(DATA.persons.sort((a, b) => a.age - b.age));
+        expect(ret).toEqual([...DATA.persons].sort((a, b) => b.age - a.age));
     });
 });
 

@@ -10,6 +10,6 @@ describe('getCulture', () => {
         expect(getCulture()).toMatchObject({name: constants.locale});
     });
     test('random', () => {
-        expect(getCulture(faker.random.word())).toBeUndefined();
+        expect(getCulture(faker.lorem.word())).toBeUndefined();
     });
 });

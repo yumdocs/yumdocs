@@ -7,7 +7,7 @@ import errorCodes from "../../../src/error/errorCodes";
 const INPUT_DIR = './tests/templates/';
 // const OUTPUT_DIR = './temp/'
 const DATA = {
-    text: faker.random.word()
+    text: faker.lorem.word()
 };
 
 describe('Unknown or misspelled statement', () => {

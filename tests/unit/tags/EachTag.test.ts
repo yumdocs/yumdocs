@@ -8,58 +8,58 @@ const OUTPUT_DIR = './temp/'
 const DATA = {
     persons: [
         {
-            firstName: faker.name.firstName(),
-            lastName: faker.name.lastName(),
+            firstName: faker.person.firstName(),
+            lastName: faker.person.lastName(),
             siblings: [
                 {
-                    firstName: faker.name.firstName(),
-                    lastName: faker.name.lastName()
+                    firstName: faker.person.firstName(),
+                    lastName: faker.person.lastName()
                 },
                 {
-                    firstName: faker.name.firstName(),
-                    lastName: faker.name.lastName()
+                    firstName: faker.person.firstName(),
+                    lastName: faker.person.lastName()
                 },
             ]
         },
         {
-            firstName: faker.name.firstName(),
-            lastName: faker.name.lastName(),
+            firstName: faker.person.firstName(),
+            lastName: faker.person.lastName(),
             siblings: [
                 {
-                    firstName: faker.name.firstName(),
-                    lastName: faker.name.lastName()
+                    firstName: faker.person.firstName(),
+                    lastName: faker.person.lastName()
                 },
                 {
-                    firstName: faker.name.firstName(),
-                    lastName: faker.name.lastName()
+                    firstName: faker.person.firstName(),
+                    lastName: faker.person.lastName()
                 },
             ]
         },
         {
-            firstName: faker.name.firstName(),
-            lastName: faker.name.lastName(),
+            firstName: faker.person.firstName(),
+            lastName: faker.person.lastName(),
             siblings: [
                 {
-                    firstName: faker.name.firstName(),
-                    lastName: faker.name.lastName()
+                    firstName: faker.person.firstName(),
+                    lastName: faker.person.lastName()
                 },
                 {
-                    firstName: faker.name.firstName(),
-                    lastName: faker.name.lastName()
+                    firstName: faker.person.firstName(),
+                    lastName: faker.person.lastName()
                 },
             ]
         },
         {
-            firstName: faker.name.firstName(),
-            lastName: faker.name.lastName(),
+            firstName: faker.person.firstName(),
+            lastName: faker.person.lastName(),
             siblings: [
                 {
-                    firstName: faker.name.firstName(),
-                    lastName: faker.name.lastName()
+                    firstName: faker.person.firstName(),
+                    lastName: faker.person.lastName()
                 },
                 {
-                    firstName: faker.name.firstName(),
-                    lastName: faker.name.lastName()
+                    firstName: faker.person.firstName(),
+                    lastName: faker.person.lastName()
                 },
             ]
         },

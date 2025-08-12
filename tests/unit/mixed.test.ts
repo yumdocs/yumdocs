@@ -6,11 +6,11 @@ const INPUT_DIR = './tests/templates/';
 const OUTPUT_DIR = './temp/'
 
 const DATA = {
-    text: faker.datatype.string(),
-    integer: faker.datatype.number(),
-    float: faker.datatype.float(),
+    text: faker.string.sample(),
+    integer: faker.number.int(),
+    float: faker.number.float(),
     boolean: faker.datatype.boolean(),
-    date: faker.datatype.datetime()
+    date: faker.date.anytime()
 };
 
 describe('Mixed tags and expressions - ok', () => {

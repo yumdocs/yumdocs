@@ -5,7 +5,7 @@ import { faker } from '@faker-js/faker';
 // TODO Test options error and data
 
 test('Missing error code', () => {
-    const code = faker.datatype.number({ min: 0, max: 999});
+    const code = faker.number.int({ min: 0, max: 999});
     function test() {
         throw new YumError(code);
     }

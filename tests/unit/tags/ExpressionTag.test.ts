@@ -5,7 +5,7 @@ import {hasTagsRegExp} from "../../../src/tags/tagUtils";
 const INPUT_DIR = './tests/templates/';
 const OUTPUT_DIR = './temp/'
 const DATA = {
-    dummy: faker.random.word()
+    dummy: faker.lorem.word()
 };
 
 describe('Simple expression - ok', () => {

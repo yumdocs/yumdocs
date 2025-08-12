@@ -5,10 +5,10 @@ import {hasTagsRegExp} from "../../../src/tags/tagUtils";
 const INPUT_DIR = './tests/templates/';
 const OUTPUT_DIR = './temp/'
 const DATA = {
-    float: faker.datatype.float(),
+    float: faker.number.float(),
     hasExpression: faker.datatype.boolean(),
     hasText: faker.datatype.boolean(),
-    text: faker.random.word(),
+    text: faker.lorem.word(),
 };
 
 describe('If tag - ok', () => {
