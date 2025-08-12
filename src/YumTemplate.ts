@@ -83,7 +83,7 @@ class YumTemplate {
         return {
             delimiters: {
                 start: options.delimiters?.start || constants.delimiters.start,
-                end: options.delimiters?.start || constants.delimiters.end,
+                end: options.delimiters?.end || constants.delimiters.end,
             },
             locale: options.locale || constants.locale
         };
