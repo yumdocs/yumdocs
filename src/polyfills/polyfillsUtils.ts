@@ -1,4 +1,11 @@
 /**
+ * Extended process interface for Electron compatibility
+ */
+interface ElectronProcess extends NodeJS.Process {
+    type?: string;
+}
+
+/**
  * isNodeJS
  * @see https://github.com/mozilla/pdf.js/blob/master/src/shared/is_node.js
  */
@@ -6,8 +13,8 @@ export const isNodeJS: boolean =
     typeof process === 'object' &&
     process + '' === '[object process]' &&
     !process.versions.nw &&
-    // @ts-expect-error TS2339: Property 'type' does not exist on type 'Process'.
-    !(process.versions.electron && process.type && process.type !== 'browser');
+    // Check for electron process.type property (exists in Electron but not Node.js)
+    !((process as ElectronProcess).versions.electron && (process as ElectronProcess).type && (process as ElectronProcess).type !== 'browser');
 
 /**
  * global/window

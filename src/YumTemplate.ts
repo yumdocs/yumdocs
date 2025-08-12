@@ -1,6 +1,9 @@
 import {promises as fs} from 'fs';
 import JSZip from 'jszip';
 import constants from './constants';
+
+// Type alias for JSZip input formats since InputFileFormat isn't exported
+type JSZipInputFormat = string | ArrayBuffer | Uint8Array | Buffer | Blob | number[] | Promise<string | ArrayBuffer | Uint8Array | Buffer | Blob | number[]>;
 import cultureMap from './cultures/cultureMap';
 import YumError from "./error/YumError";
 import IPart from "./parts/IPart";
@@ -114,10 +117,8 @@ class YumTemplate {
      * @param handle
      * @private
      */
-    private async _loadAnythingElse(handle: unknown) {
+    private async _loadAnythingElse(handle: JSZipInputFormat) {
         try {
-            // Unfortunately, JSZip does not export InputFileFormat
-            // @ts-expect-error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'InputFileFormat'.
             this._zip = await JSZip.loadAsync(handle);
         } catch(error) {
             throw new YumError(1013, { error });
@@ -128,13 +129,13 @@ class YumTemplate {
      * load
      * @param handle
      */
-    async load(handle: unknown) {
+    async load(handle: string | JSZipInputFormat) {
         this._parts.clear();
         // Reset JSZip if called twice?
         if (isNodeJS && typeof handle === 'string') {
-            await this._loadNodePath(<string>handle);
+            await this._loadNodePath(handle);
         } else {
-            await this._loadAnythingElse(handle);
+            await this._loadAnythingElse(handle as JSZipInputFormat);
         }
     }
 

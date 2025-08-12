@@ -2,11 +2,21 @@ import constants from "../constants";
 import OptionsType from "../OptionsType";
 
 /**
+ * RegExp match result with named capture groups
+ */
+interface RegExpMatchWithGroups extends Array<string> {
+    groups?: {
+        statement?: string;
+        expression?: string;
+    };
+}
+
+/**
  * MatchNode
  */
 class MatchedNode {
     public readonly node: Text;
-    private readonly _match: Array<string>;
+    private readonly _match: RegExpMatchWithGroups;
     private readonly _options: OptionsType;
 
     /**
@@ -15,7 +25,7 @@ class MatchedNode {
      * @param match
      * @param options
      */
-    constructor(node: Text, match: Array<string>, options: OptionsType) {
+    constructor(node: Text, match: RegExpMatchWithGroups, options: OptionsType) {
         this.node = node;
         this._match = match;
         this._options = options;
@@ -25,16 +35,14 @@ class MatchedNode {
      * statement
      */
     get statement(): string {
-        // @ts-expect-error TS2339: Property 'groups' does not exist on type 'string[]'.
-        return this._match.groups.statement;
+        return this._match.groups?.statement || '';
     }
 
     /**
      * expression
      */
     get expression(): string {
-        // @ts-expect-error TS2339: Property 'groups' does not exist on type 'string[]'.
-        return this._match.groups.expression;
+        return this._match.groups?.expression || '';
     }
 
     /**

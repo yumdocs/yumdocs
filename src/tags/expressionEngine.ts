@@ -70,8 +70,8 @@ jexl.addTransform('upper', (val: unknown) => String(val).toUpperCase());
 // Boolean - N/A
 
 // Number and Date
-// @ts-expect-error TS2339: Property 'locale' does not exist on type 'BuildableJexl'.
-jexl.addTransform('format', (val: unknown, fmt: unknown, locale: unknown = jexl.locale || constants.locale) =>
+// Note: jexl doesn't have a locale property, so we use constants.locale as fallback
+jexl.addTransform('format', (val: unknown, fmt: unknown, locale: unknown = constants.locale) =>
     toString(typeof val !== 'string' || isNaN(Date.parse(val as string)) ? val : new Date(Date.parse(val as string)), fmt as string | undefined, locale as string | undefined));
 
 // Array
@@ -83,16 +83,24 @@ jexl.addTransform('orderBy', async (val: unknown, expression: unknown, reverse =
         // Build an array that has both items and expression evals
         const _val = val.map((el, idx) => ({_v: el, _e: _evals[idx]}));
         // Sort based on expression evals
-        // _val.sort((a: { _e: unknown; _v: unknown }, b: { _e: unknown; _v: unknown }) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        _val.sort((a: { _e: any; _v: any }, b: { _e: any; _v: any }) => {
-            if (typeof a._e === typeof b._e && a._e < b._e) {
-                return reverse ? 1 : -1;
-            } else if (typeof a._e === typeof b._e && a._e > b._e) {
-                return reverse ? -1 : 1;
-            } else {
-                return 0;
+        interface SortItem {
+            _e: unknown; // Expression evaluation result
+            _v: unknown; // Original value
+        }
+        _val.sort((a: SortItem, b: SortItem) => {
+            // Type guard for comparable types
+            const isComparable = (value: unknown): value is string | number | Date => {
+                return typeof value === 'string' || typeof value === 'number' || value instanceof Date;
+            };
+            
+            if (typeof a._e === typeof b._e && isComparable(a._e) && isComparable(b._e)) {
+                if (a._e < b._e) {
+                    return reverse ? 1 : -1;
+                } else if (a._e > b._e) {
+                    return reverse ? -1 : 1;
+                }
             }
+            return 0;
         });
         // Return an array of values
         return _val.map(el => el._v);
