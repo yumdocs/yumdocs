@@ -93,6 +93,7 @@ class TagParser implements ITagParser, ITagContext {
                 return Tag;
             }
         }
+        return undefined;
     }
 
     /**

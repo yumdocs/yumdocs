@@ -4,7 +4,7 @@ import errorCodes from './errorCodes';
  * YumError
  */
 class YumError extends Error {
-    readonly name: string = 'YumError';
+    override readonly name: string = 'YumError';
     code: number;
     data?: Record<string, unknown>;
     originalError?: Error;
@@ -36,11 +36,11 @@ class YumError extends Error {
         // @see https://stackoverflow.com/questions/41102060/typescript-extending-error-class
         Object.setPrototypeOf(this, new.target.prototype); // restore prototype chain
         this.code = code;
-        if (options.error instanceof Error) {
-            this.originalError = options.error;
+        if (options['error'] instanceof Error) {
+            this.originalError = options['error'];
         }
-        if (Object.prototype.toString.call(options.data) === '[object Object]') {
-            this.data = <Record<string, unknown>>options.data;
+        if (Object.prototype.toString.call(options['data']) === '[object Object]') {
+            this.data = <Record<string, unknown>>options['data'];
         }
         this.name = 'YumError';
         

@@ -10,7 +10,7 @@ import OptionsType from '../OptionsType';
  * TemplatedPart
  */
 class TemplatedPart extends AbstractPart {
-    readonly priority: number = 1;
+    override readonly priority: number = 1;
     private readonly _ast: Array<AbstractTag> = [];
 
     /**
@@ -38,7 +38,7 @@ class TemplatedPart extends AbstractPart {
      * Note: executed by parent AbstractPart
      * @param xml
      */
-    protected _preProcess(xml: string): string {
+    protected override _preProcess(xml: string): string {
         const { start, end } = <{ start: string, end: string }>this._options.delimiters;
         // TODO escape characters like < and >
         const pos1 = xml.indexOf(start.slice(0,1));
