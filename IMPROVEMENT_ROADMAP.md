@@ -31,6 +31,47 @@
 
 **Effort**: 3-4 days | **Testing**: Security test suite
 
+### 1.6 Test Suite Re-engineering 
+**Priority**: HIGH | **Effort**: 2-3 weeks
+
+**Current Issues Identified**:
+- 26 test files with inconsistent organization patterns
+- 17 OpenXML fixture files with inconsistent naming conventions  
+- Mix of integration/unit tests without clear separation
+- Test antipatterns (private property access via `as any`)
+- Repetitive test setup and data generation
+- Missing edge case coverage and error scenarios
+
+**Proposed Solutions**:
+- **Fixture Naming Convention**: Standardize to `{format}-{feature}-{scenario}.{ext}` 
+  - Examples: `word-expression-basic.docx`, `ppt-each-nested.pptx`, `excel-if-conditional.xlsx`
+- **Test Structure Reorganization**: Clear separation of unit vs integration tests
+- **Test Utilities**: Replace private property access with proper test helpers
+- **Data Generation**: Consistent patterns for test data creation
+- **Coverage Expansion**: Add missing edge cases and error scenario testing
+
+**Files to Create**:
+- `tests/helpers/TestDataFactory.ts` - Centralized test data generation
+- `tests/helpers/TemplateTestUtils.ts` - Template testing utilities  
+- `tests/helpers/FixtureManager.ts` - Standardized fixture loading
+- `tests/integration/` - Clear integration test separation
+- `tests/unit/` - Refactored unit tests with better patterns
+
+**Files to Rename/Reorganize**:
+- All fixture files in `tests/templates/` with new naming convention
+- Update all test imports and references
+- Reorganize test structure for better maintainability
+
+**Benefits**:
+- Improved test maintainability and readability
+- Better coverage of edge cases and error scenarios
+- Consistent patterns across the test suite
+- Easier debugging and test development
+- Foundation for future testing improvements
+
+**Timeline**: 2-3 weeks (made easier by modern TypeScript features from Phase 1.5a)
+**Risk**: Medium (extensive changes but with good test foundation)
+
 ---
 
 ## Phase 2: Architecture Improvements (Week 3-5)
