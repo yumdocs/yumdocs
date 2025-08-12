@@ -5,7 +5,7 @@ import expressionEngine from "./expressionEngine";
 import constants from "../constants";
 import {assert} from "../error/assert";
 import YumError from "../error/YumError";
-import OptionsType from "../OptionsType";
+import ITagContext from "./ITagContext";
 
 /**
  * ExpressionTag
@@ -19,8 +19,8 @@ class ExpressionTag extends AbstractTag implements ITag {
      * @param matchedNode
      * @param parent
      */
-    constructor(matchedNode: MatchedNode, parent: Array<AbstractTag>, options: OptionsType) {
-        super(matchedNode, parent, options);
+    constructor(matchedNode: MatchedNode, parent: Array<AbstractTag>, context: ITagContext) {
+        super(matchedNode, parent, context);
     }
 
     /**

@@ -5,6 +5,7 @@ import tagMap from "./tagMap";
 import ExpressionTag from "./ExpressionTag";
 import ITagConstructor from "./ITagConstructor";
 import ITagParser from "./ITagParser";
+import ITagContext from "./ITagContext";
 import {assert} from "../error/assert";
 import YumError from "../error/YumError";
 import OptionsType from "../OptionsType";
@@ -12,7 +13,7 @@ import OptionsType from "../OptionsType";
 /**
  * TagParser
  */
-class TagParser implements ITagParser {
+class TagParser implements ITagParser, ITagContext {
     private readonly _nodes: Array<Node>;
     private _options: OptionsType;
     private _lexer: RegExp | undefined;
@@ -29,6 +30,22 @@ class TagParser implements ITagParser {
         this._nodes = nodes;
         this._options = options;
         this._current = this._ast;
+    }
+
+    /**
+     * ITagContext implementation: get template options
+     */
+    get options(): OptionsType {
+        return this._options;
+    }
+
+    /**
+     * ITagContext implementation: create TagParser for nested parsing
+     * @param nodes
+     * @param options
+     */
+    createTagParser(nodes: Array<Node>, options: OptionsType): ITagParser {
+        return new TagParser(nodes, options);
     }
 
     /**
@@ -96,11 +113,11 @@ class TagParser implements ITagParser {
                         this._findTagInBlocks(statement);
                     if (Tag && (Tag.statement === ExpressionTag.statement) && expression) {
                         // If tag is a standalone expression
-                        const tag = new Tag(matchedNode, this._current, this._options);
+                        const tag = new Tag(matchedNode, this._current, this);
                         this._current.push(tag);
                     } else if (Tag && (Tag.statement === statement)) {
                         // If tag corresponds to an opening statement, e.g. each or if, with or without expression
-                        const tag = new Tag(matchedNode, this._current, this._options);
+                        const tag = new Tag(matchedNode, this._current, this);
                         this._stack.push(tag);
                         this._current.push(tag);
                         if (Tag.blocks.length >0) {
@@ -149,9 +166,7 @@ class TagParser implements ITagParser {
 
 }
 
-// Assigned at runtime in TagParser.ts to resolve a circular dependency
-// src/parts/TagParser.ts -> src/tags/tagMap.ts -> src/tags/EachTag.ts -> src/parts/TagParser.ts
-AbstractTag.TagParser = TagParser;
+// Circular dependency resolved through dependency injection pattern
 
 /**
  * Default export

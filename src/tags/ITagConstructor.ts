@@ -1,6 +1,6 @@
 import MatchedNode from "./MatchedNode";
 import AbstractTag from "./AbstractTag";
-import OptionsType from "../OptionsType";
+import ITagContext from "./ITagContext";
 
 /**
  * ITagConstructor
@@ -8,7 +8,7 @@ import OptionsType from "../OptionsType";
 interface ITagConstructor {
     statement: string;
     blocks: Array<string>;
-    new(node: MatchedNode, parent: Array<AbstractTag>, options: OptionsType): AbstractTag;
+    new(node: MatchedNode, parent: Array<AbstractTag>, context: ITagContext): AbstractTag;
 }
 
 /**

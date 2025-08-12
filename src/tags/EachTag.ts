@@ -1,11 +1,11 @@
-import AbstractTag from "./AbstractTag"; // <-- Use AbstractTag.TagParser to avoid a circular dependency
+import AbstractTag from "./AbstractTag";
 import ITag from "./ITag";
 import MatchedNode from "./MatchedNode";
 import {assert} from "../error/assert";
 import {cloneRunFromText, contains, getChildrenOfCommonAncestor, getSiblingsBetween} from "./domUtils";
 import expressionEngine from "./expressionEngine";
 import YumError from "../error/YumError";
-import OptionsType from "../OptionsType";
+import ITagContext from "./ITagContext";
 import constants from "../constants";
 
 class EachTag extends AbstractTag implements ITag {
@@ -18,8 +18,8 @@ class EachTag extends AbstractTag implements ITag {
      * @param parent
      * @param options
      */
-    constructor(matchedNode: MatchedNode, parent: Array<AbstractTag>, options: OptionsType) {
-        super(matchedNode, parent, options);
+    constructor(matchedNode: MatchedNode, parent: Array<AbstractTag>, context: ITagContext) {
+        super(matchedNode, parent, context);
     }
 
     /**
@@ -48,7 +48,7 @@ class EachTag extends AbstractTag implements ITag {
                 const text = <Text>eachMatchedNode.node;
                 const run = <Node>text.parentNode?.parentNode;
                 const parent = <Node>run.parentNode;
-                const {end, start} = <{end: string, start: string}>this._options.delimiters;
+                const {end, start} = <{end: string, start: string}>this.options.delimiters;
                 const rx = new RegExp(`([\\s\\S]*)(${start}\\s*${EachTag.statement}[^${end.charAt(0)}]+${end})([\\s\\S]*)(${start}\\s*${EachTag.blocks[0]}\\s*${end})([\\s\\S]*)`);
                 const matches = (eachMatchedNode.node.nodeValue || constants.empty).match(rx);
                 if (Array.isArray(matches) && matches.length === 6) {
@@ -67,7 +67,7 @@ class EachTag extends AbstractTag implements ITag {
                         nodes.push(node);
                     }
                     // Parse new node
-                    const _ast = new AbstractTag.TagParser(nodes, this._options).parse();
+                    const _ast = this.createTagParser(nodes).parse();
                     // Add to document ast
                     this.children.push(..._ast);
                     // Create last node corresponding to content after #endeach
@@ -112,7 +112,7 @@ class EachTag extends AbstractTag implements ITag {
                         }
                     }
                     // Parse new node
-                    const _ast = new AbstractTag.TagParser(nodes, this._options).parse();
+                    const _ast = this.createTagParser(nodes).parse();
                     // Add to document ast
                     this.children.push(..._ast);
                 }

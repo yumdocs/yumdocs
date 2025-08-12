@@ -1,40 +1,30 @@
 import ITag from './ITag';
 import MatchedNode from "./MatchedNode";
 import constants from "../constants";
-import ITagParser from "./ITagParser";
-import OptionsType from "../OptionsType";
-
-/**
- * TagParser
- */
-type TagParser = { new(nodes: Array<Node>, options: OptionsType): ITagParser; };
+import ITagContext from "./ITagContext";
 
 /**
  * AbstractTag
  */
 abstract class AbstractTag implements ITag {
-    // Assigned at runtime in TagParser.ts to resolve a circular dependency
-    // src/parts/TagParser.ts -> src/tags/tagMap.ts -> src/tags/EachTag.ts -> src/parts/TagParser.ts
-    public static TagParser: TagParser;
-
     public readonly matchedNodes: Map<string, MatchedNode> = new Map();
     protected _done = false;
 
     public readonly children: Array<AbstractTag> = [];
     public readonly parent: Array<AbstractTag>;
-    public readonly _options: OptionsType;
+    protected readonly _context: ITagContext;
 
     /**
      * constructor
      * @param matchedNode
      * @param parent
-     * @param options
+     * @param context
      * @protected
      */
-    protected constructor(matchedNode: MatchedNode, parent: Array<AbstractTag>, options: OptionsType) {
+    protected constructor(matchedNode: MatchedNode, parent: Array<AbstractTag>, context: ITagContext) {
         this.addMatchedNode(matchedNode);
         this.parent = parent;
-        this._options = options;
+        this._context = context;
     }
 
     /**
@@ -57,6 +47,21 @@ abstract class AbstractTag implements ITag {
      */
     get done(): boolean {
         return this._done;
+    }
+
+    /**
+     * Get template options from context
+     */
+    protected get options() {
+        return this._context.options;
+    }
+
+    /**
+     * Create a new TagParser for parsing nested nodes
+     * @param nodes
+     */
+    protected createTagParser(nodes: Array<Node>) {
+        return this._context.createTagParser(nodes, this._context.options);
     }
 }
 
