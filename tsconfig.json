@@ -106,10 +106,11 @@
     "dist/**/*",
     "node_modules/**/*"
   ],
-  "ts-node": {
-    // these options are overrides used only by ts-node
+  "tsx": {
+    // these options are overrides used only by tsx
     "compilerOptions": {
-      "module": "commonjs"
+      "module": "ESNext",
+      "moduleResolution": "bundler"
     }
   }
 }

@@ -82,7 +82,7 @@
     "rollup": "^4.46.2",
     "rollup-plugin-polyfill-node": "^0.13.0",
     "ts-jest": "^29.4.1",
-    "ts-node": "^10.9.2",
+    "tsx": "^4.20.4",
     "typescript": "^5.9.2"
   },
   "scripts": {
@@ -93,6 +93,12 @@
     "upgrade": "ncu -u && npm i"
   },
   "engines": {
-    "node": ">=14.18.0"
-  }
+    "node": ">=20.0.0"
+  },
+  "bundleDependencies": [
+    "@xmldom/xmldom",
+    "file-saver",
+    "jexl",
+    "jszip"
+  ]
 }
