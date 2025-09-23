@@ -10,66 +10,66 @@ name: Node.js CI
 on: [push, pull_request]
 
 jobs:
-  build:
-    name: Build and Test
-    runs-on: ubuntu-latest
-    env:
-      NODE_ENV: test
-      FORCE_COLOR: true
-    # See image content at https://github.com/actions/virtual-environments/blob/ffa2110464ecda1cc62b477f29609525de24e570/images/linux/Ubuntu1804-README.md
-
-    strategy:
-      # max-parallel: 1
-      matrix:
-        node-version: [14.x, 16.x, 18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Install packages
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      - name: Test
-        run: |
-          mkdir temp
-          npm test
-
-  publish:
-    name: Publish
-    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
-    needs: build
-    runs-on: ubuntu-latest
-    env:
-      FORCE_COLOR: true
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup nodeJS
-        # Setup .npmrc file to publish to npm
-        # https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages#publishing-packages-to-the-npm-registry
-        uses: actions/setup-node@v3
-        with:
-          node-version: "lts/*"
-          registry-url: "https://registry.npmjs.org"
-
-      - name: Install packages
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      - name: Publish to npmjs.com
-        run: npm publish --access public
+    build:
+        name: Build and Test
+        runs-on: ubuntu-latest
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+            NODE_ENV: test
+            FORCE_COLOR: true
+        # See image content at https://github.com/actions/virtual-environments/blob/ffa2110464ecda1cc62b477f29609525de24e570/images/linux/Ubuntu1804-README.md
+
+        strategy:
+            # max-parallel: 1
+            matrix:
+                node-version: [14.x, 16.x, 18.x]
+                # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Setup Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node-version }}
+
+            - name: Install packages
+              run: npm ci
+
+            - name: Build
+              run: npm run build
+
+            - name: Test
+              run: |
+                  mkdir temp
+                  npm test
+
+    publish:
+        name: Publish
+        if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+        needs: build
+        runs-on: ubuntu-latest
+        env:
+            FORCE_COLOR: true
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Setup nodeJS
+              # Setup .npmrc file to publish to npm
+              # https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages#publishing-packages-to-the-npm-registry
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 'lts/*'
+                  registry-url: 'https://registry.npmjs.org'
+
+            - name: Install packages
+              run: npm ci
+
+            - name: Build
+              run: npm run build
+
+            - name: Publish to npmjs.com
+              run: npm publish --access public
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
