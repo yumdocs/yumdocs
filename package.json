@@ -1,99 +1,100 @@
 {
-  "name": "@yumdocs/yumdocs",
-  "version": "0.1.17",
-  "author": "https://github.com/jlchereau",
-  "description": "Yumdocs is a template engine to automate Word, PowerPoint and Excel documents",
-  "keywords": [
-    "Microsoft Office",
-    "Word",
-    "PowerPoint",
-    "Excel",
-    "docx",
-    "pptx",
-    "xlsx",
-    "openxml",
-    "json",
-    "automation",
-    "generation",
-    "creation",
-    "automate",
-    "generate",
-    "create",
-    "merge",
-    "template",
-    "templates",
-    "templater",
-    "templating",
-    "engine",
-    "Node",
-    "JavaScript",
-    "js",
-    "TypeScript"
-  ],
-  "license": "MIT",
-  "homepage": "https://github.com/yumdocs/yumdocs#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/yumdocs/yumdocs.git"
-  },
-  "bugs": {
-    "url": "https://github.com/yumdocs/yumdocs/issues"
-  },
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
-  "browser": "dist/index.umd.js",
-  "types": "dist/src/index.d.js",
-  "files": [
-    "dist/**/*"
-  ],
-  "bundledDependencies": [
-    "@xmldom/xmldom",
-    "file-saver",
-    "jexl",
-    "jszip"
-  ],
-  "dependencies": {
-    "@xmldom/xmldom": "^0.9.8",
-    "file-saver": "^2.0.5",
-    "jexl": "^2.3.0",
-    "jszip": "^3.10.1"
-  },
-  "devDependencies": {
-    "@faker-js/faker": "^9.9.0",
-    "@stryker-mutator/core": "^9.0.1",
-    "@stryker-mutator/jest-runner": "^9.0.1",
-    "@stryker-mutator/typescript-checker": "^9.0.1",
-    "@types/file-saver": "^2.0.7",
-    "@types/jest": "^30.0.0",
-    "@types/jexl": "^2.3.4",
-    "@types/jmespath": "^0.15.2",
-    "@typescript-eslint/eslint-plugin": "^8.39.1",
-    "@typescript-eslint/parser": "^8.39.1",
-    "angular-expressions": "^1.5.1",
-    "eslint": "^9.33.0",
-    "eslint-config-prettier": "^10.1.8",
-    "jest": "^30.0.5",
-    "jmespath": "^0.16.0",
-    "prettier": "^3.6.2",
-    "ts-jest": "^29.4.1",
-    "tsup": "^8.5.0",
-    "tsx": "^4.20.4",
-    "typescript": "^5.9.2"
-  },
-  "scripts": {
-    "build": "tsup",
-    "dev": "tsc --watch",
-    "lint": "eslint --ext .js,.ts .",
-    "test": "jest",
-    "upgrade": "ncu -u && npm i"
-  },
-  "engines": {
-    "node": ">=20.0.0"
-  },
-  "bundleDependencies": [
-    "@xmldom/xmldom",
-    "file-saver",
-    "jexl",
-    "jszip"
-  ]
+    "name": "@yumdocs/yumdocs",
+    "version": "0.1.17",
+    "author": "https://github.com/jlchereau",
+    "description": "Yumdocs is a template engine to automate Word, PowerPoint and Excel documents",
+    "keywords": [
+        "Microsoft Office",
+        "Word",
+        "PowerPoint",
+        "Excel",
+        "docx",
+        "pptx",
+        "xlsx",
+        "openxml",
+        "json",
+        "automation",
+        "generation",
+        "creation",
+        "automate",
+        "generate",
+        "create",
+        "merge",
+        "template",
+        "templates",
+        "templater",
+        "templating",
+        "engine",
+        "Node",
+        "JavaScript",
+        "js",
+        "TypeScript"
+    ],
+    "license": "MIT",
+    "homepage": "https://github.com/yumdocs/yumdocs#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/yumdocs/yumdocs.git"
+    },
+    "bugs": {
+        "url": "https://github.com/yumdocs/yumdocs/issues"
+    },
+    "main": "dist/index.cjs.js",
+    "module": "dist/index.esm.js",
+    "browser": "dist/index.umd.js",
+    "types": "dist/src/index.d.js",
+    "files": [
+        "dist/**/*"
+    ],
+    "bundledDependencies": [
+        "@xmldom/xmldom",
+        "file-saver",
+        "jexl",
+        "jszip"
+    ],
+    "dependencies": {
+        "@xmldom/xmldom": "^0.9.8",
+        "file-saver": "^2.0.5",
+        "jexl": "^2.3.0",
+        "jszip": "^3.10.1"
+    },
+    "devDependencies": {
+        "@faker-js/faker": "^10.0.0",
+        "@stryker-mutator/core": "^9.1.1",
+        "@stryker-mutator/jest-runner": "^9.1.1",
+        "@stryker-mutator/typescript-checker": "^9.1.1",
+        "@types/file-saver": "^2.0.7",
+        "@types/jest": "^30.0.0",
+        "@types/jexl": "^2.3.4",
+        "@types/jmespath": "^0.15.2",
+        "@typescript-eslint/eslint-plugin": "^8.44.1",
+        "@typescript-eslint/parser": "^8.44.1",
+        "angular-expressions": "^1.5.1",
+        "eslint": "^9.36.0",
+        "eslint-config-prettier": "^10.1.8",
+        "jest": "^30.1.3",
+        "jmespath": "^0.16.0",
+        "prettier": "^3.6.2",
+        "ts-jest": "^29.4.4",
+        "tsup": "^8.5.0",
+        "tsx": "^4.20.5",
+        "typescript": "^5.9.2"
+    },
+    "scripts": {
+        "build": "tsup",
+        "dev": "tsc --watch",
+        "format": "prettier --write .",
+        "lint": "eslint .",
+        "test": "jest",
+        "upgrade": "ncu -u && npm i"
+    },
+    "engines": {
+        "node": ">=20.0.0"
+    },
+    "bundleDependencies": [
+        "@xmldom/xmldom",
+        "file-saver",
+        "jexl",
+        "jszip"
+    ]
 }
