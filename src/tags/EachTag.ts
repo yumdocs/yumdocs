@@ -1,12 +1,17 @@
-import AbstractTag from "./AbstractTag";
-import ITag from "./ITag";
-import MatchedNode from "./MatchedNode";
-import {assert} from "../error/assert";
-import {cloneRunFromText, contains, getChildrenOfCommonAncestor, getSiblingsBetween} from "./domUtils";
-import expressionEngine from "./expressionEngine";
-import YumError from "../error/YumError";
-import ITagContext from "./ITagContext";
-import constants from "../constants";
+import AbstractTag from './AbstractTag';
+import ITag from './ITag';
+import MatchedNode from './MatchedNode';
+import { assert } from '../error/assert';
+import {
+    cloneRunFromText,
+    contains,
+    getChildrenOfCommonAncestor,
+    getSiblingsBetween,
+} from './domUtils';
+import expressionEngine from './expressionEngine';
+import YumError from '../error/YumError';
+import ITagContext from './ITagContext';
+import constants from '../constants';
 
 class EachTag extends AbstractTag implements ITag {
     static readonly statement = '#each';
@@ -18,7 +23,11 @@ class EachTag extends AbstractTag implements ITag {
      * @param parent
      * @param options
      */
-    constructor(matchedNode: MatchedNode, parent: Array<AbstractTag>, context: ITagContext) {
+    constructor(
+        matchedNode: MatchedNode,
+        parent: Array<AbstractTag>,
+        context: ITagContext,
+    ) {
         super(matchedNode, parent, context);
     }
 
@@ -33,14 +42,22 @@ class EachTag extends AbstractTag implements ITag {
             // Evaluate #each expression, which should be an array
             let arr: unknown; // avoid Array<unknown> because a value which is not an array becomes new Array(value);
             try {
-                arr = await expressionEngine.evaluate(eachMatchedNode.expression, data);
+                arr = await expressionEngine.evaluate(
+                    eachMatchedNode.expression,
+                    data,
+                );
             } catch (error) {
-                throw new YumError(1060, {error, data: { expression: eachMatchedNode.expression, data }});
+                throw new YumError(1060, {
+                    error,
+                    data: { expression: eachMatchedNode.expression, data },
+                });
             }
             if (typeof arr === 'undefined') {
                 arr = [];
             } else if (!Array.isArray(arr)) {
-                throw new YumError(1110, {data: { expression: eachMatchedNode.expression, data }});
+                throw new YumError(1110, {
+                    data: { expression: eachMatchedNode.expression, data },
+                });
             }
             const array = arr as Array<Record<string, unknown>>;
             // if #each and #endeach are part of the same node
@@ -48,9 +65,15 @@ class EachTag extends AbstractTag implements ITag {
                 const text = <Text>eachMatchedNode.node;
                 const run = <Node>text.parentNode?.parentNode;
                 const parent = <Node>run.parentNode;
-                const {end, start} = <{end: string, start: string}>this.options.delimiters;
-                const rx = new RegExp(`([\\s\\S]*)(${start}\\s*${EachTag.statement}[^${end.charAt(0)}]+${end})([\\s\\S]*)(${start}\\s*${EachTag.blocks[0]}\\s*${end})([\\s\\S]*)`);
-                const matches = (eachMatchedNode.node.nodeValue || constants.empty).match(rx);
+                const { end, start } = <{ end: string; start: string }>(
+                    this.options.delimiters
+                );
+                const rx = new RegExp(
+                    `([\\s\\S]*)(${start}\\s*${EachTag.statement}[^${end.charAt(0)}]+${end})([\\s\\S]*)(${start}\\s*${EachTag.blocks[0]}\\s*${end})([\\s\\S]*)`,
+                );
+                const matches = (
+                    eachMatchedNode.node.nodeValue || constants.empty
+                ).match(rx);
                 if (Array.isArray(matches) && matches.length === 6) {
                     let node;
                     // Create first node corresponding to content before #each
@@ -83,7 +106,10 @@ class EachTag extends AbstractTag implements ITag {
             } else {
                 // Find the common parent node and child elements directly underneath,
                 // respectively containing #each and #endeach
-                const topNodes = getChildrenOfCommonAncestor(eachMatchedNode.node, endMatchedNode.node);
+                const topNodes = getChildrenOfCommonAncestor(
+                    eachMatchedNode.node,
+                    endMatchedNode.node,
+                );
                 assert(topNodes[0].parentNode === topNodes[1].parentNode);
                 // Find siblings to repeat between #each and #endeach
                 const siblings = getSiblingsBetween(topNodes[0], topNodes[1]);
@@ -93,7 +119,8 @@ class EachTag extends AbstractTag implements ITag {
                     for (const sibling of siblings) {
                         // Remove tags from ast
                         for (let i = this.children.length - 1; i >= 0; i--) {
-                            const [matchedNode] = this.children[i].matchedNodes.values();
+                            const [matchedNode] =
+                                this.children[i].matchedNodes.values();
                             if (contains(sibling, matchedNode.node)) {
                                 this.children.splice(i, 1);
                             }
@@ -117,7 +144,9 @@ class EachTag extends AbstractTag implements ITag {
                     this.children.push(..._ast);
                 }
                 // Remove #each and #endeach
-                topNodes.forEach(node => { parent.removeChild(node); });
+                topNodes.forEach((node) => {
+                    parent.removeChild(node);
+                });
                 // Process children
                 // for (let i = 0; i < this.children.length; i++) {
                 //     await this.children[i].render(array[Math.trunc(i / siblings.length)]);

@@ -1,11 +1,11 @@
-import MatchedNode from "./MatchedNode";
+import MatchedNode from './MatchedNode';
 
 /**
  * ITag
  */
 interface ITag {
     matchedNodes: Map<string, MatchedNode>;
-    addMatchedNode(matchedNode: MatchedNode): void
+    addMatchedNode(matchedNode: MatchedNode): void;
     render(data: Record<string, unknown>): Promise<void>;
     done: boolean;
 }

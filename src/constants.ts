@@ -1,7 +1,7 @@
 const constants = {
     delimiters: {
         start: '{{',
-        end: '}}'
+        end: '}}',
     },
     empty: '',
     fragment: 'fragment',

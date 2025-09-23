@@ -1,4 +1,4 @@
-import {YumTemplate} from '../../src/index';
+import { YumTemplate } from '../../src/index';
 import constants from '../../src/constants';
 
 describe('YumTemplate Constructor and Options', () => {
@@ -33,7 +33,7 @@ describe('YumTemplate Constructor and Options', () => {
         test('should use custom start delimiter and default end delimiter', () => {
             const customStart = '<%';
             const template = new YumTemplate({
-                delimiters: { start: customStart }
+                delimiters: { start: customStart },
             });
             const options = (template as any)._options;
             expect(options.delimiters.start).toBe(customStart);
@@ -43,7 +43,7 @@ describe('YumTemplate Constructor and Options', () => {
         test('should use default start delimiter and custom end delimiter', () => {
             const customEnd = '%>';
             const template = new YumTemplate({
-                delimiters: { end: customEnd }
+                delimiters: { end: customEnd },
             });
             const options = (template as any)._options;
             expect(options.delimiters.start).toBe(constants.delimiters.start);
@@ -54,7 +54,7 @@ describe('YumTemplate Constructor and Options', () => {
             const customStart = '<%';
             const customEnd = '%>';
             const template = new YumTemplate({
-                delimiters: { start: customStart, end: customEnd }
+                delimiters: { start: customStart, end: customEnd },
             });
             const options = (template as any)._options;
             expect(options.delimiters.start).toBe(customStart);
@@ -63,7 +63,7 @@ describe('YumTemplate Constructor and Options', () => {
 
         test('should handle undefined start delimiter', () => {
             const template = new YumTemplate({
-                delimiters: { start: undefined, end: '%>' }
+                delimiters: { start: undefined, end: '%>' },
             });
             const options = (template as any)._options;
             expect(options.delimiters.start).toBe(constants.delimiters.start);
@@ -72,7 +72,7 @@ describe('YumTemplate Constructor and Options', () => {
 
         test('should handle undefined end delimiter', () => {
             const template = new YumTemplate({
-                delimiters: { start: '<%', end: undefined }
+                delimiters: { start: '<%', end: undefined },
             });
             const options = (template as any)._options;
             expect(options.delimiters.start).toBe('<%');
@@ -81,7 +81,7 @@ describe('YumTemplate Constructor and Options', () => {
 
         test('should handle empty string delimiters', () => {
             const template = new YumTemplate({
-                delimiters: { start: '', end: '' }
+                delimiters: { start: '', end: '' },
             });
             const options = (template as any)._options;
             expect(options.delimiters.start).toBe(constants.delimiters.start);
@@ -121,12 +121,12 @@ describe('YumTemplate Constructor and Options', () => {
             const customStart = '[%';
             const customEnd = '%]';
             const customLocale = 'de-DE';
-            
+
             const template = new YumTemplate({
                 delimiters: { start: customStart, end: customEnd },
-                locale: customLocale
+                locale: customLocale,
             });
-            
+
             const options = (template as any)._options;
             expect(options.delimiters.start).toBe(customStart);
             expect(options.delimiters.end).toBe(customEnd);
@@ -136,12 +136,12 @@ describe('YumTemplate Constructor and Options', () => {
         test('should handle partial delimiters with custom locale', () => {
             const customStart = '{%';
             const customLocale = 'es-ES';
-            
+
             const template = new YumTemplate({
                 delimiters: { start: customStart },
-                locale: customLocale
+                locale: customLocale,
             });
-            
+
             const options = (template as any)._options;
             expect(options.delimiters.start).toBe(customStart);
             expect(options.delimiters.end).toBe(constants.delimiters.end);
@@ -153,11 +153,11 @@ describe('YumTemplate Constructor and Options', () => {
         test('end delimiter should not use start delimiter value (bug fix)', () => {
             const customStart = '<%';
             const customEnd = '%>';
-            
+
             const template = new YumTemplate({
-                delimiters: { start: customStart, end: customEnd }
+                delimiters: { start: customStart, end: customEnd },
             });
-            
+
             const options = (template as any)._options;
             // This test ensures the bug where end used start value is fixed
             expect(options.delimiters.end).toBe(customEnd);
@@ -167,11 +167,11 @@ describe('YumTemplate Constructor and Options', () => {
 
         test('end delimiter should be independent of start delimiter', () => {
             const customStart = '[[';
-            
+
             const template = new YumTemplate({
-                delimiters: { start: customStart }
+                delimiters: { start: customStart },
             });
-            
+
             const options = (template as any)._options;
             // Ensure end delimiter uses default, not the custom start value
             expect(options.delimiters.end).toBe(constants.delimiters.end);

@@ -1,68 +1,102 @@
-import ICulture from "./ICulture";
+import ICulture from './ICulture';
 
 /**
  * pt-PT
  */
-const culture: ICulture =  {
-    name: "pt-PT",
+const culture: ICulture = {
+    name: 'pt-PT',
     numberFormat: {
-        pattern: ["-n"],
+        pattern: ['-n'],
         decimals: 2,
-        ",": " ",
-        ".": ",",
+        ',': ' ',
+        '.': ',',
         groupSize: [3],
         percent: {
-            pattern: ["-n%","n%"],
+            pattern: ['-n%', 'n%'],
             decimals: 2,
-            ",": " ",
-            ".": ",",
+            ',': ' ',
+            '.': ',',
             groupSize: [3],
-            symbol: "%"
+            symbol: '%',
         },
         currency: {
-            name: "Euro",
-            abbr: "EUR",
-            pattern: ["-n $","n $"],
+            name: 'Euro',
+            abbr: 'EUR',
+            pattern: ['-n $', 'n $'],
             decimals: 2,
-            ",": " ",
-            ".": ",",
+            ',': ' ',
+            '.': ',',
             groupSize: [3],
-            symbol: "€"
-        }
+            symbol: '€',
+        },
     },
     calendars: {
         standard: {
             days: {
-                names: ["domingo","segunda-feira","terça-feira","quarta-feira","quinta-feira","sexta-feira","sábado"],
-                namesAbbr: ["dom","seg","ter","qua","qui","sex","sáb"],
-                namesShort: ["D","S","T","Q","Q","S","S"]
+                names: [
+                    'domingo',
+                    'segunda-feira',
+                    'terça-feira',
+                    'quarta-feira',
+                    'quinta-feira',
+                    'sexta-feira',
+                    'sábado',
+                ],
+                namesAbbr: ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'],
+                namesShort: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
             },
             months: {
-                names: ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"],
-                namesAbbr: ["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"]
+                names: [
+                    'janeiro',
+                    'fevereiro',
+                    'março',
+                    'abril',
+                    'maio',
+                    'junho',
+                    'julho',
+                    'agosto',
+                    'setembro',
+                    'outubro',
+                    'novembro',
+                    'dezembro',
+                ],
+                namesAbbr: [
+                    'jan',
+                    'fev',
+                    'mar',
+                    'abr',
+                    'mai',
+                    'jun',
+                    'jul',
+                    'ago',
+                    'set',
+                    'out',
+                    'nov',
+                    'dez',
+                ],
             },
-            AM: [""],
-            PM: [""],
+            AM: [''],
+            PM: [''],
             patterns: {
-                d: "dd/MM/yyyy",
+                d: 'dd/MM/yyyy',
                 D: "d' de 'MMMM' de 'yyyy",
                 F: "d' de 'MMMM' de 'yyyy HH:mm:ss",
-                g: "dd/MM/yyyy HH:mm",
-                G: "dd/MM/yyyy HH:mm:ss",
+                g: 'dd/MM/yyyy HH:mm',
+                G: 'dd/MM/yyyy HH:mm:ss',
                 m: "d 'de' MMMM",
                 M: "d 'de' MMMM",
                 s: "yyyy'-'MM'-'dd'T'HH':'mm':'ss",
-                t: "HH:mm",
-                T: "HH:mm:ss",
+                t: 'HH:mm',
+                T: 'HH:mm:ss',
                 u: "yyyy'-'MM'-'dd HH':'mm':'ss'Z'",
                 y: "MMMM' de 'yyyy",
-                Y: "MMMM' de 'yyyy"
+                Y: "MMMM' de 'yyyy",
             },
-            "/": "/",
-            ":": ":",
-            firstDay: 0
-        }
-    }
+            '/': '/',
+            ':': ':',
+            firstDay: 0,
+        },
+    },
 };
 
 /**

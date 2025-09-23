@@ -1,4 +1,8 @@
-import {DOMImplementation, DOMParser, XMLSerializer} from '../../../src/polyfills/xmldom';
+import {
+    DOMImplementation,
+    DOMParser,
+    XMLSerializer,
+} from '../../../src/polyfills/xmldom';
 
 test('polyfills/xmldom', () => {
     expect(DOMImplementation).toBeInstanceOf(Function);

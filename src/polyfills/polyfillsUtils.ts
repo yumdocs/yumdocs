@@ -14,7 +14,11 @@ export const isNodeJS: boolean =
     process + '' === '[object process]' &&
     !process.versions.nw &&
     // Check for electron process.type property (exists in Electron but not Node.js)
-    !((process as ElectronProcess).versions.electron && (process as ElectronProcess).type && (process as ElectronProcess).type !== 'browser');
+    !(
+        (process as ElectronProcess).versions.electron &&
+        (process as ElectronProcess).type &&
+        (process as ElectronProcess).type !== 'browser'
+    );
 
 /**
  * global/window

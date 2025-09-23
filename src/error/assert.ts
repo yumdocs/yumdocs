@@ -5,7 +5,10 @@ import YumError from './YumError';
  * @param condition
  * @param message
  */
-export function assert(condition: unknown, message?: string): asserts condition {
+export function assert(
+    condition: unknown,
+    message?: string,
+): asserts condition {
     if (!condition) {
         throw new YumError(1001, message ? { data: { message } } : undefined);
     }

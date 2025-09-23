@@ -1,5 +1,5 @@
-import IPartConstructor from "../parts/IPartConstructor";
-import TemplatedPart from "../parts/TemplatedPart";
+import IPartConstructor from '../parts/IPartConstructor';
+import TemplatedPart from '../parts/TemplatedPart';
 
 /**
  * partMap
@@ -14,7 +14,7 @@ const partMap = new Map<string, IPartConstructor>([
     // Powerpoint
     ['ppt/slides/slide.xml', TemplatedPart],
     // Excel
-    ['xl/sharedStrings.xml', TemplatedPart]
+    ['xl/sharedStrings.xml', TemplatedPart],
 ]);
 
 /**

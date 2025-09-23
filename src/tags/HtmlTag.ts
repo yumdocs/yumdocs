@@ -1,17 +1,18 @@
-import AbstractTag from "./AbstractTag";
-import ITag from "./ITag";
-import MatchedNode from "./MatchedNode";
-import ITagContext from "./ITagContext";
-import {assert} from "../error/assert";
-import expressionEngine from "./expressionEngine";
-import YumError from "../error/YumError";
-import {DOMParser} from '../polyfills/xmldom';
-import constants from "../constants";
+import AbstractTag from './AbstractTag';
+import ITag from './ITag';
+import MatchedNode from './MatchedNode';
+import ITagContext from './ITagContext';
+import { assert } from '../error/assert';
+import expressionEngine from './expressionEngine';
+import YumError from '../error/YumError';
+import { DOMParser } from '../polyfills/xmldom';
+import constants from '../constants';
 
 // TODO Use https://www.npmjs.com/package/node-html-parser
 
 function getParagraphBuilder(attr?: Record<string, unknown>) {
-    return function buildParagraph(current: Node, xml: Document) { // TODO Options
+    return function buildParagraph(current: Node, xml: Document) {
+        // TODO Options
         let c = current;
         let ret = xml.createElement('w:p');
         c.appendChild(ret);
@@ -63,7 +64,11 @@ class HtmlTag extends AbstractTag implements ITag {
      * @param parent
      * @param options
      */
-    constructor(matchedNode: MatchedNode, parent: Array<AbstractTag>, context: ITagContext) {
+    constructor(
+        matchedNode: MatchedNode,
+        parent: Array<AbstractTag>,
+        context: ITagContext,
+    ) {
         super(matchedNode, parent, context);
     }
 
@@ -74,19 +79,20 @@ class HtmlTag extends AbstractTag implements ITag {
      * @param xml the target dom
      */
     _convert(node: Node, current: Node, xml: Document) {
-        if (node.nodeType === 3) { // if (node instanceof Text) {
+        if (node.nodeType === 3) {
+            // if (node instanceof Text) {
             const text = node.cloneNode(true);
             current.appendChild(text);
         } else {
-            const {tagName} = node as Element;
+            const { tagName } = node as Element;
             const builder = getBuilder(tagName /*, attr*/);
             if (builder) {
                 current = builder(current, xml);
             }
         }
         if (node.hasChildNodes()) {
-            const {childNodes} = node;
-            for (let i = 0, {length} = childNodes; i < length; i++) {
+            const { childNodes } = node;
+            for (let i = 0, { length } = childNodes; i < length; i++) {
                 this._convert(childNodes[i], current, xml);
             }
         }
@@ -101,15 +107,26 @@ class HtmlTag extends AbstractTag implements ITag {
         assert(matchedNode instanceof MatchedNode);
         let html: string;
         try {
-            html = <string>await expressionEngine.evaluate(matchedNode.expression, data);
-        } catch(error) {
-            throw new YumError( 1060,{error, data: { expression: matchedNode.expression, data }});
+            html = <string>(
+                await expressionEngine.evaluate(matchedNode.expression, data)
+            );
+        } catch (error) {
+            throw new YumError(1060, {
+                error,
+                data: { expression: matchedNode.expression, data },
+            });
         }
-        const dom = new DOMParser().parseFromString(`<${constants.fragment}>${html}</${constants.fragment}>`, constants.htmlMimeType);
-        const xml = new DOMParser().parseFromString(`<${constants.fragment}></${constants.fragment}>`, constants.xmlMimeType);
+        const dom = new DOMParser().parseFromString(
+            `<${constants.fragment}>${html}</${constants.fragment}>`,
+            constants.htmlMimeType,
+        );
+        const xml = new DOMParser().parseFromString(
+            `<${constants.fragment}></${constants.fragment}>`,
+            constants.xmlMimeType,
+        );
         this._convert(dom.childNodes[0], xml.childNodes[0], xml);
         // Consider this for RawTag and inherit
-        const parent = matchedNode.node.parentNode
+        const parent = matchedNode.node.parentNode;
         // parent.replaceChildren()
         this._done = true;
     }

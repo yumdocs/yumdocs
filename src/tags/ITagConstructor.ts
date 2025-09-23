@@ -1,6 +1,6 @@
-import MatchedNode from "./MatchedNode";
-import AbstractTag from "./AbstractTag";
-import ITagContext from "./ITagContext";
+import MatchedNode from './MatchedNode';
+import AbstractTag from './AbstractTag';
+import ITagContext from './ITagContext';
 
 /**
  * ITagConstructor
@@ -8,10 +8,14 @@ import ITagContext from "./ITagContext";
 interface ITagConstructor {
     statement: string;
     blocks: Array<string>;
-    new(node: MatchedNode, parent: Array<AbstractTag>, context: ITagContext): AbstractTag;
+    new (
+        node: MatchedNode,
+        parent: Array<AbstractTag>,
+        context: ITagContext,
+    ): AbstractTag;
 }
 
 /**
  * Default export
  */
-export default ITagConstructor
+export default ITagConstructor;

@@ -1,68 +1,102 @@
-import ICulture from "./ICulture";
+import ICulture from './ICulture';
 
 /**
  * de-DE
  */
 const culture: ICulture = {
-    name: "de-DE",
+    name: 'de-DE',
     numberFormat: {
-        pattern: ["-n"],
+        pattern: ['-n'],
         decimals: 2,
-        ",": ".",
-        ".": ",",
+        ',': '.',
+        '.': ',',
         groupSize: [3],
         percent: {
-            pattern: ["-n %","n %"],
+            pattern: ['-n %', 'n %'],
             decimals: 2,
-            ",": ".",
-            ".": ",",
+            ',': '.',
+            '.': ',',
             groupSize: [3],
-            symbol: "%"
+            symbol: '%',
         },
         currency: {
-            name: "Euro",
-            abbr: "EUR",
-            pattern: ["-n $","n $"],
+            name: 'Euro',
+            abbr: 'EUR',
+            pattern: ['-n $', 'n $'],
             decimals: 2,
-            ",": ".",
-            ".": ",",
+            ',': '.',
+            '.': ',',
             groupSize: [3],
-            symbol: "€"
-        }
+            symbol: '€',
+        },
     },
     calendars: {
         standard: {
             days: {
-                names: ["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"],
-                namesAbbr: ["So","Mo","Di","Mi","Do","Fr","Sa"],
-                namesShort: ["So","Mo","Di","Mi","Do","Fr","Sa"]
+                names: [
+                    'Sonntag',
+                    'Montag',
+                    'Dienstag',
+                    'Mittwoch',
+                    'Donnerstag',
+                    'Freitag',
+                    'Samstag',
+                ],
+                namesAbbr: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
+                namesShort: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
             },
             months: {
-                names: ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],
-                namesAbbr: ["Jan","Feb","Mrz","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"]
+                names: [
+                    'Januar',
+                    'Februar',
+                    'März',
+                    'April',
+                    'Mai',
+                    'Juni',
+                    'Juli',
+                    'August',
+                    'September',
+                    'Oktober',
+                    'November',
+                    'Dezember',
+                ],
+                namesAbbr: [
+                    'Jan',
+                    'Feb',
+                    'Mrz',
+                    'Apr',
+                    'Mai',
+                    'Jun',
+                    'Jul',
+                    'Aug',
+                    'Sep',
+                    'Okt',
+                    'Nov',
+                    'Dez',
+                ],
             },
-            AM: [""],
-            PM: [""],
+            AM: [''],
+            PM: [''],
             patterns: {
-                d: "dd.MM.yyyy",
-                D: "dddd, d. MMMM yyyy",
-                F: "dddd, d. MMMM yyyy HH:mm:ss",
-                g: "dd.MM.yyyy HH:mm",
-                G: "dd.MM.yyyy HH:mm:ss",
-                m: "d. MMMM",
-                M: "d. MMMM",
+                d: 'dd.MM.yyyy',
+                D: 'dddd, d. MMMM yyyy',
+                F: 'dddd, d. MMMM yyyy HH:mm:ss',
+                g: 'dd.MM.yyyy HH:mm',
+                G: 'dd.MM.yyyy HH:mm:ss',
+                m: 'd. MMMM',
+                M: 'd. MMMM',
                 s: "yyyy'-'MM'-'dd'T'HH':'mm':'ss",
-                t: "HH:mm",
-                T: "HH:mm:ss",
+                t: 'HH:mm',
+                T: 'HH:mm:ss',
                 u: "yyyy'-'MM'-'dd HH':'mm':'ss'Z'",
-                y: "MMMM yyyy",
-                Y: "MMMM yyyy"
+                y: 'MMMM yyyy',
+                Y: 'MMMM yyyy',
             },
-            "/": ".",
-            ":": ":",
-            firstDay: 1
-        }
-    }
+            '/': '.',
+            ':': ':',
+            firstDay: 1,
+        },
+    },
 };
 
 /**

@@ -1,12 +1,12 @@
 import { faker } from '@faker-js/faker';
 import YumTemplate from '../../../src/YumTemplate';
-import {hasTagsRegExp} from "../../../src/tags/tagUtils";
-import HtmlTag from "../../../src/tags/HtmlTag";
+import { hasTagsRegExp } from '../../../src/tags/tagUtils';
+import HtmlTag from '../../../src/tags/HtmlTag';
 
 YumTemplate.registerTag(HtmlTag.statement, HtmlTag);
 
 const INPUT_DIR = './tests/templates/';
-const OUTPUT_DIR = './temp/'
+const OUTPUT_DIR = './temp/';
 const DATA = {
     html: `<h1>${faker.lorem.words(4)}</h1><p>${faker.lorem.words(25)}.</p>`,
 };

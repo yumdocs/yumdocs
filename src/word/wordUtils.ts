@@ -1,4 +1,4 @@
-import {escapeRegExp} from "../tags/tagUtils";
+import { escapeRegExp } from '../tags/tagUtils';
 
 /**
  * sanitizeWordMarkup
@@ -16,9 +16,13 @@ import {escapeRegExp} from "../tags/tagUtils";
  * @param xml
  * @param delimiters
  */
-export function sanitizeWordMarkup (xml: string, delimiters: { start: string, end: string }) {
+export function sanitizeWordMarkup(
+    xml: string,
+    delimiters: { start: string; end: string },
+) {
     const { start, end } = delimiters;
-    const garbage = '<\\/w:t><\\/w:r>(<w:[^>]+\\/>)?<w:r\\s?[^>]*>(<w:rPr>[\\s\\S]+<\\/w:rPr>)?<w:t\\s?[^>]*>';
+    const garbage =
+        '<\\/w:t><\\/w:r>(<w:[^>]+\\/>)?<w:r\\s?[^>]*>(<w:rPr>[\\s\\S]+<\\/w:rPr>)?<w:t\\s?[^>]*>';
     let str = '';
     for (let i = 0; i < start.length - 1; i++) {
         str += `${escapeRegExp(start.charAt(i))}(${garbage})?`;
@@ -42,7 +46,7 @@ export function sanitizeWordMarkup (xml: string, delimiters: { start: string, en
             }
             ret += xml.substring(0, pos1);
             ret += xml.substring(pos1, pos2 + 1).replace(rx_replace, '');
-            xml = xml.substring(pos2 + 1)
+            xml = xml.substring(pos2 + 1);
         } else {
             ret += xml;
             xml = '';

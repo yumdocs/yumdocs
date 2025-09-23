@@ -1,17 +1,17 @@
-import ICulture from "./ICulture";
-import arEG from "./ar-EG";
-import bnIN from "./bn-IN";
-import deDE from "./de-DE";
-import enGB from "./en-GB";
-import enUS from "./en-US";
-import esES from "./es-ES";
-import frFR from "./fr-FR";
-import hiIN from "./hi-IN";
-import itIT from "./it-IT";
-import jaJP from "./ja-JP";
-import ptPT from "./pt-PT";
-import ruRU from "./ru-RU";
-import zhCN from "./zh-CN";
+import ICulture from './ICulture';
+import arEG from './ar-EG';
+import bnIN from './bn-IN';
+import deDE from './de-DE';
+import enGB from './en-GB';
+import enUS from './en-US';
+import esES from './es-ES';
+import frFR from './fr-FR';
+import hiIN from './hi-IN';
+import itIT from './it-IT';
+import jaJP from './ja-JP';
+import ptPT from './pt-PT';
+import ruRU from './ru-RU';
+import zhCN from './zh-CN';
 
 /**
  * cultureMap

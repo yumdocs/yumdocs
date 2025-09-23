@@ -1,7 +1,7 @@
-import AbstractTag from "./AbstractTag";
-import ITag from "./ITag";
-import MatchedNode from "./MatchedNode";
-import ITagContext from "./ITagContext";
+import AbstractTag from './AbstractTag';
+import ITag from './ITag';
+import MatchedNode from './MatchedNode';
+import ITagContext from './ITagContext';
 
 class ImageTag extends AbstractTag implements ITag {
     static readonly statement = '#image';
@@ -13,7 +13,11 @@ class ImageTag extends AbstractTag implements ITag {
      * @param parent
      * @param options
      */
-    constructor(matchedNode: MatchedNode, parent: Array<AbstractTag>, context: ITagContext) {
+    constructor(
+        matchedNode: MatchedNode,
+        parent: Array<AbstractTag>,
+        context: ITagContext,
+    ) {
         super(matchedNode, parent, context);
     }
 

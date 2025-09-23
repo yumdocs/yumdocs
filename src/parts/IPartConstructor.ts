@@ -1,17 +1,17 @@
-import IPart from "./IPart";
-import AbstractPart from "./AbstractPart";
+import IPart from './IPart';
+import AbstractPart from './AbstractPart';
 
 /**
  * IPartConstructor
  */
 interface IPartConstructor {
-    new(
+    new (
         name: string,
         type: string,
         xml: string,
         parent: Map<string, IPart>,
-        options: Record<string, unknown>
-    ): AbstractPart
+        options: Record<string, unknown>,
+    ): AbstractPart;
 }
 
 /**

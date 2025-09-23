@@ -1,29 +1,36 @@
-import {promises as fs} from 'fs';
+import { promises as fs } from 'fs';
 import JSZip from 'jszip';
 import constants from './constants';
 
 // Type alias for JSZip input formats since InputFileFormat isn't exported
-type JSZipInputFormat = string | ArrayBuffer | Uint8Array | Buffer | Blob | number[] | Promise<string | ArrayBuffer | Uint8Array | Buffer | Blob | number[]>;
+type JSZipInputFormat =
+    | string
+    | ArrayBuffer
+    | Uint8Array
+    | Buffer
+    | Blob
+    | number[]
+    | Promise<string | ArrayBuffer | Uint8Array | Buffer | Blob | number[]>;
 import cultureMap from './cultures/cultureMap';
-import YumError from "./error/YumError";
-import IPart from "./parts/IPart";
-import IPartConstructor from "./parts/IPartConstructor";
-import partMap from "./parts/partMap";
-import ITagConstructor from "./tags/ITagConstructor";
-import tagMap from "./tags/tagMap";
-import expressionEngine from "./tags/expressionEngine";
-import { saveAs } from "./polyfills/File";
-import { isNodeJS } from "./polyfills/polyfillsUtils";
-import ICulture from "./cultures/ICulture";
-import OpenXMLContentTypes from "./OpenXMLContentTypes";
+import YumError from './error/YumError';
+import IPart from './parts/IPart';
+import IPartConstructor from './parts/IPartConstructor';
+import partMap from './parts/partMap';
+import ITagConstructor from './tags/ITagConstructor';
+import tagMap from './tags/tagMap';
+import expressionEngine from './tags/expressionEngine';
+import { saveAs } from './polyfills/File';
+import { isNodeJS } from './polyfills/polyfillsUtils';
+import ICulture from './cultures/ICulture';
+import OpenXMLContentTypes from './OpenXMLContentTypes';
 
 type OptionsType = {
-    delimiters? : {
-        start? : string,
-        end? : string
-    },
-    locale?: string
-}
+    delimiters?: {
+        start?: string;
+        end?: string;
+    };
+    locale?: string;
+};
 
 /**
  * YumTemplate
@@ -62,7 +69,13 @@ class YumTemplate {
     // ----------------------------------
     // Expression Engine
     // ----------------------------------
-    static setExpressionEval(evaluate: (expression: string, context: Record<string, unknown>) => Promise<unknown>, g?: unknown) {
+    static setExpressionEval(
+        evaluate: (
+            expression: string,
+            context: Record<string, unknown>,
+        ) => Promise<unknown>,
+        g?: unknown,
+    ) {
         expressionEngine.setEval(evaluate, g);
     }
 
@@ -88,7 +101,7 @@ class YumTemplate {
                 start: options.delimiters?.start || constants.delimiters.start,
                 end: options.delimiters?.end || constants.delimiters.end,
             },
-            locale: options.locale || constants.locale
+            locale: options.locale || constants.locale,
         };
     }
 
@@ -103,11 +116,15 @@ class YumTemplate {
             this._zip = await JSZip.loadAsync(handle);
         } catch (error) {
             if (Object.prototype.hasOwnProperty.call(error, 'syscall')) {
-                throw new YumError(1010, {data: {path}, error});
-            } else if ((<Error>error).message.startsWith('Can\'t find end of central directory')) {
-                throw new YumError(1011, {data: {path}, error});
+                throw new YumError(1010, { data: { path }, error });
+            } else if (
+                (<Error>error).message.startsWith(
+                    "Can't find end of central directory",
+                )
+            ) {
+                throw new YumError(1011, { data: { path }, error });
             } else {
-                throw new YumError(1012, {data: {path}, error});
+                throw new YumError(1012, { data: { path }, error });
             }
         }
     }
@@ -120,7 +137,7 @@ class YumTemplate {
     private async _loadAnythingElse(handle: JSZipInputFormat) {
         try {
             this._zip = await JSZip.loadAsync(handle);
-        } catch(error) {
+        } catch (error) {
             throw new YumError(1013, { error });
         }
     }
@@ -143,7 +160,9 @@ class YumTemplate {
      * render
      * @param data
      */
-    async render(data: Record<string, unknown> = {}): Promise<string | undefined> {
+    async render(
+        data: Record<string, unknown> = {},
+    ): Promise<string | undefined> {
         if (Object.keys(this._zip.files).length === 0) throw new YumError(1020);
         if (this._parts.size !== 0) throw new YumError(1021);
         let ret: string | undefined;
@@ -151,16 +170,19 @@ class YumTemplate {
         const contentTypes = new OpenXMLContentTypes(this._zip, this._options);
         await contentTypes.loadParts(this._parts);
         // Priority in increasing order (1 is highest, 10 is lowest)
-        const parts = Array.from(this._parts.values())
-            .sort((a, b) => (a.priority - b.priority));
+        const parts = Array.from(this._parts.values()).sort(
+            (a, b) => a.priority - b.priority,
+        );
         // Render and serialize each part
         for (const part of parts) {
             await part.render(data);
             const xml = part.serialize();
             // For testing only
-            if (part.name === 'word/document.xml' ||
+            if (
+                part.name === 'word/document.xml' ||
                 part.name === 'ppt/slides/slide1.xml' ||
-                part.name === 'xl/sharedStrings.xml') {
+                part.name === 'xl/sharedStrings.xml'
+            ) {
                 ret = xml;
             }
             // Update zip stream
@@ -173,19 +195,20 @@ class YumTemplate {
      * saveAs
      * @param path
      */
-    async saveAs(path: string) { // TODO Consider passing JSZip generateAsync options
+    async saveAs(path: string) {
+        // TODO Consider passing JSZip generateAsync options
         if (Object.keys(this._zip.files).length === 0) throw new YumError(1030);
         if (this._parts.size === 0) throw new YumError(1031);
         if (isNodeJS) {
             const buf = await this._zip.generateAsync({
                 type: 'nodebuffer',
                 streamFiles: true,
-                compression: 'DEFLATE'
+                compression: 'DEFLATE',
             });
             await fs.writeFile(path, buf);
         } else {
             const blob = await this._zip.generateAsync({
-                type: 'blob'
+                type: 'blob',
             });
             saveAs(blob, path);
         }

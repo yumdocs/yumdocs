@@ -1,7 +1,7 @@
 import ITag from './ITag';
-import MatchedNode from "./MatchedNode";
-import constants from "../constants";
-import ITagContext from "./ITagContext";
+import MatchedNode from './MatchedNode';
+import constants from '../constants';
+import ITagContext from './ITagContext';
 
 /**
  * AbstractTag
@@ -21,7 +21,11 @@ abstract class AbstractTag implements ITag {
      * @param context
      * @protected
      */
-    protected constructor(matchedNode: MatchedNode, parent: Array<AbstractTag>, context: ITagContext) {
+    protected constructor(
+        matchedNode: MatchedNode,
+        parent: Array<AbstractTag>,
+        context: ITagContext,
+    ) {
         this.addMatchedNode(matchedNode);
         this.parent = parent;
         this._context = context;
@@ -33,14 +37,18 @@ abstract class AbstractTag implements ITag {
      */
     addMatchedNode(matchedNode: MatchedNode) {
         // TODO Also check that node.statement is part of Tag.statements
-        this.matchedNodes.set(matchedNode.statement || constants.empty /* ExpressionTag.statement */, matchedNode);
+        this.matchedNodes.set(
+            matchedNode.statement ||
+                constants.empty /* ExpressionTag.statement */,
+            matchedNode,
+        );
     }
 
     /**
      * render
      * @param data
      */
-    abstract render(data: Record<string, unknown>): Promise<void>
+    abstract render(data: Record<string, unknown>): Promise<void>;
 
     /**
      * done

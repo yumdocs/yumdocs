@@ -1,12 +1,12 @@
-import JSZip from "jszip";
-import IPartReference from "./parts/IPartReference";
-import {DOMParser} from "./polyfills/xmldom";
-import constants from "./constants";
-import {isNodeJS} from "./polyfills/polyfillsUtils";
-import partMap from "./parts/partMap";
-import YumError from "./error/YumError";
-import IPart from "./parts/IPart";
-import OptionsType from "./OptionsType";
+import JSZip from 'jszip';
+import IPartReference from './parts/IPartReference';
+import { DOMParser } from './polyfills/xmldom';
+import constants from './constants';
+import { isNodeJS } from './polyfills/polyfillsUtils';
+import partMap from './parts/partMap';
+import YumError from './error/YumError';
+import IPart from './parts/IPart';
+import OptionsType from './OptionsType';
 
 const CONTENT_TYPES = '[Content_Types].xml';
 
@@ -30,21 +30,26 @@ class OpenXMLContentTypes {
      * _getPartRefs
      * @private
      */
-    private async _getPartRefs() : Promise<Array<IPartReference>> {
+    private async _getPartRefs(): Promise<Array<IPartReference>> {
         const ret: Array<IPartReference> = [];
         let xml;
         try {
-            xml = await this._zip.file(CONTENT_TYPES)?.async('string') || '';
-            const dom = new DOMParser().parseFromString(xml, constants.xmlMimeType);
+            xml = (await this._zip.file(CONTENT_TYPES)?.async('string')) || '';
+            const dom = new DOMParser().parseFromString(
+                xml,
+                constants.xmlMimeType,
+            );
             // const nodes = dom.childNodes[dom.childNodes.length - 1].childNodes; // TODO: might always work
-            const nodes = dom.childNodes[isNodeJS ? dom.childNodes.length - 1 : 0].childNodes;
-            for(let i = 0; i < nodes.length; i++) {
+            const nodes =
+                dom.childNodes[isNodeJS ? dom.childNodes.length - 1 : 0]
+                    .childNodes;
+            for (let i = 0; i < nodes.length; i++) {
                 const node = nodes[i] as Element;
                 // We ignore nodes with nodeName === 'Default' nodes'
                 if (node.nodeName === 'Override') {
                     const { attributes } = node;
                     let name, type;
-                    for(let j = 0; j < attributes.length; j++) {
+                    for (let j = 0; j < attributes.length; j++) {
                         const { nodeName, nodeValue } = attributes[j];
                         switch (nodeName) {
                             case 'PartName':
@@ -57,16 +62,18 @@ class OpenXMLContentTypes {
                         }
                     }
                     if (name && type) {
-                        const Part = partMap.get(name.replace(/\d+(.xml)$/, '$1'));
+                        const Part = partMap.get(
+                            name.replace(/\d+(.xml)$/, '$1'),
+                        );
                         // Note: without registered part in YumTemplate.parts, no rendering
                         if (Part) {
-                            ret.push({name, type, Part});
+                            ret.push({ name, type, Part });
                         }
                     }
                 }
             }
         } catch (error) {
-            throw new YumError(1022, { data: {xml}, error });
+            throw new YumError(1022, { data: { xml }, error });
         }
         return ret;
     }
@@ -75,7 +82,7 @@ class OpenXMLContentTypes {
      * loadParts
      * @param parts
      */
-    public async loadParts(parts: Map<string, IPart>) : Promise<void> {
+    public async loadParts(parts: Map<string, IPart>): Promise<void> {
         // List partRefs from [Content_Types].xml
         const partRefs = await this._getPartRefs();
         // Note: Priority order is not important here
@@ -83,12 +90,11 @@ class OpenXMLContentTypes {
             const xml: string = await this._zip.files[ref.name].async('text');
             parts.set(
                 ref.name,
-                new ref.Part(ref.name, ref.type, xml, parts, this._options)
+                new ref.Part(ref.name, ref.type, xml, parts, this._options),
             );
         });
         await Promise.all(promises);
     }
-
 }
 
 /**

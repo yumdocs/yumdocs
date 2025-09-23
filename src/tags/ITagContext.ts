@@ -10,7 +10,7 @@ interface ITagContext {
      * TagParser constructor for creating nested parsers
      */
     createTagParser(nodes: Array<Node>, options: OptionsType): ITagParser;
-    
+
     /**
      * Template options
      */

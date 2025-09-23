@@ -1,13 +1,13 @@
 import { faker } from '@faker-js/faker';
 import YumTemplate from '../../../src/YumTemplate';
 // import {hasTagsRegExp} from "../../../src/tags/tagUtils";
-import YumError from "../../../src/error/YumError";
-import errorCodes from "../../../src/error/errorCodes";
+import YumError from '../../../src/error/YumError';
+import errorCodes from '../../../src/error/errorCodes';
 
 const INPUT_DIR = './tests/templates/';
 // const OUTPUT_DIR = './temp/'
 const DATA = {
-    text: faker.lorem.word()
+    text: faker.lorem.word(),
 };
 
 describe('Unknown or misspelled statement', () => {

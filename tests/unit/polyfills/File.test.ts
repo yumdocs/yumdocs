@@ -1,4 +1,4 @@
-import {Blob, File, saveAs} from '../../../src/polyfills/File';
+import { Blob, File, saveAs } from '../../../src/polyfills/File';
 
 test('polyfills/File', () => {
     expect(Blob).toBeInstanceOf(Function);

@@ -8,17 +8,17 @@ class YumError extends Error {
     code: number;
     data?: Record<string, unknown>;
     originalError?: Error;
-    
+
     /**
      * Enhanced stack trace that includes original error stack when available
      */
     get stackTrace(): string {
         let result = this.stack || 'No stack trace available';
-        
+
         if (this.originalError?.stack) {
             result += '\n\nCaused by: ' + this.originalError.stack;
         }
-        
+
         return result;
     }
 
@@ -39,11 +39,14 @@ class YumError extends Error {
         if (options['error'] instanceof Error) {
             this.originalError = options['error'];
         }
-        if (Object.prototype.toString.call(options['data']) === '[object Object]') {
+        if (
+            Object.prototype.toString.call(options['data']) ===
+            '[object Object]'
+        ) {
             this.data = <Record<string, unknown>>options['data'];
         }
         this.name = 'YumError';
-        
+
         // Ensure stack trace is properly captured
         if (Error.captureStackTrace) {
             Error.captureStackTrace(this, YumError);

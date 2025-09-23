@@ -1,5 +1,5 @@
-import {isNodeJS} from '../../../src/polyfills/polyfillsUtils';
+import { isNodeJS } from '../../../src/polyfills/polyfillsUtils';
 
 test('polyfills/polyfillsUtils', () => {
-   expect(isNodeJS).toEqual(true);
+    expect(isNodeJS).toEqual(true);
 });

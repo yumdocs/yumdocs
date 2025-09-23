@@ -1,14 +1,14 @@
-import {escapeRegExp} from "./tagUtils";
-import MatchedNode from "./MatchedNode";
-import AbstractTag from "./AbstractTag";
-import tagMap from "./tagMap";
-import ExpressionTag from "./ExpressionTag";
-import ITagConstructor from "./ITagConstructor";
-import ITagParser from "./ITagParser";
-import ITagContext from "./ITagContext";
-import {assert} from "../error/assert";
-import YumError from "../error/YumError";
-import OptionsType from "../OptionsType";
+import { escapeRegExp } from './tagUtils';
+import MatchedNode from './MatchedNode';
+import AbstractTag from './AbstractTag';
+import tagMap from './tagMap';
+import ExpressionTag from './ExpressionTag';
+import ITagConstructor from './ITagConstructor';
+import ITagParser from './ITagParser';
+import ITagContext from './ITagContext';
+import { assert } from '../error/assert';
+import YumError from '../error/YumError';
+import OptionsType from '../OptionsType';
 
 /**
  * TagParser
@@ -60,26 +60,29 @@ class TagParser implements ITagParser, ITagContext {
             const statements: string[] = [];
             // Get registered *Tag blocks (TODO unicity?)
             for (const Tag of tagMap.values()) {
-                statements
-                    .push(
-                        escapeRegExp(Tag.statement),
-                        ...Tag.blocks.map(block => escapeRegExp(block))
-                    );
+                statements.push(
+                    escapeRegExp(Tag.statement),
+                    ...Tag.blocks.map((block) => escapeRegExp(block)),
+                );
             }
             // Build the regular expression
             // TODO: we might have to escape certain characters like < and >
-            const { end, start } = <{ end: string, start: string }>this._options.delimiters;
+            const { end, start } = <{ end: string; start: string }>(
+                this._options.delimiters
+            );
             this._lexer = new RegExp(
                 escapeRegExp(start) +
-                '[ \t]*' +
-                (statements.length? `(?<statement>${statements.join('|')})?[ \t]*` : '') +
-                `(?<expression>[^${escapeRegExp(end.slice(0,1))}]+)?` +
-                '[ \t]*' +
-                escapeRegExp(end),
-                'g'
+                    '[ \t]*' +
+                    (statements.length
+                        ? `(?<statement>${statements.join('|')})?[ \t]*`
+                        : '') +
+                    `(?<expression>[^${escapeRegExp(end.slice(0, 1))}]+)?` +
+                    '[ \t]*' +
+                    escapeRegExp(end),
+                'g',
             );
         }
-        return this._lexer
+        return this._lexer;
     }
 
     /**
@@ -108,26 +111,41 @@ class TagParser implements ITagParser, ITagContext {
             const matches = node.nodeValue?.matchAll(this.lexer);
             if (matches) {
                 for (const match of matches) {
-                    const matchedNode = new MatchedNode(<Text>node, match, _options);
-                    const { statement, expression } = <{ statement: string, expression: string }>matchedNode;
-                    const Tag = tagMap.get(statement || ExpressionTag.statement) ||
+                    const matchedNode = new MatchedNode(
+                        <Text>node,
+                        match,
+                        _options,
+                    );
+                    const { statement, expression } = <
+                        { statement: string; expression: string }
+                    >matchedNode;
+                    const Tag =
+                        tagMap.get(statement || ExpressionTag.statement) ||
                         this._findTagInBlocks(statement);
-                    if (Tag && (Tag.statement === ExpressionTag.statement) && expression) {
+                    if (
+                        Tag &&
+                        Tag.statement === ExpressionTag.statement &&
+                        expression
+                    ) {
                         // If tag is a standalone expression
                         const tag = new Tag(matchedNode, this._current, this);
                         this._current.push(tag);
-                    } else if (Tag && (Tag.statement === statement)) {
+                    } else if (Tag && Tag.statement === statement) {
                         // If tag corresponds to an opening statement, e.g. each or if, with or without expression
                         const tag = new Tag(matchedNode, this._current, this);
                         this._stack.push(tag);
                         this._current.push(tag);
-                        if (Tag.blocks.length >0) {
+                        if (Tag.blocks.length > 0) {
                             this._current = tag.children;
                         }
                     } else if (Tag && Tag.blocks.includes(statement)) {
                         // If tag corresponds to a branch, e.g. else, or a closing statement in a block, e.g. endeach or endif
-                        const isClosing = (Tag.blocks.indexOf(statement) === Tag.blocks.length - 1);
-                        const main = isClosing ? this._stack.pop() : this._stack[this._stack.length - 1];
+                        const isClosing =
+                            Tag.blocks.indexOf(statement) ===
+                            Tag.blocks.length - 1;
+                        const main = isClosing
+                            ? this._stack.pop()
+                            : this._stack[this._stack.length - 1];
                         if (main instanceof Tag) {
                             main.matchedNodes.set(statement, matchedNode);
                             if (isClosing) {
@@ -136,23 +154,23 @@ class TagParser implements ITagParser, ITagContext {
                         } else {
                             // Stack is empty or tag type mismatch - mismatched opening/closing tags
                             throw new YumError(2001, {
-                                data: { 
-                                    statement, 
-                                    expression: expression || '', 
+                                data: {
+                                    statement,
+                                    expression: expression || '',
                                     expectedTag: Tag?.statement || 'unknown',
-                                    stackLength: this._stack.length
-                                }
+                                    stackLength: this._stack.length,
+                                },
                             });
                         }
                     } else {
                         // Unrecognized tag pattern or invalid template structure
                         throw new YumError(2002, {
-                            data: { 
-                                statement: statement || 'none', 
+                            data: {
+                                statement: statement || 'none',
                                 expression: expression || 'none',
                                 nodeValue: node.nodeValue || '',
-                                availableTags: Array.from(tagMap.keys())
-                            }
+                                availableTags: Array.from(tagMap.keys()),
+                            },
                         });
                     }
                 }
@@ -170,7 +188,7 @@ class TagParser implements ITagParser, ITagContext {
     /**
      * parse
      */
-    parse () {
+    parse() {
         for (const node of this._nodes) {
             this._parse(node);
         }
@@ -179,7 +197,6 @@ class TagParser implements ITagParser, ITagContext {
         assert(this._current === this._ast);
         return this._ast;
     }
-
 }
 
 // Circular dependency resolved through dependency injection pattern
@@ -187,4 +204,4 @@ class TagParser implements ITagParser, ITagContext {
 /**
  * Default export
  */
-export default TagParser
+export default TagParser;

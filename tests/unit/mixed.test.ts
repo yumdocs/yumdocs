@@ -1,16 +1,16 @@
 import { faker } from '@faker-js/faker';
 import YumTemplate from '../../src/YumTemplate';
-import {hasTagsRegExp} from "../../src/tags/tagUtils";
+import { hasTagsRegExp } from '../../src/tags/tagUtils';
 
 const INPUT_DIR = './tests/templates/';
-const OUTPUT_DIR = './temp/'
+const OUTPUT_DIR = './temp/';
 
 const DATA = {
     text: faker.string.sample(),
     integer: faker.number.int(),
     float: faker.number.float(),
     boolean: faker.datatype.boolean(),
-    date: faker.date.anytime()
+    date: faker.date.anytime(),
 };
 
 describe('Mixed tags and expressions - ok', () => {

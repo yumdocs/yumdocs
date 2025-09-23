@@ -1,4 +1,4 @@
-import ICulture from "./ICulture";
+import ICulture from './ICulture';
 
 /**
  * en-US
@@ -17,7 +17,7 @@ const culture: ICulture = {
             ',': ',',
             '.': '.',
             groupSize: [3],
-            symbol: '%'
+            symbol: '%',
         },
         currency: {
             name: 'US Dollar',
@@ -27,22 +27,56 @@ const culture: ICulture = {
             ',': ',',
             '.': '.',
             groupSize: [3],
-            symbol: '$'
-        }
+            symbol: '$',
+        },
     },
     calendars: {
         standard: {
             days: {
-                names: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+                names: [
+                    'Sunday',
+                    'Monday',
+                    'Tuesday',
+                    'Wednesday',
+                    'Thursday',
+                    'Friday',
+                    'Saturday',
+                ],
                 namesAbbr: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-                namesShort: [ 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa' ]
+                namesShort: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
             },
             months: {
-                names: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                namesAbbr: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                names: [
+                    'January',
+                    'February',
+                    'March',
+                    'April',
+                    'May',
+                    'June',
+                    'July',
+                    'August',
+                    'September',
+                    'October',
+                    'November',
+                    'December',
+                ],
+                namesAbbr: [
+                    'Jan',
+                    'Feb',
+                    'Mar',
+                    'Apr',
+                    'May',
+                    'Jun',
+                    'Jul',
+                    'Aug',
+                    'Sep',
+                    'Oct',
+                    'Nov',
+                    'Dec',
+                ],
             },
-            AM: [ 'AM', 'am', 'AM' ],
-            PM: [ 'PM', 'pm', 'PM' ],
+            AM: ['AM', 'am', 'AM'],
+            PM: ['PM', 'pm', 'PM'],
             patterns: {
                 d: 'M/d/yyyy',
                 D: 'dddd, MMMM dd, yyyy',
@@ -56,14 +90,14 @@ const culture: ICulture = {
                 T: 'h:mm:ss tt',
                 u: "yyyy'-'MM'-'dd HH':'mm':'ss'Z'",
                 y: 'MMMM, yyyy',
-                Y: 'MMMM, yyyy'
+                Y: 'MMMM, yyyy',
             },
             '/': '/',
             ':': ':',
             firstDay: 0,
-            twoDigitYearMax: 2029
-        }
-    }
+            twoDigitYearMax: 2029,
+        },
+    },
 };
 
 /**

@@ -1,19 +1,20 @@
-import { getCulture } from "../cultures/cultureUtils";
-import constants from "../constants";
-import ICulture from "../cultures/ICulture";
+import { getCulture } from '../cultures/cultureUtils';
+import constants from '../constants';
+import ICulture from '../cultures/ICulture';
 
 const formatRegExp = /\{(\d+)(:[^}]+)?}/g;
 // const numberRegExp = /^(\+|-?)\d+(\.?)\d*$/;
-const dateFormatRegExp = /dddd|ddd|dd|d|MMMM|MMM|MM|M|yyyy|yy|HH|H|hh|h|mm|m|fff|ff|f|tt|ss|s|zzz|zz|z|"[^"]*"|'[^']*'/g;
+const dateFormatRegExp =
+    /dddd|ddd|dd|d|MMMM|MMM|MM|M|yyyy|yy|HH|H|hh|h|mm|m|fff|ff|f|tt|ss|s|zzz|zz|z|"[^"]*"|'[^']*'/g;
 const standardFormatRegExp = /^(n|c|p|e)(\d*)$/i;
 const literalRegExp = /(\\.)|(['][^']*[']?)|(["][^"]*["]?)/g;
 const commaRegExp = /,/g;
-const EMPTY = "";
-const POINT = ".";
-const COMMA = ",";
-const SHARP = "#";
-const ZERO = "0";
-const PLACEHOLDER = "??";
+const EMPTY = '';
+const POINT = '.';
+const COMMA = ',';
+const SHARP = '#';
+const ZERO = '0';
+const PLACEHOLDER = '??';
 const objectToString = {}.toString;
 
 /**
@@ -23,7 +24,7 @@ const objectToString = {}.toString;
  * @param end
  */
 export function pad(number: number | string, digits?: number, end?: number) {
-    const zeros = ["", "0", "00", "000", "0000"]
+    const zeros = ['', '0', '00', '000', '0000'];
     const ret = number + '';
     digits = digits || 2;
     end = digits - ret.length;
@@ -39,7 +40,11 @@ export function pad(number: number | string, digits?: number, end?: number) {
  * @param format
  * @param locale
  */
-export function formatDate(date: Date, format: string, locale: string = constants.locale): string {
+export function formatDate(
+    date: Date,
+    format: string,
+    locale: string = constants.locale,
+): string {
     const culture = <ICulture>getCulture(locale);
 
     const calendar = culture.calendars.standard,
@@ -48,82 +53,84 @@ export function formatDate(date: Date, format: string, locale: string = constant
 
     format = calendar.patterns[format] || format;
 
-    return format.replace(dateFormatRegExp, function(match): string {
+    return format.replace(dateFormatRegExp, function (match): string {
         let minutes: number;
         let result: number | string | undefined;
         let sign: boolean;
 
-        if (match === "d") {
+        if (match === 'd') {
             result = date.getDate();
-        } else if (match === "dd") {
+        } else if (match === 'dd') {
             result = pad(date.getDate());
-        } else if (match === "ddd") {
+        } else if (match === 'ddd') {
             result = days.namesAbbr[date.getDay()];
-        } else if (match === "dddd") {
+        } else if (match === 'dddd') {
             result = days.names[date.getDay()];
-        } else if (match === "M") {
+        } else if (match === 'M') {
             result = date.getMonth() + 1;
-        } else if (match === "MM") {
+        } else if (match === 'MM') {
             result = pad(date.getMonth() + 1);
-        } else if (match === "MMM") {
+        } else if (match === 'MMM') {
             result = months.namesAbbr[date.getMonth()];
-        } else if (match === "MMMM") {
+        } else if (match === 'MMMM') {
             result = months.names[date.getMonth()];
-        } else if (match === "yy") {
+        } else if (match === 'yy') {
             result = pad(date.getFullYear() % 100);
-        } else if (match === "yyyy") {
+        } else if (match === 'yyyy') {
             result = pad(date.getFullYear(), 4);
-        } else if (match === "h" ) {
+        } else if (match === 'h') {
             result = date.getHours() % 12 || 12;
-        } else if (match === "hh") {
+        } else if (match === 'hh') {
             result = pad(date.getHours() % 12 || 12);
-        } else if (match === "H") {
+        } else if (match === 'H') {
             result = date.getHours();
-        } else if (match === "HH") {
+        } else if (match === 'HH') {
             result = pad(date.getHours());
-        } else if (match === "m") {
+        } else if (match === 'm') {
             result = date.getMinutes();
-        } else if (match === "mm") {
+        } else if (match === 'mm') {
             result = pad(date.getMinutes());
-        } else if (match === "s") {
+        } else if (match === 's') {
             result = date.getSeconds();
-        } else if (match === "ss") {
+        } else if (match === 'ss') {
             result = pad(date.getSeconds());
-        } else if (match === "f") {
+        } else if (match === 'f') {
             result = Math.floor(date.getMilliseconds() / 100);
-        } else if (match === "ff") {
+        } else if (match === 'ff') {
             result = date.getMilliseconds();
             if (result > 99) {
                 result = Math.floor(result / 10);
             }
             result = pad(result);
-        } else if (match === "fff") {
+        } else if (match === 'fff') {
             result = pad(date.getMilliseconds(), 3);
-        } else if (match === "tt") {
+        } else if (match === 'tt') {
             result = date.getHours() < 12 ? calendar.AM[0] : calendar.PM[0];
-        } else if (match === "zzz") {
+        } else if (match === 'zzz') {
             minutes = date.getTimezoneOffset();
             sign = minutes < 0;
 
-            result = Math.abs(minutes / 60).toString().split(".")[0];
-            minutes = Math.abs(minutes) - (+result * 60);
+            result = Math.abs(minutes / 60)
+                .toString()
+                .split('.')[0];
+            minutes = Math.abs(minutes) - +result * 60;
 
-            result = (sign ? "+" : "-") + pad(result);
-            result += ":" + pad(minutes);
-        } else if (match === "zz" || match === "z") {
+            result = (sign ? '+' : '-') + pad(result);
+            result += ':' + pad(minutes);
+        } else if (match === 'zz' || match === 'z') {
             result = date.getTimezoneOffset() / 60;
             sign = result < 0;
 
-            result = Math.abs(result).toString().split(".")[0];
-            result = (sign ? "+" : "-") + (match === "zz" ? pad(result) : result);
+            result = Math.abs(result).toString().split('.')[0];
+            result =
+                (sign ? '+' : '-') + (match === 'zz' ? pad(result) : result);
         }
 
-        return result !== undefined ?
-            result as string :
-            match.slice(1, match.length - 1) as string;
+        return result !== undefined
+            ? (result as string)
+            : (match.slice(1, match.length - 1) as string);
     });
 }
-
 
 /**
  * groupInteger
@@ -132,7 +139,12 @@ export function formatDate(date: Date, format: string, locale: string = constant
  * @param end
  * @param numberFormat
  */
-export function groupInteger(number: string, start: number, end: number, numberFormat: Record<string, unknown>) {
+export function groupInteger(
+    number: string,
+    start: number,
+    end: number,
+    numberFormat: Record<string, unknown>,
+) {
     const decimalIndex = number.indexOf(<string>numberFormat[POINT]);
     const groupSizes = (numberFormat.groupSize as Array<number>).slice();
     let groupSize = groupSizes.shift() as number;
@@ -178,21 +190,31 @@ export function groupInteger(number: string, start: number, end: number, numberF
  * @param precision
  * @param negative
  */
-export function round(value: number, precision: number, negative= false) {
+export function round(value: number, precision: number, negative = false) {
     precision = precision || 0;
 
     let strValue = value.toString().split('e');
-    let numValue = Math.round(+(strValue[0] + 'e' + (strValue[1] ? (+strValue[1] + precision) : precision)));
+    let numValue = Math.round(
+        +(
+            strValue[0] +
+            'e' +
+            (strValue[1] ? +strValue[1] + precision : precision)
+        ),
+    );
 
     if (negative) {
         numValue = -numValue;
     }
 
     strValue = numValue.toString().split('e');
-    numValue = +(strValue[0] + 'e' + (strValue[1] ? (+strValue[1] - precision) : -precision));
+    numValue = +(
+        strValue[0] +
+        'e' +
+        (strValue[1] ? +strValue[1] - precision : -precision)
+    );
 
     return numValue.toFixed(Math.min(precision, 20));
-};
+}
 
 /**
  * formatNumber
@@ -200,7 +222,11 @@ export function round(value: number, precision: number, negative= false) {
  * @param format
  * @param locale
  */
-export function formatNumber(number: number, format: string, locale: string = constants.locale): string {
+export function formatNumber(
+    number: number,
+    format: string,
+    locale: string = constants.locale,
+): string {
     const culture = <ICulture>getCulture(locale);
     const literals: Array<string> = [];
     let numString: string,
@@ -209,7 +235,8 @@ export function formatNumber(number: number, format: string, locale: string = co
         precision = numberFormat.decimals as number,
         pattern = (numberFormat.pattern as Array<string>)[0],
         symbol = EMPTY,
-        isCurrency: boolean, isPercent: boolean,
+        isCurrency: boolean,
+        isPercent: boolean,
         customPrecision,
         negative = number < 0,
         integer,
@@ -225,7 +252,8 @@ export function formatNumber(number: number, format: string, locale: string = co
         decimalIndex,
         sharpIndex,
         zeroIndex,
-        hasZero, hasSharp,
+        hasZero,
+        hasSharp,
         start = -1,
         end;
 
@@ -240,7 +268,9 @@ export function formatNumber(number: number, format: string, locale: string = co
 
     //if no format then return number.toString() or number.toLocaleString() if culture.name is not defined
     if (!format) {
-        return culture.name.length ? number.toLocaleString() : number.toString();
+        return culture.name.length
+            ? number.toLocaleString()
+            : number.toString();
     }
 
     const formatAndPrecision = standardFormatRegExp.exec(format);
@@ -249,14 +279,14 @@ export function formatNumber(number: number, format: string, locale: string = co
     if (formatAndPrecision) {
         format = formatAndPrecision[1].toLowerCase();
 
-        isCurrency = format === "c";
-        isPercent = format === "p";
+        isCurrency = format === 'c';
+        isPercent = format === 'p';
 
         if (isCurrency || isPercent) {
             //get specific number format information if format is currency or percent
-            numberFormat = isCurrency ?
-                numberFormat.currency as Record<string, unknown> :
-                numberFormat.percent as Record<string, unknown>;
+            numberFormat = isCurrency
+                ? (numberFormat.currency as Record<string, unknown>)
+                : (numberFormat.percent as Record<string, unknown>);
             decimal = numberFormat[POINT] as string;
             precision = numberFormat.decimals as number;
             symbol = numberFormat.symbol as string;
@@ -270,8 +300,10 @@ export function formatNumber(number: number, format: string, locale: string = co
         }
 
         //return number in exponential format
-        if (format === "e") {
-            const exp = customPrecision ? number.toExponential(precision) : number.toExponential(); // toExponential() and toExponential(undefined) differ in FF #653438.
+        if (format === 'e') {
+            const exp = customPrecision
+                ? number.toExponential(precision)
+                : number.toExponential(); // toExponential() and toExponential(undefined) differ in FF #653438.
             return exp.replace(POINT, numberFormat[POINT] as string);
         }
 
@@ -299,7 +331,7 @@ export function formatNumber(number: number, format: string, locale: string = co
             value += decimal + fraction;
         }
 
-        if (format === "n" && !negative) {
+        if (format === 'n' && !negative) {
             return value;
         }
 
@@ -308,9 +340,9 @@ export function formatNumber(number: number, format: string, locale: string = co
         for (idx = 0, length = pattern.length; idx < length; idx++) {
             ch = pattern.charAt(idx);
 
-            if (ch === "n") {
+            if (ch === 'n') {
                 numString += value;
-            } else if (ch === "$" || ch === "%") {
+            } else if (ch === '$' || ch === '%') {
                 numString += symbol;
             } else {
                 numString += ch;
@@ -324,10 +356,14 @@ export function formatNumber(number: number, format: string, locale: string = co
     //
     //separate format by sections.
 
-    if (format.indexOf("'") > -1 || format.indexOf("\"") > -1 || format.indexOf("\\") > -1) {
-        format = format.replace(literalRegExp, function(match) {
-            const quoteChar = match.charAt(0).replace("\\", ""),
-                literal = match.slice(1).replace(quoteChar, "");
+    if (
+        format.indexOf("'") > -1 ||
+        format.indexOf('"') > -1 ||
+        format.indexOf('\\') > -1
+    ) {
+        format = format.replace(literalRegExp, function (match) {
+            const quoteChar = match.charAt(0).replace('\\', ''),
+                literal = match.slice(1).replace(quoteChar, '');
 
             literals.push(literal);
 
@@ -335,7 +371,7 @@ export function formatNumber(number: number, format: string, locale: string = co
         });
     }
 
-    const formatArray = format.split(";");
+    const formatArray = format.split(';');
     if (negative && formatArray[1]) {
         //get negative format
         format = formatArray[1];
@@ -351,8 +387,8 @@ export function formatNumber(number: number, format: string, locale: string = co
         format = formatArray[0];
     }
 
-    const percentIndex = format.indexOf("%");
-    const currencyIndex = format.indexOf("$");
+    const percentIndex = format.indexOf('%');
+    const currencyIndex = format.indexOf('$');
 
     isPercent = percentIndex != -1;
     isCurrency = currencyIndex != -1;
@@ -362,16 +398,16 @@ export function formatNumber(number: number, format: string, locale: string = co
         number *= 100;
     }
 
-    if (isCurrency && format[currencyIndex - 1] === "\\") {
-        format = format.split("\\").join("");
+    if (isCurrency && format[currencyIndex - 1] === '\\') {
+        format = format.split('\\').join('');
         isCurrency = false;
     }
 
     if (isCurrency || isPercent) {
         //get specific number format information if format is currency or percent
-        numberFormat = isCurrency ?
-            numberFormat.currency as Record<string, unknown> :
-            numberFormat.percent as Record<string, unknown>;
+        numberFormat = isCurrency
+            ? (numberFormat.currency as Record<string, unknown>)
+            : (numberFormat.percent as Record<string, unknown>);
         decimal = numberFormat[POINT] as string;
         precision = numberFormat.decimals as number;
         symbol = numberFormat.symbol as string;
@@ -386,7 +422,7 @@ export function formatNumber(number: number, format: string, locale: string = co
     length = format.length;
 
     if (decimalIndex != -1) {
-        const fractionArray = number.toString().split("e");
+        const fractionArray = number.toString().split('e');
         if (fractionArray[1]) {
             fraction = round(number, Math.abs(+fractionArray[1]));
         } else {
@@ -400,7 +436,9 @@ export function formatNumber(number: number, format: string, locale: string = co
         idx = fraction.length;
 
         if (!hasZero && !hasSharp) {
-            format = format.substring(0, decimalIndex) + format.substring(decimalIndex + 1);
+            format =
+                format.substring(0, decimalIndex) +
+                format.substring(decimalIndex + 1);
             length = format.length;
             decimalIndex = -1;
             idx = 0;
@@ -412,7 +450,11 @@ export function formatNumber(number: number, format: string, locale: string = co
             if (hasSharp && idx > sharpIndex) {
                 let rounded = round(number, sharpIndex, negative);
 
-                while (rounded.charAt(rounded.length - 1) === ZERO && sharpIndex > 0 && sharpIndex > zeroIndex) {
+                while (
+                    rounded.charAt(rounded.length - 1) === ZERO &&
+                    sharpIndex > 0 &&
+                    sharpIndex > zeroIndex
+                ) {
                     sharpIndex--;
 
                     rounded = round(number, sharpIndex, negative);
@@ -464,14 +506,14 @@ export function formatNumber(number: number, format: string, locale: string = co
         integerLength = integer.length;
         // fractionLength = fraction.length;
 
-        if (negative && (+numString * -1) >= 0) {
+        if (negative && +numString * -1 >= 0) {
             negative = false;
         }
 
         numString = format.substring(0, start);
 
         if (negative && !hasNegativeFormat) {
-            numString += "-";
+            numString += '-';
         }
 
         for (idx = start; idx < length; idx++) {
@@ -487,7 +529,10 @@ export function formatNumber(number: number, format: string, locale: string = co
                     replacement = EMPTY;
                 }
 
-                if ((decimalIndex - idx) <= integerLength && decimalIndex - idx > -1) {
+                if (
+                    decimalIndex - idx <= integerLength &&
+                    decimalIndex - idx > -1
+                ) {
                     numString += integer;
                     idx = decimalIndex;
                 }
@@ -508,7 +553,12 @@ export function formatNumber(number: number, format: string, locale: string = co
         }
 
         if (hasGroup) {
-            numString = groupInteger(numString, start + (negative && !hasNegativeFormat ? 1 : 0), Math.max(end, (integerLength + start)), numberFormat);
+            numString = groupInteger(
+                numString,
+                start + (negative && !hasNegativeFormat ? 1 : 0),
+                Math.max(end, integerLength + start),
+                numberFormat,
+            );
         }
 
         if (end >= start) {
@@ -520,7 +570,7 @@ export function formatNumber(number: number, format: string, locale: string = co
             value = EMPTY;
             for (idx = 0, length = numString.length; idx < length; idx++) {
                 ch = numString.charAt(idx);
-                value += (ch === "$" || ch === "%") ? symbol : ch;
+                value += ch === '$' || ch === '%' ? symbol : ch;
             }
             numString = value;
         }
@@ -543,24 +593,34 @@ export function formatNumber(number: number, format: string, locale: string = co
  * @param fmt
  * @param culture
  */
-export function toString(value: unknown, fmt: string | undefined, culture = constants.locale): string {
+export function toString(
+    value: unknown,
+    fmt: string | undefined,
+    culture = constants.locale,
+): string {
     if (fmt) {
-        if (objectToString.call(value) === "[object Date]") {
+        if (objectToString.call(value) === '[object Date]') {
             return formatDate(value as Date, fmt, culture);
-        } else if (typeof value === "number") {
+        } else if (typeof value === 'number') {
             return formatNumber(value, fmt, culture);
         }
     }
-    return value !== undefined ? value as string : EMPTY;
+    return value !== undefined ? (value as string) : EMPTY;
 }
 
 /**
  * format
  * @param fmt
  */
-export function format(fmt: string, ...values : Array<unknown>) {
-    return fmt.replace(formatRegExp, function(match, index, placeholderFormat): string {
-        const value = values[parseInt(index, 10)];
-        return toString(value, placeholderFormat ? placeholderFormat.substring(1) : '');
-    });
+export function format(fmt: string, ...values: Array<unknown>) {
+    return fmt.replace(
+        formatRegExp,
+        function (match, index, placeholderFormat): string {
+            const value = values[parseInt(index, 10)];
+            return toString(
+                value,
+                placeholderFormat ? placeholderFormat.substring(1) : '',
+            );
+        },
+    );
 }

@@ -2,18 +2,22 @@
  * getCommonAncestor
  * @param nodes
  */
-import {assert} from "../error/assert";
+import { assert } from '../error/assert';
 
-export function getChildrenOfCommonAncestor(...nodes: Array<Node>): Array<Node> {
+export function getChildrenOfCommonAncestor(
+    ...nodes: Array<Node>
+): Array<Node> {
     // @see https://stackoverflow.com/questions/3960843/how-to-find-the-nearest-common-ancestors-of-two-or-more-nodes
     const ret: Array<Node> = [...nodes];
-    if (!ret.every(node => node === ret[0])) {
+    if (!ret.every((node) => node === ret[0])) {
         // If all nodes are not identical
         // Check each parentNode until they are all identical or root is reached
         while (
-            ret.slice(1).every(node => node.parentNode !== ret[0].parentNode) &&
-            ret.every(node => node.parentNode !== ret[0].ownerDocument)
-            ) {
+            ret
+                .slice(1)
+                .every((node) => node.parentNode !== ret[0].parentNode) &&
+            ret.every((node) => node.parentNode !== ret[0].ownerDocument)
+        ) {
             for (let i = 0; i < ret.length; i++) {
                 ret[i] = <Node>ret[i].parentNode;
             }
@@ -41,7 +45,7 @@ export function getSiblingsBetween(node1: Node, node2: Node): Array<Node> {
             } else {
                 break;
             }
-        } while (current.nextSibling !== node2)
+        } while (current.nextSibling !== node2);
         // if we have reached the last sibling without reaching node2
         if (current.nextSibling !== node2) {
             ret.splice(0, ret.length); // empty
@@ -56,9 +60,9 @@ export function getSiblingsBetween(node1: Node, node2: Node): Array<Node> {
  * @param child
  */
 export function contains(parent: Node, child: Node): boolean {
-    if(child === parent) return true;
+    if (child === parent) return true;
     let current = child;
-    while(current.parentNode) {
+    while (current.parentNode) {
         if (current.parentNode === parent) {
             return true;
         }
@@ -81,7 +85,7 @@ export function indexOfNode(list: NodeListOf<ChildNode>, node: Node) {
             break;
         }
     }
-    return found? index : -1;
+    return found ? index : -1;
 }
 
 /**

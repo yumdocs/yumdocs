@@ -1,12 +1,12 @@
 import { faker } from '@faker-js/faker';
 import YumTemplate from '../../../src/YumTemplate';
-import {hasTagsRegExp} from "../../../src/tags/tagUtils";
-import TableTag from "../../../src/tags/HtmlTag";
+import { hasTagsRegExp } from '../../../src/tags/tagUtils';
+import TableTag from '../../../src/tags/HtmlTag';
 
 YumTemplate.registerTag(TableTag.statement, TableTag);
 
 const INPUT_DIR = './tests/templates/';
-const OUTPUT_DIR = './temp/'
+const OUTPUT_DIR = './temp/';
 const DATA = {
     float: faker.number.float(),
     hasExpression: faker.datatype.boolean(),

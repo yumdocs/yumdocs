@@ -1,20 +1,22 @@
 import angular from 'angular-expressions';
 import jmespath from 'jmespath';
-import { faker } from "@faker-js/faker";
-import expressionEngine from "../../../src/tags/expressionEngine";
+import { faker } from '@faker-js/faker';
+import expressionEngine from '../../../src/tags/expressionEngine';
 
 const DATA = {
     boolean: faker.datatype.boolean(),
     date: faker.date.anytime(),
     number: faker.number.int(),
     text: faker.string.sample(),
-    words: new Array(1 + Math.trunc(10 * Math.random())).fill('').map(() => faker.lorem.words()),
+    words: new Array(1 + Math.trunc(10 * Math.random()))
+        .fill('')
+        .map(() => faker.lorem.words()),
     persons: new Array(1 + Math.trunc(10 * Math.random())).fill({}).map(() => ({
         firstName: faker.person.firstName(),
         lastName: faker.person.firstName(),
-        age: faker.number.int({min: 18, max: 100})
+        age: faker.number.int({ min: 18, max: 100 }),
     })),
-}
+};
 
 describe('Basic test', () => {
     test('Simple expression', async () => {
@@ -25,7 +27,10 @@ describe('Basic test', () => {
 
 describe('Functions', () => {
     test('$min', async () => {
-        const ret = await expressionEngine.evaluate('number + $min(0,number)', DATA);
+        const ret = await expressionEngine.evaluate(
+            'number + $min(0,number)',
+            DATA,
+        );
         expect(ret).toEqual(DATA.number + Math.min(0, DATA.number));
     });
 });
@@ -36,17 +41,26 @@ describe('Transforms', () => {
         const ret = await expressionEngine.evaluate('text|lower', DATA);
         expect(ret).toEqual(DATA.text.toLowerCase());
     });
-    xtest('replace', async () => { // TODO: too many errors
+    xtest('replace', async () => {
+        // TODO: too many errors
         console.log(DATA.text);
-        const search = DATA.text.substring(Math.floor(DATA.text.length/2), Math.ceil(DATA.text.length/2) + 1).replace(/(^\\)"/g, '$1\\"');
+        const search = DATA.text
+            .substring(
+                Math.floor(DATA.text.length / 2),
+                Math.ceil(DATA.text.length / 2) + 1,
+            )
+            .replace(/(^\\)"/g, '$1\\"');
         const replace = faker.string.sample().replace(/(^\\)"/g, '$1\\"');
         console.log(search + ' ---> ' + replace);
-        const ret = await expressionEngine.evaluate(`text|replace("${search}","${replace}")`, DATA);
-        expect(ret).toEqual(DATA.text.replace(search,replace));
+        const ret = await expressionEngine.evaluate(
+            `text|replace("${search}","${replace}")`,
+            DATA,
+        );
+        expect(ret).toEqual(DATA.text.replace(search, replace));
     });
     test('substr', async () => {
         const ret = await expressionEngine.evaluate('text|substr(0,2)', DATA);
-        expect(ret).toEqual(DATA.text.substring(0,2));
+        expect(ret).toEqual(DATA.text.substring(0, 2));
     });
     test('upper', async () => {
         const ret = await expressionEngine.evaluate('text|upper', DATA);
@@ -55,7 +69,10 @@ describe('Transforms', () => {
 
     // Number and Date
     test('format', async () => {
-        const ret = await expressionEngine.evaluate('number|format("c", "en-US")', DATA);
+        const ret = await expressionEngine.evaluate(
+            'number|format("c", "en-US")',
+            DATA,
+        );
         expect(ret).toMatch(/^\$\d{1,3}(,\d{3})*\.\d{2}$/);
     });
 
@@ -67,14 +84,20 @@ describe('Transforms', () => {
     test('orderBy', async () => {
         let ret = await expressionEngine.evaluate('words|orderBy', DATA);
         expect(ret).toEqual(DATA.words);
-        ret = await expressionEngine.evaluate('persons|orderBy("age", true)', DATA);
+        ret = await expressionEngine.evaluate(
+            'persons|orderBy("age", true)',
+            DATA,
+        );
         expect(ret).toEqual([...DATA.persons].sort((a, b) => b.age - a.age));
     });
 });
 
 describe('Configure other expressions engines', () => {
     test('Jmespath', async () => {
-        function evaluate(expression: string, context: Record<string, unknown>): Promise<unknown> {
+        function evaluate(
+            expression: string,
+            context: Record<string, unknown>,
+        ): Promise<unknown> {
             return new Promise((resolve /*, reject */) => {
                 const ret = jmespath.search(context, expression);
                 resolve(ret);
@@ -87,7 +110,10 @@ describe('Configure other expressions engines', () => {
     });
 
     test('Angular expressions', async () => {
-        function evaluate(expression: string, context: Record<string, unknown>): Promise<unknown> {
+        function evaluate(
+            expression: string,
+            context: Record<string, unknown>,
+        ): Promise<unknown> {
             return new Promise((resolve /*, reject */) => {
                 const fn = angular.compile(expression);
                 const ret = fn(context);

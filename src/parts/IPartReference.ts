@@ -1,15 +1,15 @@
-import IPartConstructor from "./IPartConstructor";
+import IPartConstructor from './IPartConstructor';
 
 /**
  * IPartReference
  */
 interface IPartReference {
-    name: string,
-    type: string,
-    Part: IPartConstructor // typeof AbstractPart
+    name: string;
+    type: string;
+    Part: IPartConstructor; // typeof AbstractPart
 }
 
 /**
  * Default export
  */
-export default IPartReference
+export default IPartReference;

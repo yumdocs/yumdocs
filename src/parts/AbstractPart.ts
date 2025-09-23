@@ -1,7 +1,7 @@
-import { DOMParser, XMLSerializer } from "../polyfills/xmldom";
-import IPart from "./IPart";
-import constants from "../constants";
-import OptionsType from "../OptionsType";
+import { DOMParser, XMLSerializer } from '../polyfills/xmldom';
+import IPart from './IPart';
+import constants from '../constants';
+import OptionsType from '../OptionsType';
 
 /**
  * Part
@@ -29,14 +29,17 @@ abstract class AbstractPart implements IPart {
         type: string,
         xml: string,
         parent: Map<string, IPart>,
-        options: OptionsType
+        options: OptionsType,
     ) {
         this._name = name;
         this._type = type;
         this._parent = parent; // The parent list of parts in YumTemplate
         this._options = options; // These options
         const ppXml = this._preProcess(xml);
-        this._dom = new DOMParser().parseFromString(ppXml, constants.xmlMimeType);
+        this._dom = new DOMParser().parseFromString(
+            ppXml,
+            constants.xmlMimeType,
+        );
     }
 
     /**
@@ -73,7 +76,7 @@ abstract class AbstractPart implements IPart {
      * render
      * @param data
      */
-    abstract render(data: Record<string, unknown>): Promise<void>
+    abstract render(data: Record<string, unknown>): Promise<void>;
 
     /**
      * serialize

@@ -1,6 +1,6 @@
-import YumTemplate from "../../src/YumTemplate";
-import errorCodes from "../../src/error/errorCodes";
-import YumError from "../../src/error/YumError";
+import YumTemplate from '../../src/YumTemplate';
+import errorCodes from '../../src/error/errorCodes';
+import YumError from '../../src/error/YumError';
 
 const INPUT_DIR = './tests/templates/';
 // const OUTPUT_DIR = './temp/'
@@ -39,7 +39,7 @@ describe('Corrupt file', () => {
         const file = new YumTemplate();
         try {
             await file.load(`${INPUT_DIR}${ODT}`);
-            await file.render({dummy: true});
+            await file.render({ dummy: true });
             expect(true).toBe(false); // file.load should throw
         } catch (e) {
             expect(e).toBeInstanceOf(YumError);
@@ -53,7 +53,7 @@ describe('Corrupt file', () => {
         const file = new YumTemplate();
         try {
             await file.load(`${INPUT_DIR}${ZIP}`);
-            await file.render({dummy: true});
+            await file.render({ dummy: true });
             expect(true).toBe(false); // file.load should throw
         } catch (e) {
             expect(e).toBeInstanceOf(YumError);

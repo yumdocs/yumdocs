@@ -1,9 +1,9 @@
-import AbstractPart from "./AbstractPart";
-import IPart from "./IPart";
-import {sanitizeWordMarkup} from '../word/wordUtils';
-import TagParser from "../tags/TagParser";
-import AbstractTag from "../tags/AbstractTag";
-import {sanitizePptMarkup} from "../ppt/pptUtils";
+import AbstractPart from './AbstractPart';
+import IPart from './IPart';
+import { sanitizeWordMarkup } from '../word/wordUtils';
+import TagParser from '../tags/TagParser';
+import AbstractTag from '../tags/AbstractTag';
+import { sanitizePptMarkup } from '../ppt/pptUtils';
 import OptionsType from '../OptionsType';
 
 /**
@@ -26,7 +26,7 @@ class TemplatedPart extends AbstractPart {
         type: string,
         xml: string,
         parent: Map<string, IPart>,
-        options: OptionsType
+        options: OptionsType,
     ) {
         super(name, type, xml, parent, options);
         // this._ast = new AbstractTag.TagParser([this._dom], options).parse();
@@ -39,15 +39,17 @@ class TemplatedPart extends AbstractPart {
      * @param xml
      */
     protected override _preProcess(xml: string): string {
-        const { start, end } = <{ start: string, end: string }>this._options.delimiters;
+        const { start, end } = <{ start: string; end: string }>(
+            this._options.delimiters
+        );
         // TODO escape characters like < and >
-        const pos1 = xml.indexOf(start.slice(0,1));
+        const pos1 = xml.indexOf(start.slice(0, 1));
         const pos2 = pos1 > -1 ? xml.indexOf(end.slice(-1), pos1 + 1) : -1;
         // No need to sanitize if we cannot find the first and last characters of delimiters
         if (this._name.startsWith('word/') && pos1 > 0 && pos2 > 0) {
-            return sanitizeWordMarkup(xml, {start, end});
+            return sanitizeWordMarkup(xml, { start, end });
         } else if (this._name.startsWith('ppt/') && pos1 > 0 && pos2 > 0) {
-            return sanitizePptMarkup(xml, {start, end});
+            return sanitizePptMarkup(xml, { start, end });
         } else {
             // Do nothing by default
             return super._preProcess(xml);

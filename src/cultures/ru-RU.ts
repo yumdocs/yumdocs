@@ -1,68 +1,102 @@
-import ICulture from "./ICulture";
+import ICulture from './ICulture';
 
 /**
  * ru-RU
  */
-const culture: ICulture =  {
-    name: "ru-RU",
+const culture: ICulture = {
+    name: 'ru-RU',
     numberFormat: {
-        pattern: ["-n"],
+        pattern: ['-n'],
         decimals: 2,
-        ",": " ",
-        ".": ",",
+        ',': ' ',
+        '.': ',',
         groupSize: [3],
         percent: {
-            pattern: ["-n%","n%"],
+            pattern: ['-n%', 'n%'],
             decimals: 2,
-            ",": " ",
-            ".": ",",
+            ',': ' ',
+            '.': ',',
             groupSize: [3],
-            symbol: "%"
+            symbol: '%',
         },
         currency: {
-            name: "Russian Ruble",
-            abbr: "RUB",
-            pattern: ["-n $","n $"],
+            name: 'Russian Ruble',
+            abbr: 'RUB',
+            pattern: ['-n $', 'n $'],
             decimals: 2,
-            ",": " ",
-            ".": ",",
+            ',': ' ',
+            '.': ',',
             groupSize: [3],
-            symbol: "₽"
-        }
+            symbol: '₽',
+        },
     },
     calendars: {
         standard: {
             days: {
-                names: ["воскресенье","понедельник","вторник","среда","четверг","пятница","суббота"],
-                namesAbbr: ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"],
-                namesShort: ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"]
+                names: [
+                    'воскресенье',
+                    'понедельник',
+                    'вторник',
+                    'среда',
+                    'четверг',
+                    'пятница',
+                    'суббота',
+                ],
+                namesAbbr: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+                namesShort: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
             },
             months: {
-                names: ["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"],
-                namesAbbr: ["янв","фев","мар","апр","май","июн","июл","авг","сен","окт","ноя","дек"]
+                names: [
+                    'Январь',
+                    'Февраль',
+                    'Март',
+                    'Апрель',
+                    'Май',
+                    'Июнь',
+                    'Июль',
+                    'Август',
+                    'Сентябрь',
+                    'Октябрь',
+                    'Ноябрь',
+                    'Декабрь',
+                ],
+                namesAbbr: [
+                    'янв',
+                    'фев',
+                    'мар',
+                    'апр',
+                    'май',
+                    'июн',
+                    'июл',
+                    'авг',
+                    'сен',
+                    'окт',
+                    'ноя',
+                    'дек',
+                ],
             },
-            AM: [""],
-            PM: [""],
+            AM: [''],
+            PM: [''],
             patterns: {
-                d: "dd.MM.yyyy",
+                d: 'dd.MM.yyyy',
                 D: "d MMMM yyyy 'г.'",
                 F: "d MMMM yyyy 'г.' H:mm:ss",
-                g: "dd.MM.yyyy H:mm",
-                G: "dd.MM.yyyy H:mm:ss",
-                m: "d MMMM",
-                M: "d MMMM",
+                g: 'dd.MM.yyyy H:mm',
+                G: 'dd.MM.yyyy H:mm:ss',
+                m: 'd MMMM',
+                M: 'd MMMM',
                 s: "yyyy'-'MM'-'dd'T'HH':'mm':'ss",
-                t: "H:mm",
-                T: "H:mm:ss",
+                t: 'H:mm',
+                T: 'H:mm:ss',
                 u: "yyyy'-'MM'-'dd HH':'mm':'ss'Z'",
-                y: "MMMM yyyy",
-                Y: "MMMM yyyy"
+                y: 'MMMM yyyy',
+                Y: 'MMMM yyyy',
             },
-            "/": ".",
-            ":": ":",
-            firstDay: 1
-        }
-    }
+            '/': '.',
+            ':': ':',
+            firstDay: 1,
+        },
+    },
 };
 
 /**

@@ -1,5 +1,9 @@
-import {DOMParser} from '../../../src/polyfills/xmldom';
-import {contains, getChildrenOfCommonAncestor, getSiblingsBetween} from "../../../src/tags/domUtils";
+import { DOMParser } from '../../../src/polyfills/xmldom';
+import {
+    contains,
+    getChildrenOfCommonAncestor,
+    getSiblingsBetween,
+} from '../../../src/tags/domUtils';
 
 const XML = `<?xml version="1.0" encoding="UTF-8"?>
 <company name="Avengers">

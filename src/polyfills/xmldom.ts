@@ -1,4 +1,4 @@
-import {g, isNodeJS} from './polyfillsUtils';
+import { g, isNodeJS } from './polyfillsUtils';
 
 const origin = isNodeJS ? require('@xmldom/xmldom') : g;
 

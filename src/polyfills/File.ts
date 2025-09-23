@@ -1,4 +1,4 @@
-import {g, isNodeJS} from './polyfillsUtils';
+import { g, isNodeJS } from './polyfillsUtils';
 import FileSaver from 'file-saver';
 
 class FileProxy {}
@@ -11,8 +11,8 @@ class BlobProxy {}
 function saveAsProxy(blob: Blob, path: string): never {
     throw new Error(
         `saveAs is not available in Node.js environment. ` +
-        `To save files in Node.js, use YumTemplate.saveFile() method instead, ` +
-        `or implement your own file writing logic with the rendered buffer.`
+            `To save files in Node.js, use YumTemplate.saveFile() method instead, ` +
+            `or implement your own file writing logic with the rendered buffer.`,
     );
 }
 

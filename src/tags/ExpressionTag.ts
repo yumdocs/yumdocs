@@ -1,11 +1,11 @@
-import AbstractTag from "./AbstractTag";
-import ITag from "./ITag";
-import MatchedNode from "./MatchedNode";
-import expressionEngine from "./expressionEngine";
-import constants from "../constants";
-import {assert} from "../error/assert";
-import YumError from "../error/YumError";
-import ITagContext from "./ITagContext";
+import AbstractTag from './AbstractTag';
+import ITag from './ITag';
+import MatchedNode from './MatchedNode';
+import expressionEngine from './expressionEngine';
+import constants from '../constants';
+import { assert } from '../error/assert';
+import YumError from '../error/YumError';
+import ITagContext from './ITagContext';
 
 /**
  * ExpressionTag
@@ -19,7 +19,11 @@ class ExpressionTag extends AbstractTag implements ITag {
      * @param matchedNode
      * @param parent
      */
-    constructor(matchedNode: MatchedNode, parent: Array<AbstractTag>, context: ITagContext) {
+    constructor(
+        matchedNode: MatchedNode,
+        parent: Array<AbstractTag>,
+        context: ITagContext,
+    ) {
         super(matchedNode, parent, context);
     }
 
@@ -33,9 +37,14 @@ class ExpressionTag extends AbstractTag implements ITag {
         let str: string;
         try {
             // TODO what if condition is not a string???
-            str = <string>await expressionEngine.evaluate(matchedNode.expression, data);
-        } catch(error) {
-            throw new YumError( 1060,{error, data: { expression: matchedNode.expression, data }});
+            str = <string>(
+                await expressionEngine.evaluate(matchedNode.expression, data)
+            );
+        } catch (error) {
+            throw new YumError(1060, {
+                error,
+                data: { expression: matchedNode.expression, data },
+            });
         }
         matchedNode.replaceMatch(str);
         this._done = true;

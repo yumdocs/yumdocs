@@ -1,5 +1,5 @@
-import constants from "../constants";
-import OptionsType from "../OptionsType";
+import constants from '../constants';
+import OptionsType from '../OptionsType';
 
 /**
  * RegExp match result with named capture groups
@@ -25,7 +25,11 @@ class MatchedNode {
      * @param match
      * @param options
      */
-    constructor(node: Text, match: RegExpMatchWithGroups, options: OptionsType) {
+    constructor(
+        node: Text,
+        match: RegExpMatchWithGroups,
+        options: OptionsType,
+    ) {
         this.node = node;
         this._match = match;
         this._options = options;
@@ -60,7 +64,9 @@ class MatchedNode {
     replaceMatch(data: string) {
         const tag: string = this._match[0];
         // const offset: number = this._match.index; // This might not be accurate if another replacement has already been done
-        const offset: number = (this.node.nodeValue || constants.empty).indexOf(tag);
+        const offset: number = (this.node.nodeValue || constants.empty).indexOf(
+            tag,
+        );
         const count: number = tag.length;
         return this.node.replaceData(offset, count, data);
     }
@@ -72,7 +78,9 @@ class MatchedNode {
      */
     replaceMatchAndBefore(data: string) {
         const tag: string = this._match[0];
-        let offset: number = (this.node.nodeValue || constants.empty).indexOf(tag);
+        let offset: number = (this.node.nodeValue || constants.empty).indexOf(
+            tag,
+        );
         let count: number = tag.length;
         const end = <string>this._options.delimiters?.end;
         const pos = (this.node.nodeValue || constants.empty).indexOf(end);
@@ -95,10 +103,15 @@ class MatchedNode {
      */
     replaceMatchAndAfter(data: string) {
         const tag: string = this._match[0];
-        const offset: number = (this.node.nodeValue || constants.empty).indexOf(tag);
+        const offset: number = (this.node.nodeValue || constants.empty).indexOf(
+            tag,
+        );
         let count: number;
         const start = <string>this._options.delimiters?.start;
-        const pos = (this.node.nodeValue || constants.empty).indexOf(start, offset + 1);
+        const pos = (this.node.nodeValue || constants.empty).indexOf(
+            start,
+            offset + 1,
+        );
         if (pos > offset) {
             // There is another tag starting at pos after
             count = pos - offset;

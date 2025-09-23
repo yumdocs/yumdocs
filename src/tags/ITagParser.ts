@@ -1,11 +1,11 @@
-import AbstractTag from "./AbstractTag";
+import AbstractTag from './AbstractTag';
 
 /**
  * ITagParser
  */
 interface ITagParser {
-    lexer: RegExp | undefined,
-    parse(): Array<AbstractTag>
+    lexer: RegExp | undefined;
+    parse(): Array<AbstractTag>;
 }
 
 /**

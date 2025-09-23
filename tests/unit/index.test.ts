@@ -1,8 +1,8 @@
-import {YumError, YumTemplate, expressionEngine} from '../../src/index';
+import { YumError, YumTemplate, expressionEngine } from '../../src/index';
 
 describe('Entry Points', () => {
     test('YumError', () => {
-       expect(YumError).toBeInstanceOf(Function);
+        expect(YumError).toBeInstanceOf(Function);
     });
 
     test('YumTemplate', () => {

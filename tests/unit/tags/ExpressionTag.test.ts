@@ -1,11 +1,11 @@
 import { faker } from '@faker-js/faker';
 import YumTemplate from '../../../src/YumTemplate';
-import {hasTagsRegExp} from "../../../src/tags/tagUtils";
+import { hasTagsRegExp } from '../../../src/tags/tagUtils';
 
 const INPUT_DIR = './tests/templates/';
-const OUTPUT_DIR = './temp/'
+const OUTPUT_DIR = './temp/';
 const DATA = {
-    dummy: faker.lorem.word()
+    dummy: faker.lorem.word(),
 };
 
 describe('Simple expression - ok', () => {

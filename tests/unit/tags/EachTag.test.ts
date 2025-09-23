@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker';
 import YumTemplate from '../../../src/YumTemplate';
-import {hasTagsRegExp} from "../../../src/tags/tagUtils";
+import { hasTagsRegExp } from '../../../src/tags/tagUtils';
 
 const INPUT_DIR = './tests/templates/';
-const OUTPUT_DIR = './temp/'
+const OUTPUT_DIR = './temp/';
 
 const DATA = {
     persons: [
@@ -13,13 +13,13 @@ const DATA = {
             siblings: [
                 {
                     firstName: faker.person.firstName(),
-                    lastName: faker.person.lastName()
+                    lastName: faker.person.lastName(),
                 },
                 {
                     firstName: faker.person.firstName(),
-                    lastName: faker.person.lastName()
+                    lastName: faker.person.lastName(),
                 },
-            ]
+            ],
         },
         {
             firstName: faker.person.firstName(),
@@ -27,13 +27,13 @@ const DATA = {
             siblings: [
                 {
                     firstName: faker.person.firstName(),
-                    lastName: faker.person.lastName()
+                    lastName: faker.person.lastName(),
                 },
                 {
                     firstName: faker.person.firstName(),
-                    lastName: faker.person.lastName()
+                    lastName: faker.person.lastName(),
                 },
-            ]
+            ],
         },
         {
             firstName: faker.person.firstName(),
@@ -41,13 +41,13 @@ const DATA = {
             siblings: [
                 {
                     firstName: faker.person.firstName(),
-                    lastName: faker.person.lastName()
+                    lastName: faker.person.lastName(),
                 },
                 {
                     firstName: faker.person.firstName(),
-                    lastName: faker.person.lastName()
+                    lastName: faker.person.lastName(),
                 },
-            ]
+            ],
         },
         {
             firstName: faker.person.firstName(),
@@ -55,15 +55,15 @@ const DATA = {
             siblings: [
                 {
                     firstName: faker.person.firstName(),
-                    lastName: faker.person.lastName()
+                    lastName: faker.person.lastName(),
                 },
                 {
                     firstName: faker.person.firstName(),
-                    lastName: faker.person.lastName()
+                    lastName: faker.person.lastName(),
                 },
-            ]
+            ],
         },
-    ]
+    ],
 };
 
 describe('Each tag simple case - ok', () => {

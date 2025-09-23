@@ -1,15 +1,15 @@
-import {DOMParser} from "../../../src/polyfills/xmldom";
+import { DOMParser } from '../../../src/polyfills/xmldom';
 import TagParser from '../../../src/tags/TagParser';
-import constants from "../../../src/constants";
-import {escapeRegExp} from "../../../src/tags/tagUtils";
+import constants from '../../../src/constants';
+import { escapeRegExp } from '../../../src/tags/tagUtils';
 
 test('lexer with builtin delimiters', () => {
-    const {delimiters, locale} = constants;
+    const { delimiters, locale } = constants;
     const XML = `<?xml version="1.0" encoding="UTF-8"?>
         <node>Bonjour ${delimiters.start}#if employee.gender${delimiters.end}Mr${delimiters.start}#else${delimiters.end}Ms.${delimiters.start}#endif${delimiters.end} ${delimiters.start}employee.fullName | format${delimiters.end},</node>`;
     const dom = new DOMParser().parseFromString(XML, 'text/xml');
-    const parser = new TagParser([dom], {delimiters, locale});
-    const {lexer} = parser;
+    const parser = new TagParser([dom], { delimiters, locale });
+    const { lexer } = parser;
     const str = lexer?.toString();
     const start = escapeRegExp(delimiters.start);
     const end = escapeRegExp(delimiters.end);
@@ -20,7 +20,7 @@ test('lexer with builtin delimiters', () => {
     for (const match of matches) {
         expect(match.groups).toHaveProperty('statement');
         expect(match.groups).toHaveProperty('expression');
-        count ++;
+        count++;
     }
     expect(count).toEqual(XML.split(delimiters.start).length - 1);
 });
@@ -28,14 +28,14 @@ test('lexer with builtin delimiters', () => {
 test('lexer with custom delimiters', () => {
     const delimiters = {
         start: '${',
-        end: '}'
+        end: '}',
     };
-    const {locale} = constants;
+    const { locale } = constants;
     const XML = `<?xml version="1.0" encoding="UTF-8"?>
         <node>Bonjour ${delimiters.start}#if employee.gender${delimiters.end}Mr${delimiters.start}#else${delimiters.end}Ms.${delimiters.start}#endif${delimiters.end} ${delimiters.start}employee.fullName | format${delimiters.end},</node>`;
     const dom = new DOMParser().parseFromString(XML, 'text/xml');
-    const parser = new TagParser([dom], {delimiters, locale});
-    const {lexer} = parser;
+    const parser = new TagParser([dom], { delimiters, locale });
+    const { lexer } = parser;
     const str = lexer?.toString();
     const start = escapeRegExp(delimiters.start);
     const end = escapeRegExp(delimiters.end);
@@ -46,7 +46,7 @@ test('lexer with custom delimiters', () => {
     for (const match of matches) {
         expect(match.groups).toHaveProperty('statement');
         expect(match.groups).toHaveProperty('expression');
-        count ++;
+        count++;
     }
     expect(count).toEqual(XML.split(delimiters.start).length - 1);
 });
@@ -55,14 +55,14 @@ test('lexer with custom delimiters', () => {
 xtest('lexer with custom delimiters that mess with XML', () => {
     const delimiters = {
         start: '<%',
-        end: '%>'
+        end: '%>',
     };
-    const {locale} = constants;
+    const { locale } = constants;
     const XML = `<?xml version="1.0" encoding="UTF-8"?>
         <node>Bonjour ${delimiters.start}#if employee.gender${delimiters.end}Mr${delimiters.start}#else${delimiters.end}Ms.${delimiters.start}#endif${delimiters.end} ${delimiters.start}employee.fullName | format${delimiters.end},</node>`;
     const dom = new DOMParser().parseFromString(XML, 'text/xml');
-    const parser = new TagParser([dom], {delimiters, locale});
-    const {lexer} = parser;
+    const parser = new TagParser([dom], { delimiters, locale });
+    const { lexer } = parser;
     const str = lexer?.toString();
     const start = escapeRegExp(delimiters.start);
     const end = escapeRegExp(delimiters.end);
@@ -73,17 +73,17 @@ xtest('lexer with custom delimiters that mess with XML', () => {
     for (const match of matches) {
         expect(match.groups).toHaveProperty('statement');
         expect(match.groups).toHaveProperty('expression');
-        count ++;
+        count++;
     }
     expect(count).toEqual(XML.split(delimiters.start).length - 1);
 });
 
 test('Parser', () => {
-    const {delimiters, locale} = constants;
+    const { delimiters, locale } = constants;
     const XML = `<?xml version="1.0" encoding="UTF-8"?>
         <node>Bonjour ${delimiters.start}#if employee.gender${delimiters.end}Mr${delimiters.start}#else${delimiters.end}Ms.${delimiters.start}#endif${delimiters.end} ${delimiters.start}employee.fullName | format${delimiters.end},</node>`;
     const dom = new DOMParser().parseFromString(XML, 'text/xml');
-    const parser = new TagParser([dom], {delimiters, locale});
+    const parser = new TagParser([dom], { delimiters, locale });
     const ast = parser.parse();
     expect(ast).toHaveProperty('length', 2);
-})
+});

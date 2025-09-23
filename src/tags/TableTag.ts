@@ -1,7 +1,7 @@
-import AbstractTag from "./AbstractTag";
-import ITag from "./ITag";
-import MatchedNode from "./MatchedNode";
-import ITagContext from "./ITagContext";
+import AbstractTag from './AbstractTag';
+import ITag from './ITag';
+import MatchedNode from './MatchedNode';
+import ITagContext from './ITagContext';
 
 class TableTag extends AbstractTag implements ITag {
     static readonly statement = '#table';
@@ -13,7 +13,11 @@ class TableTag extends AbstractTag implements ITag {
      * @param parent
      * @param options
      */
-    constructor(matchedNode: MatchedNode, parent: Array<AbstractTag>, context: ITagContext) {
+    constructor(
+        matchedNode: MatchedNode,
+        parent: Array<AbstractTag>,
+        context: ITagContext,
+    ) {
         super(matchedNode, parent, context);
     }
 
@@ -24,7 +28,7 @@ class TableTag extends AbstractTag implements ITag {
     async render(data: Record<string, unknown> = {}) {
         // TODO Consider Kendo UI Spreadsheet json
         const tableMatchedNode = this.matchedNodes.get(TableTag.statement);
-        const sumMatchedNode = this.matchedNodes.get(TableTag.blocks[0])
+        const sumMatchedNode = this.matchedNodes.get(TableTag.blocks[0]);
         const endMatchedNode = this.matchedNodes.get(TableTag.blocks[1]);
     }
 }

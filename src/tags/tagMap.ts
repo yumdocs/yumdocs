@@ -1,7 +1,7 @@
-import EachTag from "./EachTag";
-import ExpressionTag from "./ExpressionTag";
-import IfTag from "./IfTag";
-import ITagConstructor from "./ITagConstructor";
+import EachTag from './EachTag';
+import ExpressionTag from './ExpressionTag';
+import IfTag from './IfTag';
+import ITagConstructor from './ITagConstructor';
 
 /**
  * tagMap
@@ -11,7 +11,7 @@ import ITagConstructor from "./ITagConstructor";
 const tagMap = new Map<string, ITagConstructor>([
     [ExpressionTag.statement, ExpressionTag],
     [EachTag.statement, EachTag],
-    [IfTag.statement, IfTag]
+    [IfTag.statement, IfTag],
 ]);
 
 /**
