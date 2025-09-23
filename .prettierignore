@@ -1,0 +1,44 @@
+# Build outputs
+dist/
+build/
+out/
+
+# Dependencies
+node_modules/
+
+# Coverage reports
+coverage/
+
+# Logs
+*.log
+logs/
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Temporary files
+.tmp/
+temp/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Package files
+*.tgz
+*.tar.gz
+
+# Documentation (auto-generated)
+docs/api/
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
